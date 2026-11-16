@@ -38,7 +38,7 @@ Werk deze tabel bij aan het eind van elke fase.
 ## Codeconventies (officiële GDScript-stijlgids)
 
 - Tabs voor inspringen. `snake_case` voor bestanden, functies en variabelen; `PascalCase` voor `class_name`; `UPPER_SNAKE_CASE` voor constanten en enumwaarden.
-- **Overal statische types**: `var hp: float`, `func tick(delta: float) -> void`, `for cell: Vector2i in cells`. Het project waarschuwt bij ontbrekende types (`untyped_declaration`).
+- **Overal statische types**: `var hp: float`, `func tick(delta: float) -> void`, `for cell: Vector2i in cells`. `./run_tests.sh` faalt (exitcode 2) bij ontbrekende types of andere GDScript-waarschuwingen.
 - Signalen in de verleden tijd: `hearth_extinguished`, `wave_spawned`.
 - Volgorde in een script: `class_name`, `extends`, doc-commentaar, signalen, enums, constanten, `@export`, variabelen, `_init`/`_ready`, publieke functies, privéfuncties (`_naam`).
 - Code en namen in het **Engels**; uitleg in commentaar mag in het **Nederlands**.
@@ -89,7 +89,7 @@ godot -e --path .                          # editor openen
 godot --path .                             # spel starten
 godot --headless --import                  # importeren (na een verse clone of nieuwe assets)
 godot --headless --path . --quit-after 30  # korte headless run: start het project zonder fouten?
-./run_tests.sh                             # alle gdUnit4-tests headless
+./run_tests.sh                             # typecheck + alle gdUnit4-tests headless
 ./run_tests.sh -a res://tests/unit         # alleen één map of bestand
 ```
 

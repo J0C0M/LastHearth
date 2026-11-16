@@ -38,7 +38,13 @@ De tests gebruiken [gdUnit4](https://github.com/godot-gdunit-labs/gdUnit4) v6.2.
 ./run_tests.sh -a res://tests/unit   # alleen één map of bestand
 ```
 
-Het script gebruikt `godot` (of `godot4`) van je PATH, of `$GODOT_BIN`. Exitcode 0 = alles groen. Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via het gdUnit4-paneel.
+Het script controleert eerst alle scripts in `scripts/` en `tests/` op GDScript-waarschuwingen (zoals een ontbrekend statisch type) en draait daarna de tests. Het gebruikt `godot` (of `godot4`) van je PATH, of `$GODOT_BIN`.
+
+- Exitcode 0: alles groen.
+- Exitcode 2: tests groen, maar er zijn waarschuwingen. Los die op.
+- Een andere exitcode: tests gefaald.
+
+Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via het gdUnit4-paneel.
 
 ## Besturing
 
