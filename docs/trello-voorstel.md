@@ -1,6 +1,6 @@
 # Voorstel: Trello-bord afstemmen op Last Hearth
 
-**Status: voorstel, nog niet uitgevoerd.** Er is niets op het bord veranderd. Na akkoord van Jochem wordt dit op het bord gezet.
+**Status: uitgevoerd op 16 november 2026**, na akkoord van Jochem. De nieuwe kaarten (US-17 t/m US-25, PT-09) staan bovenaan de Backlog.
 
 Bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
 Stand van het bord: 16 november 2026, 24 kaarten.

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ToolData" format=3]
+
+[ext_resource type="Resource" path="res://resources/enemies/enemy_shadow.tres" id="1_3m7wd"]
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_77q76"]
+
+[resource]
+script = ExtResource("2_77q76")
+id = &"summon_shadow"
+name = "Shadow"
+kind = 7
+cost = 10.0
+enemy = ExtResource("1_3m7wd")
+description = "Summon a shadow: fast and fragile."

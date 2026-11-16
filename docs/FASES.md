@@ -5,8 +5,8 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 
 | Fase | Naam | Branch | Wie | Trello-kaart(en) | Week | Status |
 |---|---|---|---|---|---|---|
-| 0 | Projectopzet | `Project-Setup` | Jochem | PT-02, PT-04 (testframework) | 2, dag 1 | 🔍 In review |
-| 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | ⏳ Gepland |
+| 0 | Projectopzet | `Project-Setup` | Jochem | PT-02, PT-04 (testframework) | 2, dag 1 | ✅ Klaar |
+| 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | 🔍 In review |
 | 2 | Wereld, camera en interface | `World-View-And-UI` | 1 persoon (tegelijk met fase 3) | US-01, US-02, US-10 | 2 | ⏳ Gepland |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | 1 persoon (tegelijk met fase 2) | US-04 | 2 | ⏳ Gepland |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ⏳ Gepland |
@@ -41,7 +41,7 @@ Branch `Project-Setup` · Jochem · PT-02, PT-04
 - [x] `docs/FASES.md` (dit bestand)
 - [x] `CLAUDE.md` en `README.md`
 - [x] Trello-voorstel in `docs/trello-voorstel.md`
-- [ ] PR `Project-Setup` → `Development` gemerged
+- [x] PR `Project-Setup` → `Development` gemerged ([#1](https://github.com/J0C0M/LastHearth/pull/1))
 
 **Klaar als:** het project importeert en start zonder fouten, de smoke-test headless groen is en alle commits gesigned zijn.
 
@@ -50,21 +50,33 @@ Branch `Project-Setup` · Jochem · PT-02, PT-04
 Branch `Simulation-Core` · Jochem · PT-04, US-01 (deels)
 Alleen logica in `scripts/data/` en `scripts/sim/`, geen beeld.
 
-- [ ] Resource-klassen `LevelData`, `ToolData`, `EnemyData`
-- [ ] `.tres`-bestanden voor level 1: Licht max 150, dageraad na 4:30, fakkel 30, Flare 100, terrein 1 per tegel
-- [ ] `.tres`-bestanden voor level 2: Dread max 200, haard uit vóór 3:40, schaduw 10, geest 22, brute 45, Snuff 60, Drain/Rubble 1–1,5 per tegel
-- [ ] `.tres`-bestanden voor de vijanden: schaduw, brute, geest
-- [ ] `WorldGrid`: 96×60 tegels (water, zand, gras, bos, berg), arrays voor gloom en licht
-- [ ] `MapGen` met `FastNoiseLite`
-- [ ] Testlevel met vaste seed en dummydata (PT-04)
-- [ ] `FlowField`: breadth-first search vanaf de haard, varianten voor lopen en vliegen
-- [ ] `Hearth`
-- [ ] `Simulation`: `tick(delta)`, regeneratie van grondstof, aftellen van de tijd
-- [ ] `Simulation`: `is_won()` / `is_lost()` per level
-- [ ] `Simulation`: `use_tool()` voor de terreingereedschappen
-- [ ] gdUnit4-test voor elke klasse
+- [x] Resource-klassen `LevelData`, `ToolData`, `EnemyData`
+- [x] `.tres`-bestanden voor level 1: Licht max 150, dageraad na 4:30, fakkel 30, Flare 100, terrein 1 per tegel
+- [x] `.tres`-bestanden voor level 2: Dread max 200, haard uit vóór 3:40, schaduw 10, geest 22, brute 45, Snuff 60, Drain/Rubble 1–1,5 per tegel
+- [x] `.tres`-bestanden voor de vijanden: schaduw, brute, geest
+- [x] `WorldGrid`: 96×60 tegels (water, zand, gras, bos, berg), arrays voor gloom en licht
+- [x] `MapGen` met `FastNoiseLite`
+- [x] Testlevel met vaste seed en dummydata (PT-04): `resources/levels/test_level.tres`
+- [x] `FlowField`: breadth-first search vanaf de haard, varianten voor lopen en vliegen
+- [x] `Hearth`
+- [x] `Simulation`: `tick(delta)`, regeneratie van grondstof, aftellen van de tijd
+- [x] `Simulation`: `is_won()` / `is_lost()` per level
+- [x] `Simulation`: `use_tool()` voor de terreingereedschappen
+- [x] gdUnit4-test voor elke klasse (102 tests)
+- [ ] PR `Simulation-Core` → `Development` gemerged
 
 **Klaar als:** alle gdUnit4-tests headless groen zijn.
+
+**Gemaakte keuzes (fase 1)**
+- De klok telt echte seconden bij 1x snelheid: `dawn_time` 270 (4:30) en 220 (3:40).
+- Waarden die niet in het design document staan zijn tijdelijk; ze staan in `resources/README.md` en worden bijgesteld in fase 5.
+- De kaart van elk level staat in een eigen bestand: `scripts/sim/levels/level_1_map.gd` (duo A) en `level_2_map.gd` (duo B). Tot fase 4A/4B geven ze de testkaart.
+- Bewegen gaat in vier richtingen. Lopende vijanden kunnen niet over water en berg; vliegende (geest) overal.
+- Een terreinwijziging die een put afsnijdt van de haard wordt geweigerd en kost niets. Zo bestaat er altijd een weg ("vijanden vinden altijd de snelste weg").
+- Land maakt gras; Drain (alleen op water) en Rubble (alleen op berg) maken zand.
+- `Hearth.dim()` (Snuff) maakt de lichtcirkel kleiner zonder schade. Er is nog geen herstel; dat mag duo B toevoegen.
+- Namen en teksten in de `.tres` zijn Engels; de geest heet `wraith` in de code.
+- `./run_tests.sh` doet eerst een typecheck (faalt bij GDScript-waarschuwingen) en draait daarna álle tests, ook na een fout.
 
 ## Fase 2: Wereld, camera en interface
 

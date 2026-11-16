@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ToolData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_pwpft"]
+
+[resource]
+script = ExtResource("1_pwpft")
+id = &"flare"
+name = "Flare"
+kind = 5
+cost = 100.0
+radius = 6
+description = "Burn every enemy nearby."

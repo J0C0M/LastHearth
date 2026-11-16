@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ToolData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_lrgbb"]
+
+[resource]
+script = ExtResource("1_lrgbb")
+id = &"drain"
+name = "Drain"
+kind = 8
+cost = 1.0
+description = "Drain water into dry land: a bridge across the moat."

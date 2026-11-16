@@ -13,9 +13,10 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 
 | Fase | Status | Wie |
 |---|---|---|
-| 0 Projectopzet | 🔍 In review: PR `Project-Setup` → `Development` | Jochem |
-| 1 Simulatiekern | ⏳ Volgende | Jochem |
-| 2–6 | ⏳ Gepland | zie `docs/FASES.md` |
+| 0 Projectopzet | ✅ Klaar (PR #1) | Jochem |
+| 1 Simulatiekern | 🔍 In review: PR `Simulation-Core` → `Development` | Jochem |
+| 2 en 3 | ⏳ Volgende: kunnen tegelijk starten na de merge van fase 1 | zie `docs/FASES.md` |
+| 4–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Werk deze tabel bij aan het eind van elke fase.
 
@@ -28,6 +29,17 @@ Werk deze tabel bij aan het eind van elke fase.
 - Instellingen en balans staan in **`.tres`-resources** (`resources/`), met klassen `LevelData`, `ToolData`, `EnemyData` in `scripts/data/`.
 - Gebruik `TileMapLayer`, **nooit** de verouderde `TileMap`.
 
+### De simulatie gebruiken (fase 2 en 3)
+
+- Ronde starten: `var sim := Simulation.new(load("res://resources/levels/test_level.tres"))`. De kaart wordt gegenereerd uit `map_type` en `map_seed` van het level.
+- Elke frame: `sim.tick(delta)`. Dat kost ongeveer 4 ms op de volle kaart.
+- Tekenen: `sim.grid.tiles`, `.gloom` en `.light` (index = `y * 96 + x`, terrein = `WorldGrid.Terrain`), `sim.hearth`, `sim.layout.pits`, `sim.resource`, `sim.time_left`.
+- Signalen: `tile_changed(cell)` na schilderen, `level_finished(won)` aan het eind. `sim.hearth` heeft `extinguished`.
+- Invoer: `sim.use_tool(tool, cell, brush)` geeft `false` bij weigeren (te weinig grondstof, put afgesneden). `Simulation.brush_cells(cell, brush)` geeft de tegels voor een penseelvoorbeeld.
+- Vijanden (fase 3): `sim.flow_field.next_step(cell, flying)` is de volgende tegel richting de haard.
+- Uitbreiden (fase 3): zie de `# Fase 3:`-regels in `scripts/sim/simulation.gd` (in `tick()` en `_update_light()`).
+- Debuggen: `print("\n".join(sim.grid.to_rows()))` print de kaart als tekst.
+
 ## Eigendom (voorkomt merge-conflicten)
 
 - **Gedeelde kern** (`scripts/sim/*.gd`, behalve `scripts/sim/levels/`): alleen in kleine, aparte PR's aanpassen, en waarschuw het team vooraf.
@@ -38,7 +50,7 @@ Werk deze tabel bij aan het eind van elke fase.
 ## Codeconventies (officiële GDScript-stijlgids)
 
 - Tabs voor inspringen. `snake_case` voor bestanden, functies en variabelen; `PascalCase` voor `class_name`; `UPPER_SNAKE_CASE` voor constanten en enumwaarden.
-- **Overal statische types**: `var hp: float`, `func tick(delta: float) -> void`, `for cell: Vector2i in cells`. Het project waarschuwt bij ontbrekende types (`untyped_declaration`).
+- **Overal statische types**: `var hp: float`, `func tick(delta: float) -> void`, `for cell: Vector2i in cells`. `./run_tests.sh` faalt (exitcode 2) bij ontbrekende types of andere GDScript-waarschuwingen.
 - Signalen in de verleden tijd: `hearth_extinguished`, `wave_spawned`.
 - Volgorde in een script: `class_name`, `extends`, doc-commentaar, signalen, enums, constanten, `@export`, variabelen, `_init`/`_ready`, publieke functies, privéfuncties (`_naam`).
 - Code en namen in het **Engels**; uitleg in commentaar mag in het **Nederlands**.
@@ -89,7 +101,7 @@ godot -e --path .                          # editor openen
 godot --path .                             # spel starten
 godot --headless --import                  # importeren (na een verse clone of nieuwe assets)
 godot --headless --path . --quit-after 30  # korte headless run: start het project zonder fouten?
-./run_tests.sh                             # alle gdUnit4-tests headless
+./run_tests.sh                             # typecheck + alle gdUnit4-tests headless
 ./run_tests.sh -a res://tests/unit         # alleen één map of bestand
 ```
 

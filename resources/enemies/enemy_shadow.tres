@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1_lj2g4"]
+
+[resource]
+script = ExtResource("1_lj2g4")
+id = &"shadow"
+name = "Shadow"
+speed = 2.0
+damage = 2.0
+light_sensitivity = 4.0
