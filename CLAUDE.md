@@ -14,8 +14,9 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | Fase | Status | Wie |
 |---|---|---|
 | 0 Projectopzet | ✅ Klaar (PR #1) | Jochem |
-| 1 Simulatiekern | 🚧 Bezig: branch `Simulation-Core` | Jochem |
-| 2–6 | ⏳ Gepland | zie `docs/FASES.md` |
+| 1 Simulatiekern | 🔍 In review: PR `Simulation-Core` → `Development` | Jochem |
+| 2 en 3 | ⏳ Volgende: kunnen tegelijk starten na de merge van fase 1 | zie `docs/FASES.md` |
+| 4–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Werk deze tabel bij aan het eind van elke fase.
 
@@ -27,6 +28,17 @@ Werk deze tabel bij aan het eind van elke fase.
 - De UI verandert de wereld alleen via **`Simulation.use_tool(tool, cell)`**.
 - Instellingen en balans staan in **`.tres`-resources** (`resources/`), met klassen `LevelData`, `ToolData`, `EnemyData` in `scripts/data/`.
 - Gebruik `TileMapLayer`, **nooit** de verouderde `TileMap`.
+
+### De simulatie gebruiken (fase 2 en 3)
+
+- Ronde starten: `var sim := Simulation.new(load("res://resources/levels/test_level.tres"))`. De kaart wordt gegenereerd uit `map_type` en `map_seed` van het level.
+- Elke frame: `sim.tick(delta)`. Dat kost ongeveer 4 ms op de volle kaart.
+- Tekenen: `sim.grid.tiles`, `.gloom` en `.light` (index = `y * 96 + x`, terrein = `WorldGrid.Terrain`), `sim.hearth`, `sim.layout.pits`, `sim.resource`, `sim.time_left`.
+- Signalen: `tile_changed(cell)` na schilderen, `level_finished(won)` aan het eind. `sim.hearth` heeft `extinguished`.
+- Invoer: `sim.use_tool(tool, cell, brush)` geeft `false` bij weigeren (te weinig grondstof, put afgesneden). `Simulation.brush_cells(cell, brush)` geeft de tegels voor een penseelvoorbeeld.
+- Vijanden (fase 3): `sim.flow_field.next_step(cell, flying)` is de volgende tegel richting de haard.
+- Uitbreiden (fase 3): zie de `# Fase 3:`-regels in `scripts/sim/simulation.gd` (in `tick()` en `_update_light()`).
+- Debuggen: `print("\n".join(sim.grid.to_rows()))` print de kaart als tekst.
 
 ## Eigendom (voorkomt merge-conflicten)
 
