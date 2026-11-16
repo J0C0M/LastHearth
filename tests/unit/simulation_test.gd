@@ -359,3 +359,14 @@ func test_stars_are_zero_until_phase_4() -> void:
 	var sim := _sim()
 	sim.tick(100.0)
 	assert_int(sim.stars()).is_equal(0)
+
+
+func test_gloom_spreads_in_steps_not_every_frame() -> void:
+	var sim := _sim([
+		"P.......................",
+		"......................H.",
+	])
+	sim.tick(Simulation.GLOOM_STEP * 0.5)
+	assert_float(sim.grid.get_gloom(Vector2i(1, 0))).is_equal(0.0)
+	sim.tick(Simulation.GLOOM_STEP * 0.5)
+	assert_float(sim.grid.get_gloom(Vector2i(1, 0))).is_equal_approx(0.5 * Simulation.GLOOM_STEP, 0.0001)

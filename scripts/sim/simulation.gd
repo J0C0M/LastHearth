@@ -24,6 +24,9 @@ enum Refusal {
 
 const Terrain := WorldGrid.Terrain
 const Kind := ToolData.Kind
+## Gloom spreads in steps of at least this many seconds: it moves slowly, so
+## ten updates per second look the same as sixty and cost far less.
+const GLOOM_STEP := 0.1
 
 var level: LevelData
 var grid: WorldGrid
@@ -40,6 +43,7 @@ var elapsed := 0.0
 var last_refusal := Refusal.NONE
 
 var _finished := false
+var _gloom_time := 0.0
 
 
 ## Starts a round of [param level_data]. Without [param world], MapGen builds
@@ -73,7 +77,10 @@ func tick(delta: float) -> void:
 	resource = level.clamp_resource(resource + level.regen * delta)
 	_feed_pits()
 	_update_light()
-	grid.spread_gloom(delta, level.gloom_speed)
+	_gloom_time += delta
+	if _gloom_time >= GLOOM_STEP:
+		grid.spread_gloom(_gloom_time, level.gloom_speed)
+		_gloom_time = 0.0
 	# Fase 3: VillagePlanner, entities and WaveSpawner are updated here.
 	_check_finished()
 

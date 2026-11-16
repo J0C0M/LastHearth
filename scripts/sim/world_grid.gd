@@ -20,6 +20,8 @@ const GLOOM_SPREAD_THRESHOLD := 1.0
 const LIGHT_CLEARS_GLOOM := 2.0
 ## Above this light value a tile counts as lit: gloom cannot grow there.
 const LIT_THRESHOLD := 0.05
+## Gloom creeps to diagonal neighbours too, but slower (rounder, less blocky fronts).
+const DIAGONAL_SPREAD := 0.6
 
 var size: Vector2i
 ## Terrain per tile (values of [enum Terrain]).
@@ -28,6 +30,9 @@ var tiles := PackedByteArray()
 var gloom := PackedFloat32Array()
 ## Light per tile, 0..1. Recomputed by [method recompute_light].
 var light := PackedFloat32Array()
+## How fast gloom grows on each tile, as a factor on the level's gloom speed.
+## 1.0 everywhere by default; MapGen varies it, so gloom creeps in ragged fronts.
+var gloom_rate := PackedFloat32Array()
 
 
 func _init(grid_size: Vector2i = DEFAULT_SIZE, fill_terrain: Terrain = Terrain.GRASS) -> void:
@@ -37,6 +42,8 @@ func _init(grid_size: Vector2i = DEFAULT_SIZE, fill_terrain: Terrain = Terrain.G
 	tiles.fill(fill_terrain)
 	gloom.resize(count)
 	light.resize(count)
+	gloom_rate.resize(count)
+	gloom_rate.fill(1.0)
 
 
 ## Builds a grid from text rows, one character per tile (see [constant TERRAIN_CHARS]).
@@ -124,7 +131,9 @@ func get_light(cell: Vector2i) -> float:
 
 ## Lets gloom creep forward and light push it back, over [param delta] seconds.
 ## A dark tile (gloom 1.0) darkens its four neighbours by [param speed] per
-## second. On lit tiles gloom cannot grow and fades away instead.
+## second, times the tile's [member gloom_rate]; diagonal neighbours grow at
+## [constant DIAGONAL_SPREAD] of that. On lit tiles gloom cannot grow and
+## fades away instead.
 func spread_gloom(delta: float, speed: float) -> void:
 	if delta <= 0.0:
 		return
@@ -132,7 +141,9 @@ func spread_gloom(delta: float, speed: float) -> void:
 	var growth := speed * delta
 	var fade := LIGHT_CLEARS_GLOOM * delta
 	var width := size.x
-	for y: int in size.y:
+	var h := size.y
+	var t := GLOOM_SPREAD_THRESHOLD
+	for y: int in h:
 		for x: int in width:
 			var i := y * width + x
 			var lit := light[i]
@@ -142,14 +153,23 @@ func spread_gloom(delta: float, speed: float) -> void:
 				continue
 			if gloom[i] >= 1.0:
 				continue
-			var dark_neighbor := (
-				(x > 0 and gloom[i - 1] >= GLOOM_SPREAD_THRESHOLD)
-				or (x < width - 1 and gloom[i + 1] >= GLOOM_SPREAD_THRESHOLD)
-				or (y > 0 and gloom[i - width] >= GLOOM_SPREAD_THRESHOLD)
-				or (y < size.y - 1 and gloom[i + width] >= GLOOM_SPREAD_THRESHOLD)
+			var cardinal := (
+				(x > 0 and gloom[i - 1] >= t)
+				or (x < width - 1 and gloom[i + 1] >= t)
+				or (y > 0 and gloom[i - width] >= t)
+				or (y < h - 1 and gloom[i + width] >= t)
 			)
-			if dark_neighbor:
-				next[i] = minf(1.0, gloom[i] + growth)
+			if cardinal:
+				next[i] = minf(1.0, gloom[i] + growth * gloom_rate[i])
+				continue
+			var diagonal := (
+				(x > 0 and y > 0 and gloom[i - width - 1] >= t)
+				or (x < width - 1 and y > 0 and gloom[i - width + 1] >= t)
+				or (x > 0 and y < h - 1 and gloom[i + width - 1] >= t)
+				or (x < width - 1 and y < h - 1 and gloom[i + width + 1] >= t)
+			)
+			if diagonal:
+				next[i] = minf(1.0, gloom[i] + growth * gloom_rate[i] * DIAGONAL_SPREAD)
 	gloom = next
 
 
