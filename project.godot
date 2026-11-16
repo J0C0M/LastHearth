@@ -36,6 +36,10 @@ project/assembly_name="Last Hearth"
 
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
+[gui]
+
+theme/custom="res://resources/ui/theme.tres"
+
 [input]
 
 tool_1={
