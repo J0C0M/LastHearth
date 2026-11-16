@@ -3,12 +3,19 @@
 Alle assets in deze map staan hieronder, met bron en licentie.
 Voeg een regel toe zodra je een asset toevoegt.
 
-`tiles/terrain.png` heeft vijf kolommen in de volgorde van `WorldGrid.Terrain` (water, zand, gras, bos, berg) en twee rijen varianten. Vervang je de tegels, houd dan deze indeling aan; dan hoeft er geen code te veranderen.
 
 | Asset / pack | Maker | Bron | Licentie | Gebruikt in |
 |---|---|---|---|---|
-| Placeholder-pixelart: `tiles/terrain.png`, `tiles/gloom.png`, `sprites/hearth.png`, `sprites/pit.png` | Team Last Hearth (met een script getekend) | eigen werk | CC0 1.0 | terrein, gloom, haard, putten |
-| _1-Bit Pack (gepland, vervangt de placeholder-terreintegels)_ | Kenney | https://kenney.nl/assets/1-bit-pack | CC0 1.0 | |
+| Alle pixelart: `tiles/terrain.png`, `tiles/shore.png`, `tiles/objects.png`, `sprites/fire.png`, `sprites/pit.png`, `sprites/particle.png` | Team Last Hearth | eigen werk, getekend door `tools/art/make_world_art.gd` | CC0 1.0 | wereld, haard, putten, effecten |
+
+De art wordt met scripts getekend. Kleuren of vormen aanpassen? Wijzig `tools/art/make_world_art.gd` en draai daarna:
+
+```bash
+godot --headless --path . -s res://tools/art/make_world_art.gd
+godot --headless --path . -s res://tools/art/make_tileset.gd
+```
+
+Indeling van `tiles/terrain.png` (16×16): rij 0 diep water en rij 1 ondiep water (2 varianten × 3 animatieframes), rij 2 zand, rij 3 gras (4 + 2 met bloemen), rij 4 bosgrond, rij 5 rots. `tiles/objects.png` (16×24): rij 0 bomen, rij 1 bergtoppen (kolom 2-3 met sneeuw).
 
 ## Licentieteksten
 
