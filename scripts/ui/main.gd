@@ -11,10 +11,20 @@ extends Node
 enum Screen { MENU, BRIEFING, PLAYING, RESULT }
 
 const SPEEDS: Array[int] = [1, 2, 3]
+## Behind the main menu a night of the first level is shown, with this much
+## gloom already crept in (in steps of 6 seconds).
+const MENU_NIGHT_STEPS := 10
+## The menu camera looks a bit to the right of the hearth, so the fire burns
+## beside the menu, and drifts slowly around that point.
+const MENU_FOCUS_OFFSET := Vector2(150, -10)
+const MENU_DRIFT := Vector2(40, 24)
+const MENU_DRIFT_SPEED := 0.12
 
 var sim: Simulation
 var speed := 1
 var screen := Screen.MENU
+
+var _menu_sim: Simulation
 
 @onready var world: WorldView = $World
 @onready var ui: GameUI = $GameUI
@@ -38,7 +48,7 @@ func show_menu() -> void:
 	_set_paused(false)
 	set_speed(1)
 	screen = Screen.MENU
-	world.hide()
+	_show_menu_world()
 	ui.hide()
 	briefing.hide()
 	main_menu.show()
@@ -81,6 +91,10 @@ func toggle_pause() -> void:
 
 
 func _process(delta: float) -> void:
+	if screen == Screen.MENU:
+		_drift_menu_camera()
+		world.draw_state(_menu_sim)
+		return
 	if screen != Screen.PLAYING and screen != Screen.RESULT:
 		return
 	if screen == Screen.PLAYING and not get_tree().paused:
@@ -113,3 +127,22 @@ func _finish_round() -> void:
 func _set_paused(paused: bool) -> void:
 	get_tree().paused = paused
 	ui.show_paused(paused)
+
+
+## The world behind the main menu: a night of the first level, already dark.
+func _show_menu_world() -> void:
+	if _menu_sim == null:
+		var level := main_menu.levels[0] if not main_menu.levels.is_empty() else LevelData.new()
+		_menu_sim = Simulation.new(level)
+		for i: int in MENU_NIGHT_STEPS:
+			_menu_sim.tick(6.0)
+	world.setup(_menu_sim)
+	world.camera.set_zoom_level(1.25)
+	world.hide_brush()
+	world.show()
+
+
+func _drift_menu_camera() -> void:
+	var t := Time.get_ticks_msec() / 1000.0 * MENU_DRIFT_SPEED
+	var center := world.cell_center(_menu_sim.hearth.cell) + MENU_FOCUS_OFFSET
+	world.camera.focus(center + Vector2(sin(t) * MENU_DRIFT.x, sin(t * 0.7 + 1.0) * MENU_DRIFT.y))

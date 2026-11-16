@@ -13,6 +13,7 @@ signal quit_requested
 
 @onready var level_buttons: VBoxContainer = %LevelButtons
 @onready var quit_button: Button = %QuitButton
+@onready var fire: AnimatedSprite2D = %Fire
 
 
 func _ready() -> void:
@@ -23,6 +24,9 @@ func _ready() -> void:
 	quit_button.pressed.connect(quit_requested.emit)
 	quit_button.visible = not OS.has_feature("web")
 	visibility_changed.connect(_on_visibility_changed)
+	# The fire above the title stays centred, whatever the width of the menu.
+	var spot := fire.get_parent() as Control
+	spot.resized.connect(func() -> void: fire.position = Vector2(spot.size.x * 0.5, 26))
 
 
 ## The goal of a level in a few words, for the level buttons.
@@ -35,6 +39,8 @@ static func goal_summary(goal: LevelData.Goal) -> String:
 func _add_level_button(level: LevelData, text: String) -> void:
 	var button := Button.new()
 	button.text = text
+	button.icon = level.resource_icon
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.tooltip_text = goal_summary(level.goal)
 	button.pressed.connect(level_chosen.emit.bind(level))
 	level_buttons.add_child(button)

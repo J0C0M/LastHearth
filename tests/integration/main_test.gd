@@ -27,8 +27,10 @@ func test_game_starts_in_the_main_menu() -> void:
 	var main := _main()
 	assert_int(main.screen).is_equal(Main.Screen.MENU)
 	assert_bool(main.main_menu.visible).is_true()
-	assert_bool(main.world.visible).is_false()
 	assert_bool(main.ui.visible).is_false()
+	# A night of the first level is shown behind the menu.
+	assert_bool(main.world.visible).is_true()
+	assert_str(main.world.sim.level.id).is_equal("level_1")
 
 
 func test_main_menu_lists_both_levels() -> void:
@@ -124,4 +126,4 @@ func test_main_menu_from_the_game_resets_pause_and_speed() -> void:
 	assert_int(main.screen).is_equal(Main.Screen.MENU)
 	assert_bool(get_tree().paused).is_false()
 	assert_float(Engine.time_scale).is_equal(1.0)
-	assert_bool(main.world.visible).is_false()
+	assert_object(main.world.sim).is_not_same(main.sim)
