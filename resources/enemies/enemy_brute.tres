@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1_db6np"]
+
+[resource]
+script = ExtResource("1_db6np")
+id = &"brute"
+name = "Brute"
+hp = 60.0
+speed = 0.8
+damage = 8.0

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1_bqut5"]
+
+[resource]
+script = ExtResource("1_bqut5")
+id = &"wraith"
+name = "Wraith"
+hp = 20.0
+speed = 1.4
+damage = 3.0
+light_sensitivity = 3.0
+flying = true
