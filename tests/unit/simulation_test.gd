@@ -295,3 +295,67 @@ func test_tick_on_the_full_map_is_fast_enough() -> void:
 	var per_tick_ms := (Time.get_ticks_usec() - start) / 1000.0 / 60.0
 	# One frame at 60 fps is 16.7 ms; the simulation should use well under half.
 	assert_float(per_tick_ms).is_less(8.0)
+
+
+# --- Refusal reasons, light sources, stars ------------------------------------
+
+func test_successful_tool_use_has_no_refusal() -> void:
+	var sim := _sim()
+	sim.use_tool(_tool(Kind.WATER), Vector2i(7, 2))
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NONE)
+
+
+func test_refusal_says_when_there_is_not_enough_resource() -> void:
+	var sim := _sim()
+	sim.use_tool(_tool(Kind.WATER, 99.0), Vector2i(7, 2))
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NOT_ENOUGH_RESOURCE)
+
+
+func test_refusal_says_when_nothing_would_change() -> void:
+	var sim := _sim()
+	sim.use_tool(_tool(Kind.LAND), Vector2i(7, 2))
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NO_EFFECT)
+
+
+func test_refusal_says_when_a_pit_would_be_cut_off() -> void:
+	var sim := _sim([
+		"P.^.....",
+		"..^.....",
+		"..^..H..",
+		"..^.....",
+		"........",
+	])
+	sim.use_tool(_tool(Kind.MOUNTAIN), Vector2i(2, 4))
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.CUTS_OFF_PIT)
+
+
+func test_refusal_says_when_a_tool_is_not_available_yet() -> void:
+	var sim := _sim()
+	sim.use_tool(_tool(Kind.FLARE), Vector2i(7, 2))
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NOT_AVAILABLE)
+
+
+func test_refusal_says_when_the_round_is_over() -> void:
+	var sim := _sim()
+	sim.tick(100.0)
+	sim.use_tool(_tool(Kind.WATER), Vector2i(7, 2))
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.ROUND_OVER)
+
+
+func test_light_sources_contain_the_burning_hearth() -> void:
+	var sim := _sim()
+	var sources := sim.light_sources()
+	assert_int(sources.size()).is_equal(1)
+	assert_that(sources[0].cell).is_equal(sim.hearth.cell)
+
+
+func test_hearth_that_is_out_gives_no_light_source() -> void:
+	var sim := _sim()
+	sim.hearth.damage(100.0)
+	assert_bool(sim.light_sources().is_empty()).is_true()
+
+
+func test_stars_are_zero_until_phase_4() -> void:
+	var sim := _sim()
+	sim.tick(100.0)
+	assert_int(sim.stars()).is_equal(0)
