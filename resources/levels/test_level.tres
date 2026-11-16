@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="LevelData" format=3]
 
 [ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_3b8sw"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/flame.png" id="1_20b1k"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_20b1k"]
 [ext_resource type="Resource" path="res://resources/tools/tool_land.tres" id="3_oo5aj"]
 [ext_resource type="Resource" path="res://resources/tools/tool_water.tres" id="4_gmv7m"]
@@ -15,6 +16,7 @@ id = &"test_level"
 title = "Test Level"
 briefing = "Fixed test map with dummy data (PT-04). For development and tests, not for players."
 map_seed = 12345
+resource_icon = ExtResource("1_20b1k")
 start_resource = 150.0
 max_resource = 150.0
 regen = 5.0

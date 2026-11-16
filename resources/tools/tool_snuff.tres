@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="ToolData" format=3]
 
+[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_snuff.png" id="1_7faff"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_qyqwj"]
 
 [resource]
@@ -9,4 +10,5 @@ name = "Snuff"
 kind = 10
 cost = 60.0
 radius = 4
+icon = ExtResource("1_7faff")
 description = "Snuff out torches and dim the hearth nearby."

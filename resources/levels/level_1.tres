@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="LevelData" format=3]
 
+[ext_resource type="Texture2D" path="res://assets/ui/icons/flame.png" id="1_4u7ew"]
 [ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_7blc3"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_4u7ew"]
 [ext_resource type="Resource" path="res://resources/tools/tool_land.tres" id="3_d3w8w"]
@@ -16,6 +17,7 @@ title = "Hold the Light"
 briefing = "Shadows crawl out of three Night Pits towards the last hearth. Shape the land, light torches and keep the hearth burning until dawn."
 map_type = 1
 map_seed = 101
+resource_icon = ExtResource("1_4u7ew")
 start_resource = 75.0
 max_resource = 150.0
 regen = 2.0

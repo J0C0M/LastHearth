@@ -38,6 +38,8 @@ const TERRAIN_KINDS: Array[Kind] = [
 @export var radius: int = 0
 ## The enemy type a SUMMON tool creates.
 @export var enemy: EnemyData = null
+## 16 x 16 icon on the toolbar (see assets/ui/icons/).
+@export var icon: Texture2D = null
 ## Tooltip text.
 @export_multiline var description: String = ""
 

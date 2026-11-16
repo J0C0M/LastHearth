@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="ToolData" format=3]
 
+[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_flare.png" id="1_ea6gv"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_pwpft"]
 
 [resource]
@@ -9,4 +10,5 @@ name = "Flare"
 kind = 5
 cost = 100.0
 radius = 6
+icon = ExtResource("1_ea6gv")
 description = "Burn every enemy nearby."
