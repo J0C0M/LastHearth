@@ -1,0 +1,28 @@
+[gd_resource type="TileSet" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tiles/terrain.png" id="1_e3hg0"]
+[ext_resource type="Texture2D" path="res://assets/tiles/gloom.png" id="2_2l0l2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k7m0s"]
+texture = ExtResource("1_e3hg0")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n3lm4"]
+texture = ExtResource("2_2l0l2")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_k7m0s")
+sources/1 = SubResource("TileSetAtlasSource_n3lm4")
