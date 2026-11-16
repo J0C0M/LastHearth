@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="LevelData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_7blc3"]
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_4u7ew"]
+[ext_resource type="Resource" path="res://resources/tools/tool_land.tres" id="3_d3w8w"]
+[ext_resource type="Resource" path="res://resources/tools/tool_water.tres" id="4_v6d2w"]
+[ext_resource type="Resource" path="res://resources/tools/tool_forest.tres" id="5_br0t4"]
+[ext_resource type="Resource" path="res://resources/tools/tool_mountain.tres" id="6_bqjqr"]
+[ext_resource type="Resource" path="res://resources/tools/tool_torch.tres" id="7_cgn3d"]
+[ext_resource type="Resource" path="res://resources/tools/tool_flare.tres" id="8_bbtr6"]
+
+[resource]
+script = ExtResource("1_7blc3")
+id = &"level_1"
+title = "Hold the Light"
+briefing = "Shadows crawl out of three Night Pits towards the last hearth. Shape the land, light torches and keep the hearth burning until dawn."
+map_type = 1
+map_seed = 101
+start_resource = 75.0
+max_resource = 150.0
+regen = 2.0
+gloom_speed = 0.15
+max_houses = 12
+tools = Array[ExtResource("2_4u7ew")]([ExtResource("3_d3w8w"), ExtResource("4_v6d2w"), ExtResource("5_br0t4"), ExtResource("6_bqjqr"), ExtResource("7_cgn3d"), ExtResource("8_bbtr6")])

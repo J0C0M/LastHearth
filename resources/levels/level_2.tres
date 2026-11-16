@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="LevelData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_61tk6"]
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_u0ri6"]
+[ext_resource type="Resource" path="res://resources/tools/tool_gloom.tres" id="3_01ud5"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_shadow.tres" id="4_toexm"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_wraith.tres" id="5_ce1dc"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_brute.tres" id="6_qyts5"]
+[ext_resource type="Resource" path="res://resources/tools/tool_drain.tres" id="7_dd5yr"]
+[ext_resource type="Resource" path="res://resources/tools/tool_rubble.tres" id="8_nro2g"]
+[ext_resource type="Resource" path="res://resources/tools/tool_snuff.tres" id="9_4cnbh"]
+
+[resource]
+script = ExtResource("1_61tk6")
+id = &"level_2"
+title = "Let the Dark In"
+briefing = "The village hides behind a moat and a ring of torches. Spread the gloom, cross the water and snuff out the hearth before dawn."
+goal = 1
+map_type = 2
+map_seed = 202
+dawn_time = 220.0
+dawn_delay_per_kill = 5.0
+resource_label = "Dread"
+start_resource = 50.0
+max_resource = 200.0
+regen = 3.0
+resource_per_kill = 15.0
+gloom_speed = 0.05
+max_houses = 12
+tools = Array[ExtResource("2_u0ri6")]([ExtResource("3_01ud5"), ExtResource("4_toexm"), ExtResource("5_ce1dc"), ExtResource("6_qyts5"), ExtResource("7_dd5yr"), ExtResource("8_nro2g"), ExtResource("9_4cnbh")])
