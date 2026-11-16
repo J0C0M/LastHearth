@@ -50,11 +50,12 @@ else
 fi
 
 # --ignoreHeadlessMode: gdUnit4 refuses to run headless without it.
+# --continue: run every test, instead of stopping at the first failure.
 # --remote-debug to port 0 stops Godot from opening its interactive debugger
 # on a script error, which would hang the run. The two harmless
 # "Remote Debugger" errors this causes are filtered out of stderr.
 "$GODOT_BIN" --headless --path . -s -d --remote-debug tcp://127.0.0.1:0 \
-	res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode "$@" \
+	res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode --continue "$@" \
 	2> >(grep -v -E "remote port number must be|Remote Debugger: Unable to connect|at: (connect_to_host|create_tcp) " >&2)
 exit_code=$?
 
