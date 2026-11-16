@@ -31,7 +31,7 @@ fi
 #  1. Without -d: catches parse errors. (In debug mode a parse error can crash Godot.)
 #  2. With -d (only if step 1 is clean): Godot prints warnings only in debug mode.
 lint() {
-	"$GODOT_BIN" --headless --path . "$@" -s res://tests/lint_scripts.gd < /dev/null 2>&1 \
+	"$GODOT_BIN" --headless --path . --quit-after 600 "$@" -s res://tests/lint_scripts.gd < /dev/null 2>&1 \
 		| sed 's/\x1b\[[0-9;]*m//g' \
 		| grep -E "^(WARNING|SCRIPT ERROR|ERROR)|^ +at: "
 }
