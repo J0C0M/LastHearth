@@ -266,10 +266,10 @@ static func _hash(cell: Vector2i) -> int:
 static func _make_light_texture() -> GradientTexture2D:
 	var gradient := Gradient.new()
 	gradient.interpolation_mode = Gradient.GRADIENT_INTERPOLATE_CONSTANT
-	gradient.offsets = PackedFloat32Array([0.0, 0.4, 0.6, 0.76, 0.9])
+	gradient.offsets = PackedFloat32Array([0.0, 0.3, 0.48, 0.62, 0.74, 0.84, 0.92])
 	gradient.colors = PackedColorArray([
-		Color(1, 1, 1, 1.0), Color(1, 1, 1, 0.78), Color(1, 1, 1, 0.56),
-		Color(1, 1, 1, 0.34), Color(1, 1, 1, 0.0)])
+		Color(1, 1, 1, 0.95), Color(1, 1, 1, 0.8), Color(1, 1, 1, 0.64),
+		Color(1, 1, 1, 0.48), Color(1, 1, 1, 0.32), Color(1, 1, 1, 0.16), Color(1, 1, 1, 0.0)])
 	var texture := GradientTexture2D.new()
 	texture.gradient = gradient
 	texture.fill = GradientTexture2D.FILL_RADIAL
