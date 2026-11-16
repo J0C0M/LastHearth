@@ -76,6 +76,7 @@ scripts/
   view/           WorldView en sprites
   ui/             GameUI en menu's
 tests/            unit/, integration/, bots/
+tools/art/        scripts die alle pixelart en lettertypen tekenen
 docs/             design.md, FASES.md, ontwerp/, testen/
 ```
 
@@ -106,4 +107,4 @@ Fase 0 en 1 (projectopzet en simulatiekern): Jochem (J0C0M). Fase 2 (wereld en i
 
 ## Licentie en credits
 
-Externe assets en hun licenties staan in [`assets/CREDITS.md`](assets/CREDITS.md). gdUnit4 valt onder de MIT-licentie (`addons/gdUnit4/LICENSE`).
+Alle pixelart en de lettertypen zijn eigen werk (CC0), getekend door scripts in [`tools/art/`](tools/README.md); zie [`assets/CREDITS.md`](assets/CREDITS.md). gdUnit4 valt onder de MIT-licentie (`addons/gdUnit4/LICENSE`).

@@ -8,6 +8,8 @@
 Last Hearth wordt gebouwd in Godot 4 met GDScript, als 2D-pixelartspel zonder externe plug-ins. Het project bestaat uit drie lagen die los van elkaar staan: simulatie, weergave en interface.
 
 > **Noot (fase 0):** "zonder externe plug-ins" geldt voor het spel zelf. De testframework-addon gdUnit4 (`addons/gdUnit4/`) draait alleen in de editor en bij tests, en zit niet in de gameplay.
+>
+> **Noot (fase 2):** twee technische keuzes wijken af van de tabel hieronder. De gloom-overlay is geen `TileMapLayer` maar één textuur met een shader (`scenes/world/gloom.gdshader`), zodat de duisternis zacht en bewegend getekend wordt. Effecten gebruiken `CPUParticles2D` in plaats van `GPUParticles2D`, omdat die op elke computer werken met de Compatibility-renderer. Alle pixelart is eigen werk (zie `tools/art/`).
 
 ## Hoe het in elkaar zit
 

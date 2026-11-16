@@ -90,13 +90,16 @@ Branch `World-View-And-UI` · 1 persoon, tegelijk met fase 3 · US-01, US-02, US
 - [x] `GameUI`: grondstofbalk en klok tot de dageraad
 - [x] Pauze (`get_tree().paused`) en 1x/2x/3x snelheid (`Engine.time_scale`) (US-02)
 - [x] Hoofdmenu met levelkeuze, briefing en resultaatscherm (US-10)
-- [ ] Kenney CC0-pixelartpack toegevoegd, licentie in `assets/CREDITS.md` (nu eigen placeholder-art, zie hieronder)
+- [x] Pixelart met licentie in `assets/CREDITS.md`: eigen werk (CC0) in plaats van een Kenney-pack, zie hieronder
 - [ ] PR `World-View-And-UI` → `Development` gemerged
 
 **Klaar als:** je op een gegenereerde kaart terrein kunt schilderen en het licht en de duisternis ziet.
 
 **Gemaakte keuzes (fase 2)**
-- Gekozen pack: Kenney **1-Bit Pack** (CC0): terrein, water, bomen, bergen, dorpelingen, monsters, kampvuur en huizen in één stijl. kenney.nl blokkeert automatisch downloaden; daarom staat er tijdelijk eigen placeholder-art (CC0) in precies dezelfde indeling. Inwisselen = alleen de PNG's vervangen (zie `assets/CREDITS.md`).
+- **Eigen pixelart in plaats van Kenney** (besluit van Jochem na de eerste review): het spel moet levendig en kleurrijk ogen, in de stijl van een god-game als WorldBox (eigen art, geen kopie). Alles wordt getekend door scripts in `tools/art/`: terrein met diep en ondiep water en schuim, bomen en bergtoppen als objecten, een knetterend vuur, gloeiende putten, een pixel-UI (houten panelen, stenen knoppen, iconen) en twee eigen bitmap-lettertypen (Hearth Pixel, Hearth Micro).
+- Gloom wordt getekend als één textuur (één pixel per tegel) met `scenes/world/gloom.gdshader`: zacht, bewegend en met dithering, in plaats van harde zwarte tegels. In de simulatie groeit gloom nu ook diagonaal en met een snelheid per tegel (sneller door bos, trager over water), zodat het in rafelige fronten oprukt.
+- Licht valt af in pixel-art-banden; fakkels en huizen uit fase 3 krijgen dezelfde stijl via `light_sources()`.
+- Het hoofdmenu toont een levende nacht van level 1 als achtergrond.
 - Scènes: `Main.tscn` → `World` (`world.tscn`), `GameUI` (`ui.tscn`, met `result_screen.tscn`), `Menus` (`main_menu.tscn`, `briefing.tscn`). Het script van Main staat in `scripts/ui/main.gd` ("ui.tscn en main.gd" in het design).
 - Thema in `resources/ui/theme.tres`, ingesteld voor het hele project.
 - Schilderen mag ook tijdens de pauze (zoals in WorldBox). Esc pauzeert ook; het pauzemenu heeft "Main menu".

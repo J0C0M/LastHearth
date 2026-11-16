@@ -44,10 +44,11 @@ Werk deze tabel bij aan het eind van elke fase.
 ### Scènes (fase 2)
 
 - `scenes/main/Main.tscn` (`scripts/ui/main.gd`): spellus en schermen (menu → briefing → spelen → resultaat). Bevat:
-  - `World` = `scenes/world/world.tscn` (`WorldView`): lagen `Terrain`, `Gloom`, `Markers` (haard, putten), `Lights`, `Night`, `Overlay/BrushPreview`, `Camera`;
+  - `World` = `scenes/world/world.tscn` (`WorldView`): lagen `Terrain`, `Shore` (schuim, schaduw), `Objects` (y-gesorteerd: `Trees` met bomen en bergtoppen, `Hearth` met vuur en vonken), `Gloom` (shader), `Pits`, `Lights`, `Night`, `Overlay` (vuurvliegjes, `BrushPreview`), `Camera`;
   - `GameUI` = `scenes/ui/ui.tscn`: bovenbalk, werkbalk, melding, pauzescherm, `ResultScreen`;
   - `Menus`: `main_menu.tscn` en `briefing.tscn`.
-- Fase 3: zet sprites van dorpelingen, vijanden en gebouwen in een nieuwe `Node2D` tussen `Gloom` en `Markers` in `world.tscn`, en laat `WorldView.draw_state()` ze bijwerken. Lichtbronnen van fakkels en huizen komen via `Simulation.light_sources()` vanzelf in beeld.
+- Fase 3: zet sprites van dorpelingen, vijanden en gebouwen onder `Objects` in `world.tscn` (dan sorteren ze vanzelf met bomen en bergen), en laat `WorldView.draw_state()` ze bijwerken. Lichtbronnen van fakkels en huizen komen via `Simulation.light_sources()` vanzelf in beeld.
+- Art: alles is eigen pixelart, getekend door scripts in `tools/art/` (zie `tools/README.md`). Teken nieuwe sprites in dezelfde stijl en met dezelfde kleuren (constanten bovenin `make_world_art.gd` en `make_ui_art.gd`). Een nieuw gereedschap krijgt een icoon in `assets/ui/icons/` en `ToolData.icon`.
 - In-game knoppen hebben `focus_mode = None`: spatie en Tab zijn speltoetsen.
 
 ## Eigendom (voorkomt merge-conflicten)
