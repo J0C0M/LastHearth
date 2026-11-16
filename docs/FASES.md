@@ -5,8 +5,8 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 
 | Fase | Naam | Branch | Wie | Trello-kaart(en) | Week | Status |
 |---|---|---|---|---|---|---|
-| 0 | Projectopzet | `Project-Setup` | Jochem | PT-02, PT-04 (testframework) | 2, dag 1 | 🔍 In review |
-| 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | ⏳ Gepland |
+| 0 | Projectopzet | `Project-Setup` | Jochem | PT-02, PT-04 (testframework) | 2, dag 1 | ✅ Klaar |
+| 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | 🚧 Bezig |
 | 2 | Wereld, camera en interface | `World-View-And-UI` | 1 persoon (tegelijk met fase 3) | US-01, US-02, US-10 | 2 | ⏳ Gepland |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | 1 persoon (tegelijk met fase 2) | US-04 | 2 | ⏳ Gepland |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ⏳ Gepland |
@@ -41,7 +41,7 @@ Branch `Project-Setup` · Jochem · PT-02, PT-04
 - [x] `docs/FASES.md` (dit bestand)
 - [x] `CLAUDE.md` en `README.md`
 - [x] Trello-voorstel in `docs/trello-voorstel.md`
-- [ ] PR `Project-Setup` → `Development` gemerged
+- [x] PR `Project-Setup` → `Development` gemerged ([#1](https://github.com/J0C0M/LastHearth/pull/1))
 
 **Klaar als:** het project importeert en start zonder fouten, de smoke-test headless groen is en alle commits gesigned zijn.
 

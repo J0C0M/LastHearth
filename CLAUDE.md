@@ -13,8 +13,8 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 
 | Fase | Status | Wie |
 |---|---|---|
-| 0 Projectopzet | 🔍 In review: PR `Project-Setup` → `Development` | Jochem |
-| 1 Simulatiekern | ⏳ Volgende | Jochem |
+| 0 Projectopzet | ✅ Klaar (PR #1) | Jochem |
+| 1 Simulatiekern | 🚧 Bezig: branch `Simulation-Core` | Jochem |
 | 2–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Werk deze tabel bij aan het eind van elke fase.
