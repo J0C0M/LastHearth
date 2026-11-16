@@ -12,6 +12,7 @@ config_version=5
 
 config/name="Last Hearth"
 config/description="Keep the last hearth burning until dawn, or snuff it out as the darkness."
+run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
