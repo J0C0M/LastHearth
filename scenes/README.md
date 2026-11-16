@@ -5,8 +5,8 @@ Godot-scènes (`.tscn`). Scènes **tekenen** de simulatie en vangen invoer op. D
 | Map | Wat hoort erin |
 |---|---|
 | `main/` | `Main.tscn`: de hoofdscène met de spellus (`_process`), `start_level()` en `set_speed()` |
-| `world/` | `world.tscn` met `WorldView`: terrein- en gloom-`TileMapLayer`, `CanvasModulate`, `PointLight2D`, camera |
-| `ui/` | `ui.tscn` met `GameUI`, hoofdmenu, briefing en resultaatscherm |
+| `world/` | `world.tscn` met `WorldView`: terrein- en gloom-`TileMapLayer`, `CanvasModulate`, `PointLight2D`, `WorldCamera` |
+| `ui/` | `ui.tscn` (`GameUI`), `main_menu.tscn`, `briefing.tscn`, `result_screen.tscn` |
 | `entities/` | Scènes voor dorpelingen, vijanden en gebouwen (sprites en animaties) |
 
 - **Een `.tscn` bewerkt maar één persoon tegelijk.** Scènebestanden zijn lastig te mergen. Overleg in de groep voordat je een scène opent die van iemand anders is.

@@ -14,8 +14,9 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | Fase | Status | Wie |
 |---|---|---|
 | 0 Projectopzet | ✅ Klaar (PR #1) | Jochem |
-| 1 Simulatiekern | 🔍 In review: PR `Simulation-Core` → `Development` | Jochem |
-| 2 en 3 | ⏳ Volgende: kunnen tegelijk starten na de merge van fase 1 | zie `docs/FASES.md` |
+| 1 Simulatiekern | ✅ Klaar (PR #2) | Jochem |
+| 2 Wereld, camera en interface | 🔍 In review: PR `World-View-And-UI` → `Development` | Jochem |
+| 3 Dorp en vijanden | ⏳ Volgende | zie `docs/FASES.md` |
 | 4–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Werk deze tabel bij aan het eind van elke fase.
@@ -39,6 +40,15 @@ Werk deze tabel bij aan het eind van elke fase.
 - Vijanden (fase 3): `sim.flow_field.next_step(cell, flying)` is de volgende tegel richting de haard.
 - Uitbreiden (fase 3): zie de `# Fase 3:`-regels in `scripts/sim/simulation.gd` (in `tick()` en `_update_light()`).
 - Debuggen: `print("\n".join(sim.grid.to_rows()))` print de kaart als tekst.
+
+### Scènes (fase 2)
+
+- `scenes/main/Main.tscn` (`scripts/ui/main.gd`): spellus en schermen (menu → briefing → spelen → resultaat). Bevat:
+  - `World` = `scenes/world/world.tscn` (`WorldView`): lagen `Terrain`, `Gloom`, `Markers` (haard, putten), `Lights`, `Night`, `Overlay/BrushPreview`, `Camera`;
+  - `GameUI` = `scenes/ui/ui.tscn`: bovenbalk, werkbalk, melding, pauzescherm, `ResultScreen`;
+  - `Menus`: `main_menu.tscn` en `briefing.tscn`.
+- Fase 3: zet sprites van dorpelingen, vijanden en gebouwen in een nieuwe `Node2D` tussen `Gloom` en `Markers` in `world.tscn`, en laat `WorldView.draw_state()` ze bijwerken. Lichtbronnen van fakkels en huizen komen via `Simulation.light_sources()` vanzelf in beeld.
+- In-game knoppen hebben `focus_mode = None`: spatie en Tab zijn speltoetsen.
 
 ## Eigendom (voorkomt merge-conflicten)
 

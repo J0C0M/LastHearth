@@ -7,6 +7,7 @@ Instellingen als Godot-resources (`.tres`). Hiermee pas je de balans aan in de I
 | `levels/` | Eén bestand per level: duur tot de dageraad, startgrondstof, regeneratie, haard-hp, gloom-snelheid, max. huizen, lijst met gereedschappen, briefingtekst | `LevelData` |
 | `tools/` | Eén bestand per gereedschap: naam, kosten, beschrijving | `ToolData` |
 | `enemies/` | Eén bestand per vijandtype (schaduw, brute, geest): hp, snelheid, schade, bereik, lichtgevoeligheid, vliegen | `EnemyData` |
+| `ui/` | `theme.tres`: kleuren, lettergrootte en knopstijlen van de interface (ingesteld voor het hele project) | `Theme` |
 
 - De klassen staan in `scripts/data/`.
 - Bestandsnamen in `snake_case`: `level_1.tres`, `tool_torch.tres`, `enemy_brute.tres`.

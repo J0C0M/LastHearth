@@ -53,12 +53,14 @@ Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via h
 | Gereedschap kiezen | `1` – `7` |
 | Penseel kleiner / groter | `[` / `]` |
 | Schilderen met gereedschap | linkermuisknop |
-| Pauze | spatie |
+| Pauze (schilderen mag dan nog) | spatie of Esc |
 | Snelheid 1x / 2x / 3x | Tab |
-| Camera bewegen | WASD of pijltjestoetsen |
+| Camera bewegen | WASD, pijltjestoetsen of slepen met de middelste muisknop |
 | Zoomen | scrollwiel |
 
-Alle toetsen staan in de InputMap (Project → Project Settings → Input Map).
+Alle toetsen staan in de InputMap (Project → Project Settings → Input Map). Ga met de muis over een gereedschap voor uitleg en kosten.
+
+Het spel start in het hoofdmenu: kies een level, lees de briefing en begin de nacht. Vanuit de editor (debug build) staat ook het testlevel in het menu.
 
 ## Mappen
 

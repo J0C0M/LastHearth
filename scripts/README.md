@@ -7,8 +7,8 @@ Alle GDScript-code. De mappen volgen de drie lagen uit het design document: simu
 | `data/` | `LevelData`, `ToolData`, `EnemyData` | `Resource` |
 | `sim/` | Pure spellogica. Fase 1: `Simulation`, `WorldGrid`, `LightSource`, `MapGen`, `MapLayout`, `FlowField`, `Hearth`. Fase 3: `WaveSpawner`, `VillagePlanner`, `Entity`, `Villager`, `Enemy`, `Building`, `House`, `Torch` | `RefCounted` |
 | `sim/levels/` | Levelspecifieke logica: `level_1_*.gd` (duo A) en `level_2_*.gd` (duo B). Nu: `level_1_map.gd` en `level_2_map.gd` (kaartindeling) | `RefCounted` |
-| `view/` | `WorldView` en sprite-scripts: lezen de simulatie en tekenen die | `Node2D` e.d. |
-| `ui/` | `GameUI` en menu's: invoer en schermen, roepen `use_tool()` aan | `Control` / `CanvasLayer` |
+| `view/` | `WorldView`, `WorldCamera`, `BrushPreview`: lezen de simulatie en tekenen die | `Node2D` / `Camera2D` |
+| `ui/` | `Main` (spellus), `GameUI`, `MainMenu`, `Briefing`, `ResultScreen`: invoer en schermen, roepen `use_tool()` aan | `Node` / `CanvasLayer` / `Control` |
 
 ## Harde regel voor `sim/`
 
