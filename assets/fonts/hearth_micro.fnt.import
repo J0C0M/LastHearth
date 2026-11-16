@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://b8yb717b1r3hg"
+path="res://.godot/imported/hearth_micro.fnt-4c3e14e05c1d6e3b3be1c83ee6485990.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/hearth_micro.fnt"
+dest_files=["res://.godot/imported/hearth_micro.fnt-4c3e14e05c1d6e3b3be1c83ee6485990.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2
