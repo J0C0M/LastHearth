@@ -1,0 +1,73 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
+[ext_resource type="Script" path="res://scripts/data/level_data.gd" id="2_level_data"]
+[ext_resource type="Resource" path="res://resources/levels/level_1.tres" id="3_level_1"]
+[ext_resource type="Resource" path="res://resources/levels/level_2.tres" id="4_level_2"]
+[ext_resource type="Resource" path="res://resources/levels/test_level.tres" id="5_test_level"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hearth.png" id="6_hearth"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+levels = Array[ExtResource("2_level_data")]([ExtResource("3_level_1"), ExtResource("4_level_2")])
+test_level = ExtResource("5_test_level")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.04, 0.09, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Hearth" type="TextureRect" parent="Center/Box"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("6_hearth")
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Center/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.42, 1)
+theme_override_font_sizes/font_size = 30
+text = "Last Hearth"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Box"]
+layout_mode = 2
+text = "Keep the last fire alive, or snuff it out."
+horizontal_alignment = 1
+
+[node name="Gap" type="Control" parent="Center/Box"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="LevelButtons" type="VBoxContainer" parent="Center/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="QuitButton" type="Button" parent="Center/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quit"
