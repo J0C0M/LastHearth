@@ -1,0 +1,297 @@
+extends GdUnitTestSuite
+
+const Terrain := WorldGrid.Terrain
+const Kind := ToolData.Kind
+const Goal := LevelData.Goal
+
+## P = pit, H = hearth (both on grass).
+const OPEN_MAP: Array[String] = [
+	"P.........",
+	"..........",
+	"....H.....",
+	"..........",
+	".........P",
+]
+
+
+func _level(goal: Goal = Goal.DEFEND) -> LevelData:
+	var level := LevelData.new()
+	level.goal = goal
+	level.dawn_time = 100.0
+	level.start_resource = 10.0
+	level.max_resource = 50.0
+	level.regen = 2.0
+	level.hearth_hp = 20.0
+	level.gloom_speed = 0.5
+	return level
+
+
+func _sim(rows: Array[String] = OPEN_MAP, level: LevelData = _level()) -> Simulation:
+	var packed := PackedStringArray(rows)
+	return Simulation.new(level, WorldGrid.from_rows(packed), MapLayout.from_rows(packed))
+
+
+func _tool(kind: Kind, cost: float = 1.0) -> ToolData:
+	var tool := ToolData.new()
+	tool.kind = kind
+	tool.cost = cost
+	return tool
+
+
+# --- Start of a round ---------------------------------------------------------
+
+func test_round_starts_with_the_level_values() -> void:
+	var sim := _sim()
+	assert_float(sim.resource).is_equal(10.0)
+	assert_float(sim.time_left).is_equal(100.0)
+	assert_that(sim.hearth.cell).is_equal(Vector2i(4, 2))
+	assert_float(sim.hearth.health).is_equal(20.0)
+	assert_int(sim.flow_field.distance(Vector2i(0, 0))).is_equal(6)
+	assert_bool(sim.is_over()).is_false()
+
+
+func test_round_from_test_level_resource_generates_the_map() -> void:
+	var sim := Simulation.new(load("res://resources/levels/test_level.tres") as LevelData)
+	assert_that(sim.grid.size).is_equal(Vector2i(96, 60))
+	assert_that(sim.hearth.cell).is_equal(Vector2i(48, 30))
+	assert_int(sim.layout.pits.size()).is_equal(3)
+	for pit: Vector2i in sim.layout.pits:
+		assert_bool(sim.flow_field.is_reachable(pit)).is_true()
+
+
+# --- tick: resource, clock, gloom ---------------------------------------------
+
+func test_resource_regenerates_up_to_the_maximum() -> void:
+	var sim := _sim()
+	sim.tick(5.0)
+	assert_float(sim.resource).is_equal_approx(20.0, 0.0001)
+	for i: int in 30:
+		sim.tick(1.0)
+	assert_float(sim.resource).is_equal(50.0)
+
+
+func test_clock_counts_down_and_stops_at_zero() -> void:
+	var sim := _sim()
+	sim.tick(30.0)
+	assert_float(sim.time_left).is_equal_approx(70.0, 0.0001)
+	assert_float(sim.elapsed).is_equal_approx(30.0, 0.0001)
+	sim.tick(500.0)
+	assert_float(sim.time_left).is_equal(0.0)
+
+
+func test_pits_feed_gloom_that_spreads() -> void:
+	# Wide map: the pit must be outside the hearth's light (radius 8).
+	var sim := _sim([
+		"P.......................",
+		"......................H.",
+	])
+	assert_float(sim.grid.get_gloom(Vector2i(0, 0))).is_equal(1.0)
+	sim.tick(1.0)
+	assert_float(sim.grid.get_gloom(Vector2i(1, 0))).is_equal_approx(0.5, 0.0001)
+
+
+func test_gloom_cannot_grow_inside_the_hearth_light() -> void:
+	# Small map: everything is within the hearth's light, even the pit.
+	var sim := _sim()
+	sim.tick(1.0)
+	assert_float(sim.grid.get_gloom(Vector2i(1, 0))).is_equal(0.0)
+
+
+func test_hearth_light_keeps_gloom_away() -> void:
+	var sim := _sim()
+	for i: int in 40:
+		sim.tick(1.0)
+	assert_float(sim.grid.get_light(sim.hearth.cell)).is_equal(1.0)
+	assert_float(sim.grid.get_gloom(sim.hearth.cell)).is_equal(0.0)
+
+
+# --- Winning and losing -------------------------------------------------------
+
+func test_defend_level_is_won_at_dawn_with_the_hearth_burning() -> void:
+	var sim := _sim()
+	sim.tick(99.0)
+	assert_bool(sim.is_won()).is_false()
+	sim.tick(1.0)
+	assert_bool(sim.is_won()).is_true()
+	assert_bool(sim.is_lost()).is_false()
+
+
+func test_defend_level_is_lost_when_the_hearth_goes_out() -> void:
+	var sim := _sim()
+	sim.hearth.damage(20.0)
+	assert_bool(sim.is_lost()).is_true()
+	assert_bool(sim.is_won()).is_false()
+
+
+func test_extinguish_level_is_won_when_the_hearth_goes_out_before_dawn() -> void:
+	var sim := _sim(OPEN_MAP, _level(Goal.EXTINGUISH))
+	sim.tick(50.0)
+	sim.hearth.damage(20.0)
+	assert_bool(sim.is_won()).is_true()
+	assert_bool(sim.is_lost()).is_false()
+
+
+func test_extinguish_level_is_lost_at_dawn_with_the_hearth_burning() -> void:
+	var sim := _sim(OPEN_MAP, _level(Goal.EXTINGUISH))
+	sim.tick(100.0)
+	assert_bool(sim.is_lost()).is_true()
+	assert_bool(sim.is_won()).is_false()
+
+
+func test_level_finished_is_emitted_once_with_the_result() -> void:
+	var sim := _sim(OPEN_MAP, _level(Goal.EXTINGUISH))
+	var results: Array[bool] = []
+	sim.level_finished.connect(func(won: bool) -> void: results.append(won))
+	sim.hearth.damage(20.0)
+	sim.tick(0.1)
+	sim.tick(0.1)
+	assert_array(results).contains_exactly([true])
+
+
+func test_nothing_changes_after_the_round_is_over() -> void:
+	var sim := _sim()
+	sim.tick(100.0)
+	var resource := sim.resource
+	sim.tick(10.0)
+	assert_float(sim.elapsed).is_equal_approx(100.0, 0.0001)
+	assert_float(sim.resource).is_equal(resource)
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(2, 2))).is_false()
+
+
+# --- use_tool: terrain --------------------------------------------------------
+
+func test_terrain_tool_paints_the_tile_and_costs_resource() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.WATER, 2.0), Vector2i(7, 1))).is_true()
+	assert_int(sim.grid.get_tile(Vector2i(7, 1))).is_equal(Terrain.WATER)
+	assert_float(sim.resource).is_equal(8.0)
+
+
+func test_tool_is_refused_without_enough_resource() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.MOUNTAIN, 11.0), Vector2i(7, 1))).is_false()
+	assert_int(sim.grid.get_tile(Vector2i(7, 1))).is_equal(Terrain.GRASS)
+	assert_float(sim.resource).is_equal(10.0)
+
+
+func test_painting_the_same_terrain_is_free_and_reports_no_change() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.LAND), Vector2i(7, 1))).is_false()
+	assert_float(sim.resource).is_equal(10.0)
+
+
+func test_brush_paints_every_tile_and_charges_each() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.FOREST), Vector2i(7, 2), 1)).is_true()
+	for cell: Vector2i in Simulation.brush_cells(Vector2i(7, 2), 1):
+		assert_int(sim.grid.get_tile(cell)).is_equal(Terrain.FOREST)
+	assert_float(sim.resource).is_equal(1.0)
+
+
+func test_brush_stops_when_the_resource_runs_out() -> void:
+	var sim := _sim()
+	sim.resource = 3.0
+	assert_bool(sim.use_tool(_tool(Kind.FOREST), Vector2i(7, 2), 1)).is_true()
+	var forest := 0
+	for cell: Vector2i in Simulation.brush_cells(Vector2i(7, 2), 1):
+		if sim.grid.get_tile(cell) == Terrain.FOREST:
+			forest += 1
+	assert_int(forest).is_equal(3)
+	# Nearest first: the centre is always painted.
+	assert_int(sim.grid.get_tile(Vector2i(7, 2))).is_equal(Terrain.FOREST)
+	assert_float(sim.resource).is_equal(0.0)
+
+
+func test_hearth_and_pits_cannot_be_painted() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(4, 2))).is_false()
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(0, 0))).is_false()
+	assert_float(sim.resource).is_equal(10.0)
+
+
+func test_drain_turns_only_water_into_sand() -> void:
+	var sim := _sim([
+		"P...~.....",
+		"....~.....",
+		"....H.....",
+	])
+	assert_bool(sim.use_tool(_tool(Kind.DRAIN), Vector2i(4, 0))).is_true()
+	assert_int(sim.grid.get_tile(Vector2i(4, 0))).is_equal(Terrain.SAND)
+	assert_bool(sim.use_tool(_tool(Kind.DRAIN), Vector2i(6, 0))).is_false()
+
+
+func test_rubble_turns_only_mountains_into_sand() -> void:
+	var sim := _sim([
+		"P...^.....",
+		"....^.....",
+		"....H.....",
+	])
+	assert_bool(sim.use_tool(_tool(Kind.RUBBLE), Vector2i(4, 1))).is_true()
+	assert_int(sim.grid.get_tile(Vector2i(4, 1))).is_equal(Terrain.SAND)
+	assert_bool(sim.use_tool(_tool(Kind.RUBBLE), Vector2i(6, 1))).is_false()
+
+
+func test_painting_updates_the_flow_field() -> void:
+	var sim := _sim([
+		".....",
+		"P...H",
+		".....",
+	])
+	assert_int(sim.flow_field.distance(Vector2i(0, 1))).is_equal(4)
+	sim.use_tool(_tool(Kind.MOUNTAIN), Vector2i(2, 1))
+	assert_int(sim.flow_field.distance(Vector2i(0, 1))).is_equal(6)
+
+
+func test_cutting_a_pit_off_from_the_hearth_is_refused_and_free() -> void:
+	var sim := _sim([
+		"P.^.....",
+		"..^.....",
+		"..^..H..",
+		"..^.....",
+		"........",
+	])
+	assert_bool(sim.use_tool(_tool(Kind.MOUNTAIN), Vector2i(2, 4))).is_false()
+	assert_int(sim.grid.get_tile(Vector2i(2, 4))).is_equal(Terrain.GRASS)
+	assert_float(sim.resource).is_equal(10.0)
+	assert_bool(sim.flow_field.is_reachable(Vector2i(0, 0))).is_true()
+
+
+func test_tile_changed_is_emitted_for_every_changed_tile() -> void:
+	var sim := _sim()
+	var cells: Array[Vector2i] = []
+	sim.tile_changed.connect(func(cell: Vector2i) -> void: cells.append(cell))
+	sim.use_tool(_tool(Kind.WATER), Vector2i(7, 2), 1)
+	assert_int(cells.size()).is_equal(9)
+
+
+func test_tools_from_later_phases_are_refused_for_now() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.TORCH, 1.0), Vector2i(7, 2))).is_false()
+	assert_float(sim.resource).is_equal(10.0)
+
+
+func test_tool_outside_the_map_is_refused() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(-1, 0))).is_false()
+
+
+# --- brush_cells --------------------------------------------------------------
+
+func test_brush_cells_grow_with_the_radius_nearest_first() -> void:
+	assert_array(Simulation.brush_cells(Vector2i(5, 5), 0)).contains_exactly([Vector2i(5, 5)])
+	var cells := Simulation.brush_cells(Vector2i(5, 5), 1)
+	assert_int(cells.size()).is_equal(9)
+	assert_that(cells[0]).is_equal(Vector2i(5, 5))
+	assert_int(Simulation.brush_cells(Vector2i(5, 5), 2).size()).is_equal(21)
+
+
+# --- Performance --------------------------------------------------------------
+
+func test_tick_on_the_full_map_is_fast_enough() -> void:
+	var sim := Simulation.new(load("res://resources/levels/test_level.tres") as LevelData)
+	var start := Time.get_ticks_usec()
+	for i: int in 60:
+		sim.tick(1.0 / 60.0)
+	var per_tick_ms := (Time.get_ticks_usec() - start) / 1000.0 / 60.0
+	# One frame at 60 fps is 16.7 ms; the simulation should use well under half.
+	assert_float(per_tick_ms).is_less(8.0)
