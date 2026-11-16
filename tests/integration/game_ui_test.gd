@@ -56,10 +56,22 @@ func _action(action: StringName, pressed: bool = true) -> InputEventAction:
 	return event
 
 
-func test_toolbar_has_a_button_per_level_tool() -> void:
+func test_toolbar_has_a_slot_per_level_tool() -> void:
 	var ui := _setup()
 	assert_int(ui.tools_box.get_child_count()).is_equal(3)
-	assert_str((ui.tools_box.get_child(0) as Button).text).is_equal("1 Water 1")
+	var slot := ui.tools_box.get_child(2) as Button
+	assert_str(slot.tooltip_text).is_equal("Torch (3)")
+	# Hotkey top left, cost bottom right.
+	assert_str((slot.get_child(0) as Label).text).is_equal("3")
+	assert_str((slot.get_child(1) as Label).text).is_equal("30")
+
+
+func test_selected_tool_is_described_in_the_info_strip() -> void:
+	var ui := _setup()
+	ui.select_tool(1)
+	assert_str(ui.tool_name_label.text).is_equal("Mountain")
+	assert_str(ui.tool_cost_label.text).is_equal("1 Light per tile")
+	assert_str(ui.tool_description_label.text).is_equal("Test tool.")
 
 
 func test_first_tool_is_selected_at_the_start() -> void:
@@ -121,9 +133,13 @@ func test_tool_that_does_nothing_shows_no_message() -> void:
 func test_refresh_shows_resource_and_clock() -> void:
 	var ui := _setup()
 	ui.refresh()
-	assert_str(ui.resource_value_label.text).is_equal("20 / 50")
-	assert_str(ui.clock_label.text).is_equal("Dawn in 1:40")
+	assert_str(ui.resource_value_label.text).is_equal("20/50")
+	assert_str(ui.clock_label.text).is_equal("1:40 until dawn")
 	assert_float(ui.resource_bar.value).is_equal(20.0)
+	assert_float(ui.night_bar.value).is_equal(0.0)
+	ui.sim.tick(25.0)
+	ui.refresh()
+	assert_float(ui.night_bar.value).is_equal_approx(0.25, 0.0001)
 
 
 func test_format_time_rounds_up_to_whole_seconds() -> void:
@@ -137,19 +153,20 @@ func test_pause_and_speed_buttons_ask_main() -> void:
 	var ui := _setup()
 	var asked: Array[String] = []
 	ui.pause_requested.connect(func() -> void: asked.append("pause"))
-	ui.speed_requested.connect(func() -> void: asked.append("speed"))
+	ui.speed_chosen.connect(func(speed: int) -> void: asked.append("speed %d" % speed))
 	ui.pause_button.pressed.emit()
-	ui.speed_button.pressed.emit()
-	assert_array(asked).contains_exactly(["pause", "speed"])
+	ui.speed_buttons[2].pressed.emit()
+	assert_array(asked).contains_exactly(["pause", "speed 3"])
 
 
 func test_show_paused_and_show_speed_update_the_buttons() -> void:
 	var ui := _setup()
 	ui.show_paused(true)
 	assert_bool(ui.paused_overlay.visible).is_true()
-	assert_str(ui.pause_button.text).is_equal("Resume")
+	assert_object(ui.pause_button.icon).is_same(GameUI.ICON_PLAY)
 	ui.show_speed(3)
-	assert_str(ui.speed_button.text).is_equal("3x")
+	assert_bool(ui.speed_buttons[2].button_pressed).is_true()
+	assert_bool(ui.speed_buttons[0].button_pressed).is_false()
 
 
 func test_result_screen_shows_the_outcome() -> void:
@@ -157,7 +174,9 @@ func test_result_screen_shows_the_outcome() -> void:
 	ui.show_result(true, 2)
 	assert_bool(ui.result_screen.visible).is_true()
 	assert_str(ui.result_screen.title_label.text).is_equal("Dawn breaks")
-	assert_str(ui.result_screen.stars_label.text).is_equal("Stars: 2 / 3")
+	assert_int(ui.result_screen.stars).is_equal(2)
+	assert_object(ui.result_screen.star_icons[1].texture).is_same(ResultScreen.STAR)
+	assert_object(ui.result_screen.star_icons[2].texture).is_same(ResultScreen.STAR_EMPTY)
 
 
 func test_setup_again_rebuilds_the_toolbar() -> void:

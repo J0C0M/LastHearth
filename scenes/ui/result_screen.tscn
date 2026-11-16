@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/result_screen.gd" id="1_result"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/star_empty.png" id="2_star"]
 
 [node name="ResultScreen" type="Control"]
 layout_mode = 3
@@ -18,7 +19,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.55)
+color = Color(0.02, 0.01, 0.05, 0.6)
 
 [node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -40,7 +41,7 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0.45, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "Dawn breaks"
 horizontal_alignment = 1
 
@@ -51,11 +52,31 @@ text = "The hearth burned through the night."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Stars" type="Label" parent="Center/Panel/Box"]
-unique_name_in_owner = true
+[node name="Stars" type="HBoxContainer" parent="Center/Panel/Box"]
 layout_mode = 2
-text = "Stars: 0 / 3"
-horizontal_alignment = 1
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="Star1" type="TextureRect" parent="Center/Panel/Box/Stars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_star")
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="Center/Panel/Box/Stars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_star")
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="Center/Panel/Box/Stars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("2_star")
+stretch_mode = 5
 
 [node name="Buttons" type="HBoxContainer" parent="Center/Panel/Box"]
 layout_mode = 2

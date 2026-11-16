@@ -1,21 +1,31 @@
 class_name GameUI
 extends CanvasLayer
-## The in-game interface: toolbar, brush size, resource bar, clock to dawn,
-## pause and speed buttons, messages and the result screen.
-## It turns mouse clicks into Simulation.use_tool() calls on the tile under
-## the mouse. Pause and speed are handled by Main (GameUI only asks).
+## The in-game interface: the resource plate, the night clock, pause and speed
+## buttons, the toolbar with tool icons, the tool info strip, messages and the
+## result screen. It turns mouse clicks into Simulation.use_tool() calls on
+## the tile under the mouse. Pause and speed are handled by Main (GameUI asks).
 ##
 ## Toetsen: 1-7 kiezen een gereedschap, [ en ] veranderen de penseelgrootte,
 ## de linkermuisknop schildert (ook slepen).
 
 signal pause_requested
-signal speed_requested
+## The player clicked a speed button (1, 2 or 3).
+signal speed_chosen(speed: int)
 signal menu_requested
 signal retry_requested
 
 ## Largest brush radius in tiles (brush size 1 = radius 0 = one tile).
 const MAX_BRUSH := 4
 const MESSAGE_TIME := 2.5
+const TOOL_SLOT_SIZE := Vector2(24, 24)
+const ICON_PAUSE := preload("res://assets/ui/icons/pause.png")
+const ICON_PLAY := preload("res://assets/ui/icons/speed_1.png")
+const BAR_LIGHT := preload("res://assets/ui/bar_light.png")
+const BAR_DREAD := preload("res://assets/ui/bar_dread.png")
+const MICRO_FONT := preload("res://assets/fonts/hearth_micro.fnt")
+const MICRO_SIZE := 6
+const COST_OK := Color(1.0, 0.86, 0.52)
+const COST_TOO_HIGH := Color(0.85, 0.36, 0.3)
 
 var sim: Simulation
 var world_view: WorldView
@@ -27,16 +37,22 @@ var _painting := false
 var _last_paint_cell := Vector2i(-1, -1)
 var _message_left := 0.0
 var _tool_buttons: Array[Button] = []
+var _cost_labels: Array[Label] = []
 var _tool_group := ButtonGroup.new()
 
+@onready var resource_icon: TextureRect = %ResourceIcon
 @onready var resource_name_label: Label = %ResourceName
 @onready var resource_bar: ProgressBar = %ResourceBar
 @onready var resource_value_label: Label = %ResourceValue
+@onready var night_bar: ProgressBar = %NightBar
 @onready var clock_label: Label = %Clock
 @onready var pause_button: Button = %PauseButton
-@onready var speed_button: Button = %SpeedButton
+@onready var speed_buttons: Array[Button] = [$SpeedPlate/Row/Speed1, $SpeedPlate/Row/Speed2, $SpeedPlate/Row/Speed3]
 @onready var tools_box: HBoxContainer = %Tools
 @onready var brush_label: Label = %BrushLabel
+@onready var tool_name_label: Label = %ToolName
+@onready var tool_cost_label: Label = %ToolCost
+@onready var tool_description_label: Label = %ToolDescription
 @onready var message_label: Label = %Message
 @onready var paused_overlay: Control = %PausedOverlay
 @onready var resume_button: Button = %ResumeButton
@@ -46,7 +62,8 @@ var _tool_group := ButtonGroup.new()
 
 func _ready() -> void:
 	pause_button.pressed.connect(pause_requested.emit)
-	speed_button.pressed.connect(speed_requested.emit)
+	for i: int in speed_buttons.size():
+		speed_buttons[i].pressed.connect(speed_chosen.emit.bind(i + 1))
 	resume_button.pressed.connect(pause_requested.emit)
 	paused_menu_button.pressed.connect(menu_requested.emit)
 	result_screen.retry_requested.connect(retry_requested.emit)
@@ -60,6 +77,11 @@ func setup(simulation: Simulation, view: WorldView) -> void:
 	_painting = false
 	brush_size = 1
 	resource_name_label.text = sim.level.resource_label
+	if sim.level.resource_icon != null:
+		resource_icon.texture = sim.level.resource_icon
+	var fill := resource_bar.get_theme_stylebox("fill").duplicate() as StyleBoxTexture
+	fill.texture = BAR_DREAD if sim.level.goal == LevelData.Goal.EXTINGUISH else BAR_LIGHT
+	resource_bar.add_theme_stylebox_override("fill", fill)
 	_build_toolbar()
 	select_tool(0)
 	message_label.text = ""
@@ -75,12 +97,14 @@ func refresh() -> void:
 		return
 	resource_bar.max_value = sim.level.max_resource
 	resource_bar.value = sim.resource
-	resource_value_label.text = "%d / %d" % [floori(sim.resource), roundi(sim.level.max_resource)]
-	clock_label.text = "Dawn in %s" % format_time(sim.time_left)
-	brush_label.text = "Brush %d  [ ]" % (brush_size + 1)
+	resource_value_label.text = "%d/%d" % [floori(sim.resource), roundi(sim.level.max_resource)]
+	night_bar.value = 1.0 - sim.time_left / maxf(sim.level.dawn_time, 0.001)
+	clock_label.text = "%s until dawn" % format_time(sim.time_left)
+	brush_label.text = str(brush_size + 1)
 	for i: int in _tool_buttons.size():
-		var tool := sim.level.tools[i]
-		_tool_buttons[i].modulate = Color.WHITE if sim.resource >= tool.cost else Color(1, 1, 1, 0.45)
+		var affordable := sim.resource >= sim.level.tools[i].cost
+		_tool_buttons[i].modulate = Color.WHITE if affordable else Color(0.6, 0.55, 0.6)
+		_cost_labels[i].add_theme_color_override("font_color", COST_OK if affordable else COST_TOO_HIGH)
 	_update_brush_preview()
 
 
@@ -89,6 +113,10 @@ func select_tool(index: int) -> void:
 		return
 	selected_tool = sim.level.tools[index]
 	_tool_buttons[index].button_pressed = true
+	tool_name_label.text = selected_tool.name
+	tool_cost_label.text = "%s %s%s" % [_cost_text(selected_tool.cost), sim.level.resource_label,
+		" per tile" if selected_tool.is_terrain_tool() else ""]
+	tool_description_label.text = selected_tool.description
 
 
 func change_brush(step: int) -> void:
@@ -107,13 +135,16 @@ func paint_at(cell: Vector2i) -> bool:
 	return used
 
 
+## Shows which speed is active (1, 2 or 3).
 func show_speed(speed: int) -> void:
-	speed_button.text = "%dx" % speed
+	var index := clampi(speed, 1, speed_buttons.size()) - 1
+	speed_buttons[index].button_pressed = true
 
 
 func show_paused(paused: bool) -> void:
 	paused_overlay.visible = paused
-	pause_button.text = "Resume" if paused else "Pause"
+	pause_button.icon = ICON_PLAY if paused else ICON_PAUSE
+	pause_button.tooltip_text = "Resume (Space)" if paused else "Pause (Space)"
 
 
 func show_message(text: String) -> void:
@@ -198,20 +229,44 @@ func _build_toolbar() -> void:
 		tools_box.remove_child(button)
 		button.queue_free()
 	_tool_buttons.clear()
+	_cost_labels.clear()
 	for i: int in sim.level.tools.size():
-		var tool := sim.level.tools[i]
-		var button := Button.new()
-		button.text = "%d %s %s" % [i + 1, tool.name, _cost_text(tool.cost)]
-		button.tooltip_text = "%s\nCost: %s %s%s" % [
-			tool.description, _cost_text(tool.cost), sim.level.resource_label,
-			" per tile" if tool.is_terrain_tool() else ""]
-		button.toggle_mode = true
-		button.button_group = _tool_group
-		# No keyboard focus: space and tab are game keys (pause, speed).
-		button.focus_mode = Control.FOCUS_NONE
-		button.pressed.connect(select_tool.bind(i))
+		var button := _make_tool_slot(i, sim.level.tools[i])
 		tools_box.add_child(button)
 		_tool_buttons.append(button)
+
+
+## A toolbar slot: the tool icon, its hotkey top left and its cost bottom right.
+func _make_tool_slot(index: int, tool: ToolData) -> Button:
+	var button := Button.new()
+	button.theme_type_variation = &"ToolSlot"
+	button.custom_minimum_size = TOOL_SLOT_SIZE
+	button.icon = tool.icon
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.toggle_mode = true
+	button.button_group = _tool_group
+	# No keyboard focus: space and tab are game keys (pause, speed).
+	button.focus_mode = Control.FOCUS_NONE
+	button.tooltip_text = "%s (%d)" % [tool.name, index + 1]
+	button.pressed.connect(select_tool.bind(index))
+	button.add_child(_micro_label(str(index + 1), Vector2(3, 2), Color(0.75, 0.7, 0.66)))
+	var cost := _micro_label(_cost_text(tool.cost), Vector2(0, 17), COST_OK)
+	cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	cost.size = Vector2(TOOL_SLOT_SIZE.x - 3, 6)
+	button.add_child(cost)
+	_cost_labels.append(cost)
+	return button
+
+
+func _micro_label(text: String, at: Vector2, color: Color) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.position = at
+	label.add_theme_font_override("font", MICRO_FONT)
+	label.add_theme_font_size_override("font_size", MICRO_SIZE)
+	label.add_theme_color_override("font_color", color)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return label
 
 
 func _update_brush_preview() -> void:

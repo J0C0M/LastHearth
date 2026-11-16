@@ -28,7 +28,7 @@ func _ready() -> void:
 	briefing.start_requested.connect(begin_round)
 	briefing.back_requested.connect(show_menu)
 	ui.pause_requested.connect(toggle_pause)
-	ui.speed_requested.connect(cycle_speed)
+	ui.speed_chosen.connect(set_speed)
 	ui.menu_requested.connect(show_menu)
 	ui.retry_requested.connect(func() -> void: start_level(sim.level))
 	show_menu()

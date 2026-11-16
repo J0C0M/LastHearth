@@ -89,7 +89,7 @@ func test_speed_cycles_through_1x_2x_3x() -> void:
 	assert_float(Engine.time_scale).is_equal(2.0)
 	main.cycle_speed()
 	assert_float(Engine.time_scale).is_equal(3.0)
-	assert_str(main.ui.speed_button.text).is_equal("3x")
+	assert_bool(main.ui.speed_buttons[2].button_pressed).is_true()
 	main.cycle_speed()
 	assert_float(Engine.time_scale).is_equal(1.0)
 
