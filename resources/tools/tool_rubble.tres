@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="ToolData" format=3]
 
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_5a1mm"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_rubble.png" id="1_06wu2"]
 
 [resource]
 script = ExtResource("1_5a1mm")
@@ -8,4 +9,5 @@ id = &"rubble"
 name = "Rubble"
 kind = 9
 cost = 1.5
+icon = ExtResource("1_06wu2")
 description = "Break a mountain down into rubble you can walk on."

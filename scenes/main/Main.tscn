@@ -1,31 +1,26 @@
 [gd_scene format=3]
 
-[node name="Main" type="Control" unique_id=651652748]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[ext_resource type="Script" path="res://scripts/ui/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/world/world.tscn" id="2_world"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ui.tscn" id="3_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/main_menu.tscn" id="4_menu"]
+[ext_resource type="PackedScene" path="res://scenes/ui/briefing.tscn" id="5_briefing"]
 
-[node name="Background" type="ColorRect" parent="." unique_id=1250512191]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.078431375, 0.0627451, 0.12156863, 1)
+[node name="Main" type="Node"]
+process_mode = 3
+script = ExtResource("1_main")
 
-[node name="Title" type="Label" parent="." unique_id=1631096382]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 32
-theme_override_colors/font_color = Color(1, 0.81960785, 0.4, 1)
-text = "Last Hearth"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="World" parent="." instance=ExtResource("2_world")]
+process_mode = 1
+visible = false
+
+[node name="GameUI" parent="." instance=ExtResource("3_ui")]
+visible = false
+
+[node name="Menus" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="MainMenu" parent="Menus" instance=ExtResource("4_menu")]
+
+[node name="Briefing" parent="Menus" instance=ExtResource("5_briefing")]
+visible = false

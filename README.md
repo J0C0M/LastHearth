@@ -53,12 +53,14 @@ Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via h
 | Gereedschap kiezen | `1` – `7` |
 | Penseel kleiner / groter | `[` / `]` |
 | Schilderen met gereedschap | linkermuisknop |
-| Pauze | spatie |
+| Pauze (schilderen mag dan nog) | spatie of Esc |
 | Snelheid 1x / 2x / 3x | Tab |
-| Camera bewegen | WASD of pijltjestoetsen |
+| Camera bewegen | WASD, pijltjestoetsen of slepen met de middelste muisknop |
 | Zoomen | scrollwiel |
 
-Alle toetsen staan in de InputMap (Project → Project Settings → Input Map).
+Alle toetsen staan in de InputMap (Project → Project Settings → Input Map). Ga met de muis over een gereedschap voor uitleg en kosten.
+
+Het spel start in het hoofdmenu: kies een level, lees de briefing en begin de nacht. Vanuit de editor (debug build) staat ook het testlevel in het menu.
 
 ## Mappen
 
@@ -74,6 +76,7 @@ scripts/
   view/           WorldView en sprites
   ui/             GameUI en menu's
 tests/            unit/, integration/, bots/
+tools/art/        scripts die alle pixelart en lettertypen tekenen
 docs/             design.md, FASES.md, ontwerp/, testen/
 ```
 
@@ -104,4 +107,4 @@ Fase 0 en 1 (projectopzet en simulatiekern): Jochem (J0C0M). Fase 2 (wereld en i
 
 ## Licentie en credits
 
-Externe assets en hun licenties staan in [`assets/CREDITS.md`](assets/CREDITS.md). gdUnit4 valt onder de MIT-licentie (`addons/gdUnit4/LICENSE`).
+Alle pixelart en de lettertypen zijn eigen werk (CC0), getekend door scripts in [`tools/art/`](tools/README.md); zie [`assets/CREDITS.md`](assets/CREDITS.md). gdUnit4 valt onder de MIT-licentie (`addons/gdUnit4/LICENSE`).

@@ -5,15 +5,28 @@ extends RefCounted
 ## WorldView reads [member grid], [member hearth] and the rest to draw.
 ##
 ## Fase 3 voegt dorpelingen, vijanden, gebouwen, VillagePlanner en WaveSpawner
-## toe aan tick(). Fase 4A/4B voegen de overige gereedschappen en stars() toe.
+## toe aan tick(). Fase 4A/4B voegen de overige gereedschappen toe en vullen stars() in.
 
 ## A terrain tool changed [param cell]. WorldView redraws that tile.
 signal tile_changed(cell: Vector2i)
 ## The round is over: [param won] tells whether the player won.
 signal level_finished(won: bool)
 
+## Why the last [method use_tool] call did nothing. GameUI shows a message for it.
+enum Refusal {
+	NONE, ## The tool was used.
+	NO_EFFECT, ## Nothing to change here (same terrain, wrong tile, outside the map).
+	NOT_ENOUGH_RESOURCE, ## Too little Light or Dread.
+	CUTS_OFF_PIT, ## The change would cut a pit off from the hearth.
+	NOT_AVAILABLE, ## This tool does not work yet (later phases).
+	ROUND_OVER, ## The round has ended.
+}
+
 const Terrain := WorldGrid.Terrain
 const Kind := ToolData.Kind
+## Gloom spreads in steps of at least this many seconds: it moves slowly, so
+## ten updates per second look the same as sixty and cost far less.
+const GLOOM_STEP := 0.1
 
 var level: LevelData
 var grid: WorldGrid
@@ -26,8 +39,11 @@ var resource: float
 var time_left: float
 ## Seconds played so far.
 var elapsed := 0.0
+## Why the last [method use_tool] call was refused, or [constant Refusal.NONE].
+var last_refusal := Refusal.NONE
 
 var _finished := false
+var _gloom_time := 0.0
 
 
 ## Starts a round of [param level_data]. Without [param world], MapGen builds
@@ -61,7 +77,10 @@ func tick(delta: float) -> void:
 	resource = level.clamp_resource(resource + level.regen * delta)
 	_feed_pits()
 	_update_light()
-	grid.spread_gloom(delta, level.gloom_speed)
+	_gloom_time += delta
+	if _gloom_time >= GLOOM_STEP:
+		grid.spread_gloom(_gloom_time, level.gloom_speed)
+		_gloom_time = 0.0
 	# Fase 3: VillagePlanner, entities and WaveSpawner are updated here.
 	_check_finished()
 
@@ -91,13 +110,32 @@ func is_over() -> bool:
 ## Terrain tools cost [member ToolData.cost] per tile that changes; painting
 ## stops when the resource runs out. A change that would cut a pit off from
 ## the hearth for walking enemies is refused and costs nothing.
+## When it returns false, [member last_refusal] tells why.
 func use_tool(tool: ToolData, cell: Vector2i, brush: int = 0) -> bool:
-	if tool == null or is_over() or not grid.in_bounds(cell):
-		return false
+	if is_over():
+		return _refuse(Refusal.ROUND_OVER)
+	if tool == null or not grid.in_bounds(cell):
+		return _refuse(Refusal.NO_EFFECT)
 	if tool.is_terrain_tool():
 		return _paint_terrain(tool, cell, brush)
 	# TORCH and FLARE (fase 3/4A), GLOOM, SUMMON and SNUFF (fase 4B) come later.
-	return false
+	return _refuse(Refusal.NOT_AVAILABLE)
+
+
+## Stars earned this round (0-3). Fase 4A/4B fill this in per level; until
+## then it is always 0.
+func stars() -> int:
+	return 0
+
+
+## Everything that gives light: the hearth now, torches and houses in fase 3.
+## WorldView shows a PointLight2D for each of these.
+func light_sources() -> Array[LightSource]:
+	var sources: Array[LightSource] = []
+	if hearth.is_lit():
+		sources.append(hearth.light_source())
+	# Fase 3: add the light sources of torches and houses here.
+	return sources
 
 
 ## The tiles a brush of [param radius] covers around [param center], nearest
@@ -119,8 +157,10 @@ func _paint_terrain(tool: ToolData, center: Vector2i, brush: int) -> bool:
 	var changed: Array[Vector2i] = []
 	var previous: Array[int] = []
 	var spent := 0.0
+	var ran_out := false
 	for cell: Vector2i in brush_cells(center, brush):
 		if resource - spent + 0.0001 < tool.cost:
+			ran_out = true
 			break
 		if cell == hearth.cell or layout.pits.has(cell):
 			continue
@@ -133,7 +173,7 @@ func _paint_terrain(tool: ToolData, center: Vector2i, brush: int) -> bool:
 		previous.append(current)
 		spent += tool.cost
 	if changed.is_empty():
-		return false
+		return _refuse(Refusal.NOT_ENOUGH_RESOURCE if ran_out else Refusal.NO_EFFECT)
 
 	flow_field.rebuild(grid, hearth.cell)
 	for pit: Vector2i in reachable_pits:
@@ -141,12 +181,18 @@ func _paint_terrain(tool: ToolData, center: Vector2i, brush: int) -> bool:
 			for i: int in changed.size():
 				grid.set_tile(changed[i], previous[i] as Terrain)
 			flow_field.rebuild(grid, hearth.cell)
-			return false
+			return _refuse(Refusal.CUTS_OFF_PIT)
 
 	resource -= spent
+	last_refusal = Refusal.NONE
 	for cell: Vector2i in changed:
 		tile_changed.emit(cell)
 	return true
+
+
+func _refuse(reason: Refusal) -> bool:
+	last_refusal = reason
+	return false
 
 
 ## The terrain [param kind] turns [param current] into, or -1 if it does not apply.
@@ -185,9 +231,7 @@ func _feed_pits() -> void:
 
 
 func _update_light() -> void:
-	var sources: Array[LightSource] = [hearth.light_source()]
-	# Fase 3: torches and houses add their light sources here.
-	grid.recompute_light(sources)
+	grid.recompute_light(light_sources())
 
 
 func _check_finished() -> void:

@@ -40,6 +40,8 @@ const MAX_TOOLS := 7
 @export_group("Resource")
 ## Name of the resource in the interface: "Light" or "Dread".
 @export var resource_label: String = "Light"
+## Icon of the resource in the interface (flame or dread eye).
+@export var resource_icon: Texture2D = null
 @export var start_resource: float = 0.0
 @export var max_resource: float = 100.0
 ## Resource gained per second.

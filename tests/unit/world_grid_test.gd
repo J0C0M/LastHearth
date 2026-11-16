@@ -80,12 +80,14 @@ func test_gloom_spreads_to_neighbours_over_time() -> void:
 	grid.spread_gloom(0.5, 1.0)
 	assert_float(grid.get_gloom(Vector2i(2, 1))).is_equal_approx(0.5, 0.0001)
 	assert_float(grid.get_gloom(Vector2i(3, 2))).is_equal_approx(0.5, 0.0001)
-	# Diagonal tiles have no fully dark neighbour yet.
-	assert_float(grid.get_gloom(Vector2i(3, 3))).is_equal(0.0)
+	# Diagonal tiles grow too, but slower.
+	assert_float(grid.get_gloom(Vector2i(3, 3))).is_equal_approx(0.5 * WorldGrid.DIAGONAL_SPREAD, 0.0001)
+	# Two steps away: nothing yet.
+	assert_float(grid.get_gloom(Vector2i(4, 2))).is_equal(0.0)
 	grid.spread_gloom(0.5, 1.0)
 	assert_float(grid.get_gloom(Vector2i(2, 1))).is_equal_approx(1.0, 0.0001)
 	grid.spread_gloom(0.5, 1.0)
-	assert_float(grid.get_gloom(Vector2i(3, 3))).is_equal_approx(0.5, 0.0001)
+	assert_float(grid.get_gloom(Vector2i(4, 2))).is_equal_approx(0.5, 0.0001)
 
 
 func test_gloom_never_exceeds_one() -> void:
@@ -142,3 +144,17 @@ func test_light_near_the_edge_stays_inside_the_grid() -> void:
 	var sources: Array[LightSource] = [LightSource.new(Vector2i(0, 0), 3.0)]
 	grid.recompute_light(sources)
 	assert_float(grid.get_light(Vector2i(0, 0))).is_equal(1.0)
+
+
+func test_gloom_rate_scales_how_fast_a_tile_darkens() -> void:
+	var grid := WorldGrid.new(Vector2i(3, 1))
+	grid.set_gloom(Vector2i(0, 0), 1.0)
+	grid.gloom_rate[grid.index(Vector2i(1, 0))] = 0.5
+	grid.spread_gloom(1.0, 1.0)
+	assert_float(grid.get_gloom(Vector2i(1, 0))).is_equal_approx(0.5, 0.0001)
+
+
+func test_new_grid_has_gloom_rate_one_everywhere() -> void:
+	var grid := WorldGrid.new(Vector2i(4, 4))
+	assert_int(grid.gloom_rate.size()).is_equal(16)
+	assert_float(grid.gloom_rate[5]).is_equal(1.0)

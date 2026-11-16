@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="LevelData" format=3]
 
 [ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_61tk6"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/dread.png" id="1_u0ri6"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_u0ri6"]
 [ext_resource type="Resource" path="res://resources/tools/tool_gloom.tres" id="3_01ud5"]
 [ext_resource type="Resource" path="res://resources/tools/tool_summon_shadow.tres" id="4_toexm"]
@@ -21,6 +22,7 @@ map_seed = 202
 dawn_time = 220.0
 dawn_delay_per_kill = 5.0
 resource_label = "Dread"
+resource_icon = ExtResource("1_u0ri6")
 start_resource = 50.0
 max_resource = 200.0
 regen = 3.0

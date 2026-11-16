@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="ToolData" format=3]
 
+[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_land.png" id="1_hx57n"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_n7ijb"]
 
 [resource]
@@ -7,4 +8,5 @@ script = ExtResource("1_n7ijb")
 id = &"land"
 name = "Land"
 cost = 1.0
+icon = ExtResource("1_hx57n")
 description = "Paint grass. Costs 1 Light per tile."

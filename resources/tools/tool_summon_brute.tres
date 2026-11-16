@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="ToolData" format=3]
 
 [ext_resource type="Resource" path="res://resources/enemies/enemy_brute.tres" id="1_q1vpd"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_summon_brute.png" id="2_huauc"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_o7yyn"]
 
 [resource]
@@ -10,4 +11,5 @@ name = "Brute"
 kind = 7
 cost = 45.0
 enemy = ExtResource("1_q1vpd")
+icon = ExtResource("2_huauc")
 description = "Summon a brute: slow and tough."

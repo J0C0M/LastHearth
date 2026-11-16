@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://bqffnc3dxmosk"
+path="res://.godot/imported/hearth_pixel.fnt-23d998b2dd59c279e73c2a298148e8e0.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/hearth_pixel.fnt"
+dest_files=["res://.godot/imported/hearth_pixel.fnt-23d998b2dd59c279e73c2a298148e8e0.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

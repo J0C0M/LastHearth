@@ -19,10 +19,17 @@ const MOUNTAIN_ABOVE := 0.38
 const FOREST_ABOVE := 0.18
 ## Radius of the open grass around the hearth in the test level.
 const VILLAGE_RADIUS := 5.0
+## Gloom grows between these factors of the level's speed, varied by noise,
+## so it creeps in ragged fronts instead of a perfect diamond.
+const GLOOM_RATE_MIN := 0.35
+const GLOOM_RATE_MAX := 1.65
+## Gloom creeps faster through forest and slower over water and rock.
+const GLOOM_TERRAIN_FACTOR: Array[float] = [0.6, 1.0, 1.0, 1.3, 0.75]
 
 var map_seed: int
 var elevation := FastNoiseLite.new()
 var moisture := FastNoiseLite.new()
+var creep := FastNoiseLite.new()
 
 
 func _init(seed_value: int = TEST_SEED) -> void:
@@ -34,6 +41,9 @@ func _init(seed_value: int = TEST_SEED) -> void:
 	moisture.seed = seed_value + 1
 	moisture.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	moisture.frequency = 0.09
+	creep.seed = seed_value + 2
+	creep.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	creep.frequency = 0.16
 
 
 ## Fills [param grid] with the map for [param map_type] and returns its layout.
@@ -75,10 +85,12 @@ func gen_test_level(grid: WorldGrid) -> MapLayout:
 		fill_circle(grid, pit, 2.0, Terrain.SAND)
 	fill_circle(grid, center + Vector2i(9, -4), 3.0, Terrain.FOREST)
 	fill_circle(grid, center, VILLAGE_RADIUS, Terrain.GRASS)
+	set_gloom_rates(grid)
 	return MapLayout.new(center, pits)
 
 
-## Fills the whole grid with noise terrain and clears gloom and light.
+## Fills the whole grid with noise terrain, clears gloom and light, and sets
+## how fast gloom grows on every tile (see [method set_gloom_rates]).
 func gen_base_terrain(grid: WorldGrid) -> void:
 	for y: int in grid.size.y:
 		for x: int in grid.size.x:
@@ -95,6 +107,18 @@ func gen_base_terrain(grid: WorldGrid) -> void:
 			grid.tiles[y * grid.size.x + x] = terrain
 	grid.gloom.fill(0.0)
 	grid.light.fill(0.0)
+	set_gloom_rates(grid)
+
+
+## Varies [member WorldGrid.gloom_rate] with noise and terrain. Call it again
+## after changing the terrain of a generated map.
+func set_gloom_rates(grid: WorldGrid) -> void:
+	for y: int in grid.size.y:
+		for x: int in grid.size.x:
+			var i := y * grid.size.x + x
+			var noise := (creep.get_noise_2d(x, y) + 1.0) * 0.5
+			var rate := lerpf(GLOOM_RATE_MIN, GLOOM_RATE_MAX, noise)
+			grid.gloom_rate[i] = rate * GLOOM_TERRAIN_FACTOR[grid.tiles[i]]
 
 
 ## Sets every tile closer than [param radius] to [param center] to [param terrain].

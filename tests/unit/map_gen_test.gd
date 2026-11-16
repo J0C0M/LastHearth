@@ -124,3 +124,27 @@ func test_carve_path_opens_a_way_through_water_and_mountains() -> void:
 	# Only blocking tiles change: grass on the path stays grass.
 	assert_int(grid.get_tile(Vector2i(1, 1))).is_equal(Terrain.GRASS)
 	assert_int(grid.get_tile(Vector2i(2, 1))).is_equal(Terrain.SAND)
+
+
+func test_gloom_rate_varies_across_a_generated_map() -> void:
+	var grid: WorldGrid = _test_level()[0]
+	var lowest := 10.0
+	var highest := 0.0
+	for rate: float in grid.gloom_rate:
+		lowest = minf(lowest, rate)
+		highest = maxf(highest, rate)
+	assert_float(lowest).is_less(0.6)
+	assert_float(highest).is_greater(1.4)
+
+
+func test_gloom_creeps_faster_through_forest_than_over_water() -> void:
+	var grid := WorldGrid.from_rows(["~T"])
+	var gen := MapGen.new()
+	gen.set_gloom_rates(grid)
+	var noise_water := (gen.creep.get_noise_2d(0, 0) + 1.0) * 0.5
+	var noise_forest := (gen.creep.get_noise_2d(1, 0) + 1.0) * 0.5
+	var expected_water := lerpf(MapGen.GLOOM_RATE_MIN, MapGen.GLOOM_RATE_MAX, noise_water) * MapGen.GLOOM_TERRAIN_FACTOR[0]
+	var expected_forest := lerpf(MapGen.GLOOM_RATE_MIN, MapGen.GLOOM_RATE_MAX, noise_forest) * MapGen.GLOOM_TERRAIN_FACTOR[3]
+	assert_float(grid.gloom_rate[0]).is_equal_approx(expected_water, 0.0001)
+	assert_float(grid.gloom_rate[1]).is_equal_approx(expected_forest, 0.0001)
+	assert_float(MapGen.GLOOM_TERRAIN_FACTOR[3]).is_greater(MapGen.GLOOM_TERRAIN_FACTOR[0])
