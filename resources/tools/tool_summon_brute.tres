@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="ToolData" format=3]
+[gd_resource type="Resource" script_class="ToolData" format=3 uid="uid://7eotuqimlwy6"]
 
 [ext_resource type="Resource" path="res://resources/enemies/enemy_brute.tres" id="1_q1vpd"]
-[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_summon_brute.png" id="2_huauc"]
-[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_o7yyn"]
+[ext_resource type="Texture2D" uid="uid://mbtstyfovs0c" path="res://assets/ui/icons/tool_summon_brute.png" id="2_huauc"]
+[ext_resource type="Script" uid="uid://cpgbldjkvfwsa" path="res://scripts/data/tool_data.gd" id="2_o7yyn"]
 
 [resource]
 script = ExtResource("2_o7yyn")
