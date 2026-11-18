@@ -1,6 +1,7 @@
 extends SceneTree
 ## Draws the world art of Last Hearth: terrain, shoreline foam, trees and
-## mountain peaks, the hearth fire, the pits and a particle dot.
+## mountain peaks, the hearth fire, the pits, a particle dot, the villagers and
+## enemies (units.png) and the village buildings (buildings.png).
 ## Eigen werk (CC0). Kleuren aanpassen? Wijzig de constanten hieronder en draai:
 ##   godot --headless --path . -s res://tools/art/make_world_art.gd
 ## Daarna: godot --headless --path . -s res://tools/art/make_tileset.gd
@@ -44,6 +45,8 @@ func _init() -> void:
 	var dot := Image.create(2, 2, false, Image.FORMAT_RGBA8)
 	dot.fill(Color.WHITE)
 	dot.save_png(OUT + "sprites/particle.png")
+	_units().save_png(OUT + "sprites/units.png")
+	_buildings().save_png(OUT + "sprites/buildings.png")
 	print("world art done")
 	quit()
 
@@ -402,4 +405,104 @@ func _pit() -> Image:
 				if d > 0.86 and arm > 0.9:
 					c = PIT[4]
 				_px(img, ox + x, y, c)
+	return img
+
+
+
+# --- Units: 16 x 16, two walking frames per row --------------------------------
+# Row 0 worker, 1 guard, 2 shadow, 3 wraith, 4 brute. Drawn from patterns: every
+# letter is a colour from UNIT_PALETTE, a dot is transparent. Feet on row 15.
+
+const UNIT_PALETTE := {
+	"k": Color("1a1014"), "h": Color("5a3a20"), "s": Color("e8b088"), "t": Color("a0643a"),
+	"T": Color("6e4226"), "p": Color("4a3a2a"), "n": Color("8a5a34"), "m": Color("c8c0c8"),
+	"M": Color("8a8494"), "g": Color("3a6ab0"), "G": Color("26487e"), "e": Color("ff5a4a"),
+	"d": Color("2e1c40"), "D": Color("170c24"), "v": Color("c8b4f2"), "V": Color("8a70c0"),
+	"W": Color("f4eeff"), "b": Color("40304e"), "B": Color("221630"), "r": Color("d8d0c0"),
+	"y": Color("ffd86a"), "o": Color("f2902c"), "R": Color("a84a32"), "q": Color("7a3222"),
+	"w": Color("d8c09a"), "x": Color("b09a78"), "N": Color("4a2e1a"), "S": Color("9a9098"),
+}
+
+const WORKER := [
+	"....kkkk....", "...khhhhk...", "...kshshk...", "...kssssk...", "....kkkk.n..", "...kttttkn..",
+	"..ktttttknk.", "..kstTttk.n.", "...kttttk...", "...kpkkpk...", "...kpk.kpk..", "...kk...kk.."]
+const WORKER_STEP := [
+	"....kkkk....", "...khhhhk...", "...kshshk...", "...kssssk...", "....kkkk.n..", "...kttttkn..",
+	"..ktttttknk.", "..kstTttk.n.", "...kttttk...", "...kpkkpk...", "....kpkpk...", "....kkkk...."]
+const GUARD := [
+	"....kkkk..m.", "...kmmmmk.m.", "...kMssMk.n.", "...kssssk.n.", "....kkkk..n.", "...kggggk.n.",
+	"..kgggggksn.", "..ksgGggk.n.", "...kggggk.n.", "...kpkkpk.n.", "...kpk.kpk..", "...kk...kk.."]
+const GUARD_STEP := [
+	"....kkkk..m.", "...kmmmmk.m.", "...kMssMk.n.", "...kssssk.n.", "....kkkk..n.", "...kggggk.n.",
+	"..kgggggksn.", "..ksgGggk.n.", "...kggggk.n.", "...kpkkpk.n.", "....kpkpk...", "....kkkk...."]
+const SHADOW_UNIT := [
+	"............", "....kkkk....", "...kddddk...", "..kddddddk..", "..kdeddedk..", "..kddddddk..",
+	".kddDddDddk.", ".kdddddddk..", ".kddDdddDdk.", "..kdkddkdk..", "..k.kdk.k...", "......k....."]
+const SHADOW_STEP := [
+	"............", "....kkkk....", "...kddddk...", "..kddddddk..", "..kdeddedk..", "..kddddddk..",
+	".kddDddDddk.", "..kddddddk..", ".kdDdddDddk.", "..kdkdkddk..", "...k.kdk.k..", ".....k......"]
+const WRAITH := [
+	"....kkkk....", "...kvvvvk...", "..kvWvvWvk..", "..kvkvvkvk..", "..kvvvvvvk..", ".kvvvvvvvvk.",
+	".kvVvvvvVvk.", ".kvvvvvvvvk.", ".kvVvvVvvVk.", ".kvkvvkvvk..", "..k.kk.kk...", "............"]
+const BRUTE := [
+	".kr......rk.", ".krk....krk.", "..krkkkkrk..", "..kbbbbbbk..", ".kbebbbbebk.", ".kbbbbbbbbk.",
+	"kbbBkkkkBbbk", "kbbbbbbbbbbk", "kbBbbbbbbBbk", ".kbbbbbbbbk.", ".kbbk..kbbk.", ".kkk....kkk."]
+const BRUTE_STEP := [
+	".kr......rk.", ".krk....krk.", "..krkkkkrk..", "..kbbbbbbk..", ".kbebbbbebk.", ".kbbbbbbbbk.",
+	"kbbBkkkkBbbk", "kbbbbbbbbbbk", "kbBbbbbbbBbk", ".kbbbbbbbbk.", "..kbbk.kbbk.", "..kkk..kkk.."]
+
+
+func _pattern(img: Image, ox: int, oy: int, rows: Array) -> void:
+	for y: int in rows.size():
+		var row: String = rows[y]
+		for x: int in row.length():
+			if UNIT_PALETTE.has(row[x]):
+				_px(img, ox + x, oy + y, UNIT_PALETTE[row[x]])
+
+
+func _units() -> Image:
+	var img := _image(T * 2, T * 5)
+	var rows := [[WORKER, WORKER_STEP], [GUARD, GUARD_STEP], [SHADOW_UNIT, SHADOW_STEP],
+		[WRAITH, WRAITH], [BRUTE, BRUTE_STEP]]
+	for row: int in rows.size():
+		for frame: int in 2:
+			var oy := row * T + 4
+			# The wraith floats: its second frame is one pixel higher.
+			if row == 3 and frame == 1:
+				oy -= 1
+			_pattern(img, frame * T + 2, oy, rows[row][frame])
+	return img
+
+
+# --- Buildings: 16 x 24 -------------------------------------------------------
+# Column 0 house, 1-2 torch (two flame frames), 3 snuffed torch, 4 construction site.
+
+const HOUSE := [
+	".......kk.......", "......kRRk......", ".....kRRRRk.....", "....kRRqRRRk....", "...kRRRRRqRRk...",
+	"..kRqRRRRRRRRk..", ".kkkkkkkkkkkkkk.", "..kwwwwwwwwwwk..", "..kwyykwwwnnwk..", "..kwyykwwwnnwk..",
+	"..kwkkkwwwnnwk..", "..kwwwwwwwnnwk..", "..kxxxxxxxnNxk..", "..kkkkkkkkkkkk.."]
+const TORCH_A := [
+	".......y........", "......yoy.......", "......oyo.......", ".....royor......", "......kSSk......",
+	".......nN.......", ".......nN.......", ".......nN.......", ".......nN.......", ".......nN.......",
+	".......nN.......", ".......nN.......", "......kkkk......"]
+const TORCH_B := [
+	"................", ".......yo.......", "......yoyo......", "......royr......", "......kSSk......",
+	".......nN.......", ".......nN.......", ".......nN.......", ".......nN.......", ".......nN.......",
+	".......nN.......", ".......nN.......", "......kkkk......"]
+const TORCH_OUT := [
+	"................", ".......M........", "......M.........", ".......M........", "......kSSk......",
+	".......nN.......", ".......nN.......", ".......nN.......", ".......nN.......", ".......nN.......",
+	".......nN.......", ".......nN.......", "......kkkk......"]
+const SITE := [
+	"..n.........n...", "..nnnnnnnnnnn...", "..n...n.....n...", "..n..n......n...", "..n.n.......n...",
+	"..nnnnnnnnnnn...", "..n......n..n...", "..n.......n.n...", "..nNNNNNNNNNn...", "..n.........n..."]
+
+
+func _buildings() -> Image:
+	var img := _image(T * 5, 24)
+	_pattern(img, 0, 24 - HOUSE.size(), HOUSE)
+	_pattern(img, T, 24 - TORCH_A.size(), TORCH_A)
+	_pattern(img, T * 2, 24 - TORCH_B.size(), TORCH_B)
+	_pattern(img, T * 3, 24 - TORCH_OUT.size(), TORCH_OUT)
+	_pattern(img, T * 4, 24 - SITE.size(), SITE)
 	return img
