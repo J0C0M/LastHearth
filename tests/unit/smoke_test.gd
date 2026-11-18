@@ -24,7 +24,8 @@ func test_display_uses_pixel_art_settings() -> void:
 	assert_int(ProjectSettings.get_setting("display/window/size/viewport_width")).is_equal(640)
 	assert_int(ProjectSettings.get_setting("display/window/size/viewport_height")).is_equal(360)
 	assert_str(ProjectSettings.get_setting("display/window/stretch/mode")).is_equal("canvas_items")
-	assert_str(ProjectSettings.get_setting("display/window/stretch/aspect")).is_equal("keep")
+	# expand: a wider or taller window shows more world instead of black bars.
+	assert_str(ProjectSettings.get_setting("display/window/stretch/aspect")).is_equal("expand")
 	# 0 = TEXTURE_FILTER_NEAREST, so pixels stay sharp.
 	assert_int(ProjectSettings.get_setting("rendering/textures/canvas_textures/default_texture_filter")).is_equal(0)
 

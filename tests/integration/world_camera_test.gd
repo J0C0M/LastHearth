@@ -46,3 +46,22 @@ func test_focus_inside_the_map_centres_on_the_point() -> void:
 	camera.set_zoom_level(1.0)
 	camera.focus(Vector2(768, 480))
 	assert_that(camera.position).is_equal(Vector2(768, 480))
+
+
+func test_resizing_the_screen_updates_min_zoom_and_keeps_the_camera_inside() -> void:
+	var viewport: SubViewport = auto_free(SubViewport.new())
+	viewport.size = Vector2i(640, 360)
+	add_child(viewport)
+	var camera := WorldCamera.new()
+	viewport.add_child(camera)
+	camera.setup(MAP_SIZE)
+	camera.set_zoom_level(camera.min_zoom)
+	camera.focus(Vector2(0, 0))
+	var old_min := camera.min_zoom
+	viewport.size = Vector2i(1280, 360)
+	assert_float(camera.min_zoom).is_equal_approx(1280.0 / MAP_SIZE.x, 0.0001)
+	assert_float(camera.min_zoom).is_greater(old_min)
+	assert_float(camera.zoom.x).is_greater_equal(camera.min_zoom - 0.0001)
+	var half := Vector2(1280, 360) * 0.5 / camera.zoom.x
+	assert_float(camera.position.x).is_greater_equal(half.x - 0.001)
+	assert_float(camera.position.x).is_less_equal(MAP_SIZE.x - half.x + 0.001)

@@ -19,7 +19,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
 | 4A Level 1: Hold the Light | ⏳ Volgende: kan nu starten (branch `Level-1-Hold-The-Light`) | duo A |
 | 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
-| Losse kaarten | ⏳ US-26, US-27, PT-10, PT-11 in de Sprint Backlog (zie `docs/FASES.md`) | wie ze oppakt |
+| Losse kaarten | ⏳ US-26, US-27, PT-10, PT-11 in de Sprint Backlog; 🔍 US-28 in review (zie `docs/FASES.md`) | wie ze oppakt |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Wat er nu speelbaar is: menu → briefing → een nacht met terrein schilderen en fakkels plaatsen, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Nog niet: Flare, de level 2-gereedschappen, sterren, eigen kaarten per level (fase 4A/4B).
@@ -57,6 +57,8 @@ Werk deze tabel bij aan het begin (🚧 Bezig) en het eind (🔍 In review, ✅ 
 - Eenheden en gebouwen tekent `WorldView` zelf als sprites onder `Objects` (y-gesorteerd met bomen en bergen), uit `assets/sprites/units.png` en `buildings.png`. Lichtbronnen van fakkels en huizen komen via `Simulation.light_sources()` vanzelf in beeld.
 - Art: alles is eigen pixelart, getekend door scripts in `tools/art/` (zie `tools/README.md`). Teken nieuwe sprites in dezelfde stijl en met dezelfde kleuren (constanten bovenin `make_world_art.gd` en `make_ui_art.gd`). Een nieuw gereedschap krijgt een icoon in `assets/ui/icons/` en `ToolData.icon`.
 - In-game knoppen hebben `focus_mode = None`: spatie en Tab zijn speltoetsen.
+- Venstergrootte: basisresolutie 640x360, `stretch/mode = canvas_items` en `stretch/aspect = expand`. Een groter venster schaalt mee; een venster dat niet 16:9 is toont meer wereld. Zet UI dus altijd met anchors vast, nooit op vaste pixelposities. `WorldCamera` past zijn kleinste zoom aan bij elke venstergrootte.
+- Speel je vanuit de editor (F5) in de **Game**-tab? Die staat standaard op *Fixed Size*, dan blijft het spel 1280x720 als je het venster groter maakt. Kies in het ⋮-menu rechts naast `1280x720` **Stretch to Fit** (of *Keep Aspect Ratio*). Dat is een instelling per computer en staat niet in git.
 - Let op: als je in de editor iets opslaat, voegt Godot `uid`s toe aan resources (prima, commit dat). Maar de editor laat soms het derde animatieframe van een watertegel in `assets/tiles/world_tileset.tres` vallen: zet dat bestand dan terug met `git restore`, of draai `tools/art/make_tileset.gd` opnieuw.
 
 ## Eigendom (voorkomt merge-conflicten)
