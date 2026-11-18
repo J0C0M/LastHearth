@@ -2,13 +2,16 @@
 
 [ext_resource type="Texture2D" path="res://assets/ui/icons/flame.png" id="1_4u7ew"]
 [ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_7blc3"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_brute.tres" id="1_br0t4"]
 [ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_4u7ew"]
 [ext_resource type="Resource" path="res://resources/tools/tool_land.tres" id="3_d3w8w"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_shadow.tres" id="4_bqjqr"]
 [ext_resource type="Resource" path="res://resources/tools/tool_water.tres" id="4_v6d2w"]
 [ext_resource type="Resource" path="res://resources/tools/tool_forest.tres" id="5_br0t4"]
 [ext_resource type="Resource" path="res://resources/tools/tool_mountain.tres" id="6_bqjqr"]
 [ext_resource type="Resource" path="res://resources/tools/tool_torch.tres" id="7_cgn3d"]
 [ext_resource type="Resource" path="res://resources/tools/tool_flare.tres" id="8_bbtr6"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_wraith.tres" id="12_cgn3d"]
 
 [resource]
 script = ExtResource("1_7blc3")
@@ -23,4 +26,10 @@ max_resource = 150.0
 regen = 2.0
 gloom_speed = 0.15
 max_houses = 12
+start_villagers = 5
+first_wave_at = 12.0
+wave_interval = 22.0
+shadow = ExtResource("4_bqjqr")
+wraith = ExtResource("12_cgn3d")
+brute = ExtResource("1_br0t4")
 tools = Array[ExtResource("2_4u7ew")]([ExtResource("3_d3w8w"), ExtResource("4_v6d2w"), ExtResource("5_br0t4"), ExtResource("6_bqjqr"), ExtResource("7_cgn3d"), ExtResource("8_bbtr6")])

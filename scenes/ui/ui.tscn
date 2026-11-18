@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" path="res://assets/ui/icons/speed_3.png" id="10_speed_3"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/brush.png" id="11_brush"]
 [ext_resource type="Texture2D" path="res://assets/ui/bar_night.png" id="12_bar_night"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/villager.png" id="13_villager"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/wood.png" id="14_wood"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vignette"]
 shader = ExtResource("3_vignette")
@@ -84,6 +86,35 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(44, 0)
 layout_mode = 2
 text = "0/0"
+
+[node name="VillageRow" type="HBoxContainer" parent="ResourcePlate/Row/Column"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="VillagerIcon" type="TextureRect" parent="ResourcePlate/Row/Column/VillageRow"]
+custom_minimum_size = Vector2(16, 12)
+layout_mode = 2
+tooltip_text = "Villagers"
+texture = ExtResource("13_villager")
+stretch_mode = 5
+
+[node name="VillagerCount" type="Label" parent="ResourcePlate/Row/Column/VillageRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(22, 0)
+layout_mode = 2
+text = "0"
+
+[node name="WoodIcon" type="TextureRect" parent="ResourcePlate/Row/Column/VillageRow"]
+custom_minimum_size = Vector2(16, 12)
+layout_mode = 2
+tooltip_text = "Wood the village has gathered"
+texture = ExtResource("14_wood")
+stretch_mode = 5
+
+[node name="WoodCount" type="Label" parent="ResourcePlate/Row/Column/VillageRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
 
 [node name="ClockPlate" type="PanelContainer" parent="."]
 anchors_preset = 5

@@ -127,3 +127,9 @@ func test_main_menu_from_the_game_resets_pause_and_speed() -> void:
 	assert_bool(get_tree().paused).is_false()
 	assert_float(Engine.time_scale).is_equal(1.0)
 	assert_object(main.world.sim).is_not_same(main.sim)
+
+
+func test_a_wave_is_announced() -> void:
+	var main := _playing()
+	main.sim.waves.spawn_wave(main.sim)
+	assert_str(main.ui.message_label.text).is_equal("Wave 1 crawls out of the pits!")

@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="ToolData" format=3]
+[gd_resource type="Resource" script_class="ToolData" format=3 uid="uid://we7ojiukudbr"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/icons/tool_land.png" id="1_hx57n"]
-[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="1_n7ijb"]
+[ext_resource type="Texture2D" uid="uid://ugncop52g22b" path="res://assets/ui/icons/tool_land.png" id="1_hx57n"]
+[ext_resource type="Script" uid="uid://cpgbldjkvfwsa" path="res://scripts/data/tool_data.gd" id="1_n7ijb"]
 
 [resource]
 script = ExtResource("1_n7ijb")

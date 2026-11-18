@@ -6,13 +6,13 @@ Voeg een regel toe zodra je een asset toevoegt.
 
 | Asset / pack | Maker | Bron | Licentie | Gebruikt in |
 |---|---|---|---|---|
-| Wereld: `tiles/terrain.png`, `tiles/shore.png`, `tiles/objects.png`, `sprites/fire.png`, `sprites/pit.png`, `sprites/particle.png` | Team Last Hearth | eigen werk, getekend door `tools/art/make_world_art.gd` | CC0 1.0 | wereld, haard, putten, effecten |
+| Wereld: `tiles/terrain.png`, `tiles/shore.png`, `tiles/objects.png`, `sprites/fire.png`, `sprites/pit.png`, `sprites/particle.png`, `sprites/units.png`, `sprites/buildings.png` | Team Last Hearth | eigen werk, getekend door `tools/art/make_world_art.gd` | CC0 1.0 | wereld, haard, putten, effecten |
 | Interface: `ui/*.png`, `ui/icons/*.png` | Team Last Hearth | eigen werk, getekend door `tools/art/make_ui_art.gd` | CC0 1.0 | panelen, knoppen, iconen |
 | Lettertypen: `fonts/hearth_pixel.*`, `fonts/hearth_micro.*` | Team Last Hearth | eigen werk, getekend door `tools/art/make_fonts.gd` | CC0 1.0 | alle tekst |
 
 De art wordt met scripts getekend; zie [`tools/README.md`](../tools/README.md) voor het opnieuw maken.
 
-Indeling van `tiles/terrain.png` (16×16): rij 0 diep water en rij 1 ondiep water (2 varianten × 3 animatieframes), rij 2 zand, rij 3 gras (4 + 2 met bloemen), rij 4 bosgrond, rij 5 rots. `tiles/objects.png` (16×24): rij 0 bomen, rij 1 bergtoppen (kolom 2-3 met sneeuw).
+Indeling van `tiles/terrain.png` (16×16): rij 0 diep water en rij 1 ondiep water (2 varianten × 3 animatieframes), rij 2 zand, rij 3 gras (4 + 2 met bloemen), rij 4 bosgrond, rij 5 rots. `tiles/objects.png` (16×24): rij 0 bomen, rij 1 bergtoppen (kolom 2-3 met sneeuw). `sprites/units.png` (16×16, 2 loopframes): rij 0 arbeider, 1 wachter, 2 schaduw, 3 geest, 4 brute. `sprites/buildings.png` (16×24): huis, fakkel (2 frames), gedoofde fakkel, bouwplaats.
 
 ## Licentieteksten
 

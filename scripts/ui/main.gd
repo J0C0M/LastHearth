@@ -59,6 +59,8 @@ func start_level(data: LevelData) -> void:
 	_set_paused(false)
 	set_speed(1)
 	sim = Simulation.new(data)
+	sim.wave_spawned.connect(_on_wave_spawned)
+	sim.villager_died.connect(_on_villager_died)
 	world.setup(sim)
 	world.show()
 	ui.setup(sim, world)
@@ -127,6 +129,14 @@ func _finish_round() -> void:
 func _set_paused(paused: bool) -> void:
 	get_tree().paused = paused
 	ui.show_paused(paused)
+
+
+func _on_wave_spawned(wave: int) -> void:
+	ui.show_message("Wave %d crawls out of the pits!" % wave)
+
+
+func _on_villager_died(_villager: Villager) -> void:
+	ui.show_message("A villager has fallen.")
 
 
 ## The world behind the main menu: a night of the first level, already dark.

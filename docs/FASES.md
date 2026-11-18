@@ -7,8 +7,8 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 |---|---|---|---|---|---|---|
 | 0 | Projectopzet | `Project-Setup` | Jochem | PT-02, PT-04 (testframework) | 2, dag 1 | ✅ Klaar |
 | 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | ✅ Klaar |
-| 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | 🔍 In review |
-| 3 | Dorp en vijanden | `Village-And-Enemies` | 1 persoon (tegelijk met fase 2) | US-04 | 2 | ⏳ Gepland |
+| 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
+| 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | 🔍 In review |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ⏳ Gepland |
 | 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ⏳ Gepland |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
@@ -91,7 +91,7 @@ Branch `World-View-And-UI` · 1 persoon, tegelijk met fase 3 · US-01, US-02, US
 - [x] Pauze (`get_tree().paused`) en 1x/2x/3x snelheid (`Engine.time_scale`) (US-02)
 - [x] Hoofdmenu met levelkeuze, briefing en resultaatscherm (US-10)
 - [x] Pixelart met licentie in `assets/CREDITS.md`: eigen werk (CC0) in plaats van een Kenney-pack, zie hieronder
-- [ ] PR `World-View-And-UI` → `Development` gemerged
+- [x] PR `World-View-And-UI` → `Development` gemerged ([#3](https://github.com/J0C0M/LastHearth/pull/3))
 
 **Klaar als:** je op een gegenereerde kaart terrein kunt schilderen en het licht en de duisternis ziet.
 
@@ -111,18 +111,28 @@ Branch `World-View-And-UI` · 1 persoon, tegelijk met fase 3 · US-01, US-02, US
 
 ## Fase 3: Dorp en vijanden
 
-Branch `Village-And-Enemies` · 1 persoon, tegelijk met fase 2 · US-04
+Branch `Village-And-Enemies` · Jochem · US-03, US-04, US-19, US-20
 
-- [ ] `Entity` → `Villager` (arbeider/wachter; toestanden IDLE, CHOP, BUILD, FLEE, FIGHT)
-- [ ] `Entity` → `Enemy` (met `EnemyData`: schaduw, brute, geest)
-- [ ] `Building` → `House` en `Torch`
-- [ ] `VillagePlanner`: elke ~2 s een huis of fakkel, op basis van hout en bevolking
-- [ ] `WaveSpawner` vanuit de putten
-- [ ] Vijanden volgen het `FlowField`, zijn gevoelig voor licht en vallen de haard en dorpelingen aan
-- [ ] Sprites in `WorldView`
-- [ ] Test: de planner bouwt een huis bij genoeg hout
-- [ ] Test: een vijand bereikt de haard
-- [ ] Test: een geest steekt water over
+- [x] `Entity` → `Villager` (arbeider/wachter; toestanden IDLE, CHOP, BUILD, FLEE, FIGHT)
+- [x] `Entity` → `Enemy` (met `EnemyData`: schaduw, brute, geest)
+- [x] `Building` → `House` en `Torch`
+- [x] `VillagePlanner`: elke ~2 s een huis of fakkel, op basis van hout en bevolking
+- [x] `WaveSpawner` vanuit de putten
+- [x] Vijanden volgen het `FlowField`, zijn gevoelig voor licht en vallen de haard en dorpelingen aan
+- [x] Sprites in `WorldView`
+- [x] Test: de planner bouwt een huis bij genoeg hout (`villager_test`, `village_planner_test`)
+- [x] Test: een vijand bereikt de haard (`enemy_test`)
+- [x] Test: een geest steekt water over (`enemy_test`)
+- [ ] PR `Village-And-Enemies` → `Development` gemerged
+
+**Gemaakte keuzes (fase 3)**
+- Posities van eenheden zijn in tegels (`Vector2`, (3.5, 2.5) is het midden van tegel (3, 2)). Vijanden lopen via het gedeelde `FlowField`; dorpelingen zoeken korte paden met `PathFinder` (BFS).
+- Arbeiders hakken het dichtstbijzijnde vrije bos binnen 14 tegels van de haard (1 hout per 3 s; 25% kans dat het bos daarna gras wordt), bouwen bouwplaatsen van de planner en vluchten naar de haard als een vijand binnen 3,5 tegel komt. Elke derde dorpeling is een wachter; wachters patrouilleren en vechten.
+- `VillagePlanner`: huis (5 hout) als er meer dorpelingen zijn dan huisplaatsen, anders een fakkel (3 hout) aan de kant van de dichtstbijzijnde put. Eén bouwplaats tegelijk; een klaar huis brengt een nieuwe dorpeling. Een beetje willekeur (met de seed) zodat het dorp niet als een raster groeit.
+- Golven: instellingen in `LevelData` (`first_wave_at`, `wave_interval`, `shadow`/`wraith`/`brute`); de formule staat in `WaveSpawner.wave_size()`. Level 2 heeft geen automatische golven.
+- Een gedode dorpeling telt mee (`villagers_killed`) en gebruikt `LevelData.dawn_delay_per_kill` en `resource_per_kill` (0 in level 1, voor level 2 al ingevuld).
+- Het fakkelgereedschap uit de werkbalk werkt nu (zelfde `Torch` als het dorp bouwt). Flare (4A) en de level 2-gereedschappen (4B) volgen nog.
+- Gebouwen blokkeren geen looproutes. Alle getallen zijn tijdelijk: balans in fase 5. Een nacht van level 1 zonder speler: het dorp groeit tot ~11 dorpelingen, de haard gaat rond 2:50 uit.
 
 ## Fase 4A: Level 1, Hold the Light
 

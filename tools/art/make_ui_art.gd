@@ -86,6 +86,12 @@ const ICONS := {
 	"star_empty": [
 		".....kk.....", ".....SS.....", "....kSSk....", "kkkkSSSSkkkk", "kSSSSSSSSSSk", ".kSSSSSSSSk.",
 		"..kSSSSSSk..", "..kSSSkSSk..", ".kSSk..kSSk.", ".kkk....kkk.", "............", "............"],
+	"villager": [
+		"....kkkk....", "...knnnnk...", "...kmmmmk...", "...kmmmmk...", "....kkkk....", "..krrrrrrk..",
+		".krrrrrrrrk.", ".krrNrrNrrk.", ".krrrrrrrrk.", "..kkkkkkkk..", "............", "............"],
+	"wood": [
+		"............", "............", "...kkkkkk...", "..knnnnnmk..", "..kNNNNNmk..", "..kkkkkkkk..",
+		".knnnnnmknk.", ".kNNNNNmkNk.", ".kkkkkkkkkk.", "............", "............", "............"],
 	"brush": [
 		".........kk.", "........kLk.", ".......kLk..", "......kLk...", ".....knk....", "....knk.....",
 		"..kkok......", ".koyok......", ".kooyk......", "kooook......", "kkkkk.......", "............"],

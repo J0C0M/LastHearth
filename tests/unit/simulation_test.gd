@@ -266,7 +266,7 @@ func test_tile_changed_is_emitted_for_every_changed_tile() -> void:
 
 func test_tools_from_later_phases_are_refused_for_now() -> void:
 	var sim := _sim()
-	assert_bool(sim.use_tool(_tool(Kind.TORCH, 1.0), Vector2i(7, 2))).is_false()
+	assert_bool(sim.use_tool(_tool(Kind.FLARE, 1.0), Vector2i(7, 2))).is_false()
 	assert_float(sim.resource).is_equal(10.0)
 
 
@@ -370,3 +370,69 @@ func test_gloom_spreads_in_steps_not_every_frame() -> void:
 	assert_float(sim.grid.get_gloom(Vector2i(1, 0))).is_equal(0.0)
 	sim.tick(Simulation.GLOOM_STEP * 0.5)
 	assert_float(sim.grid.get_gloom(Vector2i(1, 0))).is_equal_approx(0.5 * Simulation.GLOOM_STEP, 0.0001)
+
+
+# --- Village and torches (fase 3) ---------------------------------------------
+
+func test_round_starts_with_villagers_around_the_hearth() -> void:
+	var level := _level()
+	level.start_villagers = 6
+	var sim := _sim(OPEN_MAP, level)
+	assert_int(sim.villagers.size()).is_equal(6)
+	var guards := sim.villagers.filter(func(v: Villager) -> bool: return v.role == Villager.Role.GUARD)
+	assert_int(guards.size()).is_equal(2)
+	for villager: Villager in sim.villagers:
+		assert_float(villager.pos.distance_to(sim.hearth_position())).is_less(4.0)
+
+
+func test_torch_tool_places_a_lit_torch() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_tool(Kind.TORCH, 5.0), Vector2i(7, 1))).is_true()
+	assert_float(sim.resource).is_equal(5.0)
+	var torch := sim.building_at(Vector2i(7, 1))
+	assert_bool(torch is Torch).is_true()
+	assert_int(sim.light_sources().size()).is_equal(2)
+
+
+func test_torch_needs_free_dry_land() -> void:
+	var sim := _sim([
+		"P...~.....",
+		"..........",
+		"....H.....",
+	])
+	assert_bool(sim.use_tool(_tool(Kind.TORCH), Vector2i(4, 0))).is_false()
+	assert_bool(sim.use_tool(_tool(Kind.TORCH), Vector2i(4, 2))).is_false()
+	assert_bool(sim.use_tool(_tool(Kind.TORCH), Vector2i(6, 1))).is_true()
+	assert_bool(sim.use_tool(_tool(Kind.TORCH), Vector2i(6, 1))).is_false()
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NO_EFFECT)
+
+
+func test_construction_sites_give_no_light() -> void:
+	var sim := _sim()
+	sim.add_building(House.new(Vector2i(7, 1), false))
+	assert_int(sim.light_sources().size()).is_equal(1)
+
+
+func test_change_tile_updates_flow_field_and_view() -> void:
+	var sim := _sim([
+		".....",
+		"P...H",
+		".....",
+	])
+	var changed: Array[Vector2i] = []
+	sim.tile_changed.connect(func(cell: Vector2i) -> void: changed.append(cell))
+	assert_bool(sim.change_tile(Vector2i(2, 1), Terrain.MOUNTAIN)).is_true()
+	assert_int(sim.flow_field.distance(Vector2i(0, 1))).is_equal(6)
+	assert_array(changed).contains_exactly([Vector2i(2, 1)])
+
+
+func test_same_seed_gives_the_same_night() -> void:
+	var a := Simulation.new(load("res://resources/levels/test_level.tres") as LevelData)
+	var b := Simulation.new(load("res://resources/levels/test_level.tres") as LevelData)
+	for i: int in 300:
+		a.tick(0.1)
+		b.tick(0.1)
+	assert_int(a.villagers.size()).is_equal(b.villagers.size())
+	assert_int(a.enemies.size()).is_equal(b.enemies.size())
+	assert_float(a.hearth.health).is_equal(b.hearth.health)
+	assert_int(a.planner.wood).is_equal(b.planner.wood)
