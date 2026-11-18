@@ -19,3 +19,5 @@ godot --headless --path . -s res://tools/art/make_tileset.gd     # TileSet en Sp
 ```
 
 Commit daarna de veranderde PNG's en `.tres`-bestanden.
+
+Let op: als je de TileSet in de editor opslaat, laat Godot soms het derde animatieframe van een watertegel vallen. Draai dan `make_tileset.gd` opnieuw.

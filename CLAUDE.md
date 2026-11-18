@@ -15,9 +15,12 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 |---|---|---|
 | 0 Projectopzet | ✅ Klaar (PR #1) | Jochem |
 | 1 Simulatiekern | ✅ Klaar (PR #2) | Jochem |
-| 2 Wereld, camera en interface | 🔍 In review: PR `World-View-And-UI` → `Development` | Jochem |
-| 3 Dorp en vijanden | ⏳ Volgende | zie `docs/FASES.md` |
-| 4–6 | ⏳ Gepland | zie `docs/FASES.md` |
+| 2 Wereld, camera en interface | ✅ Klaar (PR #3) | Jochem |
+| 3 Dorp en vijanden | 🔍 In review: PR `Village-And-Enemies` → `Development` | Jochem |
+| 4A Level 1 / 4B Level 2 | ⏳ Volgende: kunnen tegelijk starten na de merge van fase 3 | duo A / duo B |
+| 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
+
+Wat er nu speelbaar is: menu → briefing → een nacht met terrein schilderen en fakkels plaatsen, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Nog niet: Flare, de level 2-gereedschappen, sterren, eigen kaarten per level (fase 4A/4B).
 
 Werk deze tabel bij aan het eind van elke fase.
 
@@ -32,13 +35,15 @@ Werk deze tabel bij aan het eind van elke fase.
 
 ### De simulatie gebruiken (fase 2 en 3)
 
-- Ronde starten: `var sim := Simulation.new(load("res://resources/levels/test_level.tres"))`. De kaart wordt gegenereerd uit `map_type` en `map_seed` van het level.
-- Elke frame: `sim.tick(delta)`. Dat kost ongeveer 4 ms op de volle kaart.
+- Ronde starten: `var sim := Simulation.new(load("res://resources/levels/test_level.tres"))`. De kaart wordt gegenereerd uit `map_type` en `map_seed` van het level; `sim.rng` gebruikt dezelfde seed, dus dezelfde seed geeft dezelfde nacht.
+- Elke frame: `sim.tick(delta)`. Dat kost gemiddeld ongeveer 2 ms met een vol dorp en golven.
 - Tekenen: `sim.grid.tiles`, `.gloom` en `.light` (index = `y * 96 + x`, terrein = `WorldGrid.Terrain`), `sim.hearth`, `sim.layout.pits`, `sim.resource`, `sim.time_left`.
 - Signalen: `tile_changed(cell)` na schilderen, `level_finished(won)` aan het eind. `sim.hearth` heeft `extinguished`.
 - Invoer: `sim.use_tool(tool, cell, brush)` geeft `false` bij weigeren (te weinig grondstof, put afgesneden). `Simulation.brush_cells(cell, brush)` geeft de tegels voor een penseelvoorbeeld.
-- Vijanden (fase 3): `sim.flow_field.next_step(cell, flying)` is de volgende tegel richting de haard.
-- Uitbreiden (fase 3): zie de `# Fase 3:`-regels in `scripts/sim/simulation.gd` (in `tick()` en `_update_light()`).
+- Eenheden: `sim.villagers` (`Villager`, rol WORKER/GUARD), `sim.enemies` (`Enemy`, met `data: EnemyData`), `sim.buildings` (`House`, `Torch`; `complete` = af). Posities in tegels. `sim.spawn_enemy(data, cell)` en `sim.spawn_villager(cell, role)` zetten er een neer (handig voor level 2: eenheden oproepen).
+- Dorp en golven: `sim.planner` (`VillagePlanner`, met `wood`) en `sim.waves` (`WaveSpawner`). Signalen: `wave_spawned(wave)`, `villager_died(villager)`, `building_finished(building)`.
+- Terrein vanuit de simulatie veranderen: `sim.change_tile(cell, terrain)` (werkt `FlowField` en WorldView bij).
+- Nieuwe gereedschappen (fase 4A/4B): een tak in `Simulation.use_tool()` (zie `_place_torch()` als voorbeeld); `stars()` invullen per level.
 - Debuggen: `print("\n".join(sim.grid.to_rows()))` print de kaart als tekst.
 
 ### Scènes (fase 2)
@@ -47,9 +52,10 @@ Werk deze tabel bij aan het eind van elke fase.
   - `World` = `scenes/world/world.tscn` (`WorldView`): lagen `Terrain`, `Shore` (schuim, schaduw), `Objects` (y-gesorteerd: `Trees` met bomen en bergtoppen, `Hearth` met vuur en vonken), `Gloom` (shader), `Pits`, `Lights`, `Night`, `Overlay` (vuurvliegjes, `BrushPreview`), `Camera`;
   - `GameUI` = `scenes/ui/ui.tscn`: bovenbalk, werkbalk, melding, pauzescherm, `ResultScreen`;
   - `Menus`: `main_menu.tscn` en `briefing.tscn`.
-- Fase 3: zet sprites van dorpelingen, vijanden en gebouwen onder `Objects` in `world.tscn` (dan sorteren ze vanzelf met bomen en bergen), en laat `WorldView.draw_state()` ze bijwerken. Lichtbronnen van fakkels en huizen komen via `Simulation.light_sources()` vanzelf in beeld.
+- Eenheden en gebouwen tekent `WorldView` zelf als sprites onder `Objects` (y-gesorteerd met bomen en bergen), uit `assets/sprites/units.png` en `buildings.png`. Lichtbronnen van fakkels en huizen komen via `Simulation.light_sources()` vanzelf in beeld.
 - Art: alles is eigen pixelart, getekend door scripts in `tools/art/` (zie `tools/README.md`). Teken nieuwe sprites in dezelfde stijl en met dezelfde kleuren (constanten bovenin `make_world_art.gd` en `make_ui_art.gd`). Een nieuw gereedschap krijgt een icoon in `assets/ui/icons/` en `ToolData.icon`.
 - In-game knoppen hebben `focus_mode = None`: spatie en Tab zijn speltoetsen.
+- Let op: als je in de editor iets opslaat, voegt Godot `uid`s toe aan resources (prima, commit dat). Maar de editor laat soms het derde animatieframe van een watertegel in `assets/tiles/world_tileset.tres` vallen: zet dat bestand dan terug met `git restore`, of draai `tools/art/make_tileset.gd` opnieuw.
 
 ## Eigendom (voorkomt merge-conflicten)
 
