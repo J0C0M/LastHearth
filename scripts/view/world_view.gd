@@ -2,8 +2,8 @@ class_name WorldView
 extends Node2D
 ## Draws a Simulation as a living pixel-art world: terrain with deep and
 ## shallow water and foam along the shore, trees and mountain peaks that stick
-## up as objects, soft drifting gloom, a crackling hearth, glowing pits, banded
-## light and fireflies at night. WorldView only reads the simulation; GameUI
+## up as objects, villagers, enemies and buildings among them, soft drifting
+## gloom, a crackling hearth, glowing pits, banded light and fireflies at night. WorldView only reads the simulation; GameUI
 ## changes it through use_tool().
 ##
 ## Main roept setup(sim) aan bij de start van een ronde en draw_state(sim) elke
@@ -39,6 +39,14 @@ const LIGHT_ENERGY := 1.15
 ## Size in pixels of the generated light texture (its radius is half of this).
 const LIGHT_TEXTURE_SIZE := 128
 const PIT_SCENE := preload("res://scenes/world/pit.tscn")
+## units.png: rows worker, guard, shadow, wraith, brute; two walking frames each.
+const UNITS_TEXTURE := preload("res://assets/sprites/units.png")
+## buildings.png (16 x 24): house, torch (2 frames), snuffed torch, construction site.
+const BUILDINGS_TEXTURE := preload("res://assets/sprites/buildings.png")
+const ENEMY_ROWS := {&"shadow": 2, &"wraith": 3, &"brute": 4}
+## Units are drawn a little above their position, so their feet stand on it.
+const UNIT_OFFSET := Vector2(0, -4)
+const BURN_COLOR := Color(1.7, 0.75, 0.45)
 
 const Terrain := WorldGrid.Terrain
 
@@ -49,9 +57,14 @@ var gloom_texture: ImageTexture
 var gloom_image: Image
 
 var _light_texture := _make_light_texture()
+## Entity id -> Sprite2D, so every unit keeps its own sprite.
+var _unit_sprites := {}
+## Building -> Sprite2D.
+var _building_sprites := {}
 
 @onready var terrain: TileMapLayer = $Terrain
 @onready var shore: TileMapLayer = $Shore
+@onready var objects: Node2D = $Objects
 @onready var trees: TileMapLayer = $Objects/Trees
 @onready var hearth_node: Node2D = $Objects/Hearth
 @onready var fire: AnimatedSprite2D = $Objects/Hearth/Fire
@@ -80,6 +93,7 @@ func setup(simulation: Simulation) -> void:
 			_draw_tile(Vector2i(x, y))
 	_setup_gloom()
 	_place_markers()
+	_clear_sprites()
 	brush_preview.clear()
 
 	var map_px := Vector2(sim.grid.size * TILE_SIZE)
@@ -98,6 +112,8 @@ func draw_state(simulation: Simulation) -> void:
 		return
 	_draw_gloom()
 	_draw_lights()
+	_draw_units()
+	_draw_buildings()
 	var dawn := _dawn()
 	night.color = NIGHT_COLOR.lerp(DAWN_COLOR, dawn)
 	fireflies.modulate.a = 1.0 - dawn
@@ -231,7 +247,9 @@ func _draw_lights() -> void:
 		# A small flicker in size and brightness, different for every light.
 		var flicker := 0.04 * sin(time * 9.0 + i) + 0.03 * sin(time * 5.3 + i * 2.0)
 		light.texture_scale = source.radius * TILE_SIZE / (LIGHT_TEXTURE_SIZE * 0.5) * (1.0 + flicker * 0.5)
-		light.energy = LIGHT_ENERGY * (1.0 + flicker)
+		# Small lights (houses, torches) are weaker, so a village does not wash out.
+		var strength := clampf(source.radius / Hearth.BASE_LIGHT_RADIUS, 0.3, 1.0)
+		light.energy = LIGHT_ENERGY * strength * (1.0 + flicker)
 
 
 func _dawn() -> float:
@@ -248,6 +266,76 @@ func _place_markers() -> void:
 		var pit := PIT_SCENE.instantiate() as Node2D
 		pit.position = cell_center(cell)
 		pits.add_child(pit)
+
+
+## Villagers and enemies: one sprite each, walking frames, facing, burning.
+func _draw_units() -> void:
+	var time := Time.get_ticks_msec() / 1000.0
+	var seen := {}
+	for villager: Villager in sim.villagers:
+		var row := 1 if villager.role == Villager.Role.GUARD else 0
+		_draw_unit(villager, row, time, seen)
+	for enemy: Enemy in sim.enemies:
+		var sprite := _draw_unit(enemy, ENEMY_ROWS.get(enemy.data.id, 2), time, seen)
+		var flicker := 0.5 + 0.5 * sin(time * 20.0 + enemy.id)
+		sprite.modulate = Color.WHITE.lerp(BURN_COLOR, flicker) if enemy.burning else Color.WHITE
+	for id: int in _unit_sprites.keys():
+		if not seen.has(id):
+			(_unit_sprites[id] as Sprite2D).queue_free()
+			_unit_sprites.erase(id)
+
+
+func _draw_unit(entity: Entity, row: int, time: float, seen: Dictionary) -> Sprite2D:
+	var sprite: Sprite2D = _unit_sprites.get(entity.id)
+	if sprite == null:
+		sprite = Sprite2D.new()
+		sprite.texture = UNITS_TEXTURE
+		sprite.region_enabled = true
+		sprite.offset = UNIT_OFFSET
+		objects.add_child(sprite)
+		_unit_sprites[entity.id] = sprite
+	seen[entity.id] = true
+	sprite.position = entity.pos * TILE_SIZE
+	var frame := int(time * 4.0 + entity.id) % 2
+	sprite.region_rect = Rect2(frame * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+	sprite.flip_h = entity.facing.x < 0.0
+	return sprite
+
+
+## Houses, torches and construction sites.
+func _draw_buildings() -> void:
+	var time := Time.get_ticks_msec() / 1000.0
+	var seen := {}
+	for building: Building in sim.buildings:
+		var sprite: Sprite2D = _building_sprites.get(building)
+		if sprite == null:
+			sprite = Sprite2D.new()
+			sprite.texture = BUILDINGS_TEXTURE
+			sprite.region_enabled = true
+			sprite.offset = Vector2(0, -4)
+			sprite.position = cell_center(building.cell)
+			objects.add_child(sprite)
+			_building_sprites[building] = sprite
+		seen[building] = true
+		var column := 0
+		if not building.complete:
+			column = 4
+		elif building is Torch:
+			column = (1 + int(time * 5.0 + building.cell.x) % 2) if (building as Torch).lit else 3
+		sprite.region_rect = Rect2(column * TILE_SIZE, 0, TILE_SIZE, 24)
+	for building: Building in _building_sprites.keys():
+		if not seen.has(building):
+			(_building_sprites[building] as Sprite2D).queue_free()
+			_building_sprites.erase(building)
+
+
+func _clear_sprites() -> void:
+	for sprite: Sprite2D in _unit_sprites.values():
+		sprite.queue_free()
+	for sprite: Sprite2D in _building_sprites.values():
+		sprite.queue_free()
+	_unit_sprites.clear()
+	_building_sprites.clear()
 
 
 func _new_light() -> PointLight2D:

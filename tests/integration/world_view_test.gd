@@ -19,6 +19,7 @@ func _sim(rows: Array[String] = MAP) -> Simulation:
 	level.start_resource = 50.0
 	level.max_resource = 50.0
 	level.gloom_speed = 1.0
+	level.start_villagers = 0
 	var packed := PackedStringArray(rows)
 	return Simulation.new(level, WorldGrid.from_rows(packed), MapLayout.from_rows(packed))
 
@@ -169,3 +170,40 @@ func test_a_new_round_replaces_the_old_one() -> void:
 func test_cell_center_is_the_middle_of_the_tile() -> void:
 	var view := _view(_sim())
 	assert_that(view.cell_center(Vector2i(2, 3))).is_equal(Vector2(40, 56))
+
+
+func test_villagers_and_enemies_get_a_sprite_each() -> void:
+	var sim := _sim()
+	sim.spawn_villager(Vector2i(16, 2), Villager.Role.WORKER)
+	var data := EnemyData.new()
+	data.id = &"wraith"
+	sim.spawn_enemy(data, Vector2i(2, 1))
+	var view := _view(sim)
+	assert_int(view._unit_sprites.size()).is_equal(2)
+	var enemy_sprite: Sprite2D = view._unit_sprites[sim.enemies[0].id]
+	assert_that(enemy_sprite.position).is_equal(sim.enemies[0].pos * WorldView.TILE_SIZE)
+	# Row 3 of units.png is the wraith.
+	assert_float(enemy_sprite.region_rect.position.y).is_equal(3.0 * WorldView.TILE_SIZE)
+
+
+func test_sprite_of_a_dead_enemy_is_removed() -> void:
+	var sim := _sim()
+	var enemy := sim.spawn_enemy(EnemyData.new(), Vector2i(2, 1))
+	var view := _view(sim)
+	enemy.take_damage(1000.0)
+	sim.tick(0.1)
+	view.draw_state(sim)
+	assert_bool(view._unit_sprites.is_empty()).is_true()
+
+
+func test_buildings_show_as_site_house_or_torch() -> void:
+	var sim := _sim()
+	sim.add_building(House.new(Vector2i(14, 1), false))
+	sim.add_building(Torch.new(Vector2i(16, 3)))
+	var view := _view(sim)
+	assert_int(view._building_sprites.size()).is_equal(2)
+	var site: Sprite2D = view._building_sprites[sim.buildings[0]]
+	assert_float(site.region_rect.position.x).is_equal(4.0 * WorldView.TILE_SIZE)
+	sim.buildings[0].work(100.0)
+	view.draw_state(sim)
+	assert_float(site.region_rect.position.x).is_equal(0.0)
