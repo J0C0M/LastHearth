@@ -16,13 +16,15 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 0 Projectopzet | ✅ Klaar (PR #1) | Jochem |
 | 1 Simulatiekern | ✅ Klaar (PR #2) | Jochem |
 | 2 Wereld, camera en interface | ✅ Klaar (PR #3) | Jochem |
-| 3 Dorp en vijanden | 🔍 In review: PR `Village-And-Enemies` → `Development` | Jochem |
-| 4A Level 1 / 4B Level 2 | ⏳ Volgende: kunnen tegelijk starten na de merge van fase 3 | duo A / duo B |
+| 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
+| 4A Level 1: Hold the Light | ⏳ Volgende: kan nu starten (branch `Level-1-Hold-The-Light`) | duo A |
+| 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
+| Losse kaarten | ⏳ US-26, US-27, PT-10, PT-11 in de Sprint Backlog (zie `docs/FASES.md`) | wie ze oppakt |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Wat er nu speelbaar is: menu → briefing → een nacht met terrein schilderen en fakkels plaatsen, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Nog niet: Flare, de level 2-gereedschappen, sterren, eigen kaarten per level (fase 4A/4B).
 
-Werk deze tabel bij aan het eind van elke fase.
+Werk deze tabel bij aan het begin (🚧 Bezig) en het eind (🔍 In review, ✅ Klaar) van elke fase. Werk je aan 4A of 4B, pas dan **alleen je eigen rij** aan (hier en in `docs/FASES.md`), zodat de duo's geen merge-conflict krijgen.
 
 ## Architectuur
 
@@ -108,6 +110,8 @@ Werk deze tabel bij aan het eind van elke fase.
 5. `docs/FASES.md` en de **Huidige status** hierboven bijwerken.
 6. Pushen en een PR naar `Development` openen.
 7. Trello-kaart bijwerken (als er een Trello-tool is): bij de start naar **Doing**; als de PR open staat naar **Code Review + Functional Review**, met een reactie met branchnaam en PR-link. **Nooit zelf naar Done**; dat doet het team na de review. Verander of verwijder geen andere kaarten zonder akkoord van de gebruiker.
+
+Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `trelloReadChecklist`, want het bordoverzicht laat checklists weg). Let op: de checklists van oudere kaarten (US-02, US-03, US-04, US-10, PT-02, PT-04) komen nog uit een eerder concept (honger, kroniek, jaren, 5x snelheid). Die worden herschreven in PT-11; volg tot die tijd de **beschrijving** van de kaart en `docs/design.md`.
 
 Trello-bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
 

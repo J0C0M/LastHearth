@@ -8,7 +8,7 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 | 0 | Projectopzet | `Project-Setup` | Jochem | PT-02, PT-04 (testframework) | 2, dag 1 | ✅ Klaar |
 | 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | ✅ Klaar |
 | 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
-| 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | 🔍 In review |
+| 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | ✅ Klaar |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ⏳ Gepland |
 | 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ⏳ Gepland |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
@@ -123,7 +123,7 @@ Branch `Village-And-Enemies` · Jochem · US-03, US-04, US-19, US-20
 - [x] Test: de planner bouwt een huis bij genoeg hout (`villager_test`, `village_planner_test`)
 - [x] Test: een vijand bereikt de haard (`enemy_test`)
 - [x] Test: een geest steekt water over (`enemy_test`)
-- [ ] PR `Village-And-Enemies` → `Development` gemerged
+- [x] PR `Village-And-Enemies` → `Development` gemerged ([#4](https://github.com/J0C0M/LastHearth/pull/4))
 
 **Gemaakte keuzes (fase 3)**
 - Posities van eenheden zijn in tegels (`Vector2`, (3.5, 2.5) is het midden van tegel (3, 2)). Vijanden lopen via het gedeelde `FlowField`; dorpelingen zoeken korte paden met `PathFinder` (BFS).
@@ -133,6 +133,24 @@ Branch `Village-And-Enemies` · Jochem · US-03, US-04, US-19, US-20
 - Een gedode dorpeling telt mee (`villagers_killed`) en gebruikt `LevelData.dawn_delay_per_kill` en `resource_per_kill` (0 in level 1, voor level 2 al ingevuld).
 - Het fakkelgereedschap uit de werkbalk werkt nu (zelfde `Torch` als het dorp bouwt). Flare (4A) en de level 2-gereedschappen (4B) volgen nog.
 - Gebouwen blokkeren geen looproutes. Alle getallen zijn tijdelijk: balans in fase 5. Een nacht van level 1 zonder speler: het dorp groeit tot ~11 dorpelingen, de haard gaat rond 2:50 uit.
+
+## Losse kaarten na de review van fase 0–3
+
+Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiecriteria niet gehaald, en veel checklists kwamen nog uit het oude concept. Daarvoor staan vier kaarten in de **Sprint Backlog** (Sprint 2). Ze zijn klein en kunnen naast fase 4A/4B; wie ze oppakt zet zijn naam erbij.
+
+| Kaart | Wat | Raakt | Wie |
+|---|---|---|---|
+| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (nu alleen tooltip) | `main_menu.tscn`/`.gd`, `LevelData` | _(naam)_ |
+| US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu | `main.gd`, `ui.tscn` | _(naam)_ |
+| PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README | docs | _(naam)_ |
+| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) | Trello, `docs/trello-voorstel.md` | Jochem |
+
+- [ ] US-26
+- [ ] US-27
+- [ ] PT-10
+- [ ] PT-11
+
+Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.
 
 ## Fase 4A: Level 1, Hold the Light
 
