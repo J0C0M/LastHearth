@@ -59,3 +59,20 @@ func test_test_level_uses_the_fixed_test_map() -> void:
 	var level := _level("test_level")
 	assert_int(level.map_type).is_equal(LevelData.MapType.TEST)
 	assert_int(level.map_seed).is_equal(MapGen.TEST_SEED)
+
+
+func test_level_1_sends_waves_of_all_three_enemy_types() -> void:
+	var level := _level("level_1")
+	assert_float(level.wave_interval).is_greater(0.0)
+	assert_str(level.shadow.id).is_equal("shadow")
+	assert_str(level.wraith.id).is_equal("wraith")
+	assert_str(level.brute.id).is_equal("brute")
+
+
+func test_level_2_has_no_automatic_waves() -> void:
+	assert_float(_level("level_2").wave_interval).is_equal(0.0)
+
+
+func test_every_level_starts_with_a_village() -> void:
+	for level_id: String in ["level_1", "level_2", "test_level"]:
+		assert_int(_level(level_id).start_villagers).is_greater_equal(3)

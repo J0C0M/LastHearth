@@ -55,6 +55,21 @@ const MAX_TOOLS := 7
 @export var gloom_speed: float = 0.1
 @export var max_houses: int = 10
 
+@export_group("Village")
+## Villagers at the start of the round; every third one is a guard.
+@export var start_villagers: int = 4
+
+@export_group("Waves")
+## Seconds until the first wave of enemies comes out of the pits.
+@export var first_wave_at: float = 10.0
+## Seconds between waves. 0 means no automatic waves (level 2: you are the dark).
+@export var wave_interval: float = 0.0
+## The enemy types the waves are made of (see WaveSpawner.spawn_wave()).
+@export var shadow: EnemyData
+@export var wraith: EnemyData
+@export var brute: EnemyData
+
+@export_group("")
 ## Tools in toolbar order (key 1 is the first tool).
 @export var tools: Array[ToolData] = []
 

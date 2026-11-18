@@ -1,15 +1,18 @@
-[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://ci4cwdftg3rwp"]
+[gd_resource type="Resource" script_class="LevelData" format=3]
 
-[ext_resource type="Script" uid="uid://pjyjmah8ct5m" path="res://scripts/data/level_data.gd" id="1_61tk6"]
-[ext_resource type="Texture2D" uid="uid://cyyguhlqordwb" path="res://assets/ui/icons/dread.png" id="1_u0ri6"]
-[ext_resource type="Script" uid="uid://cpgbldjkvfwsa" path="res://scripts/data/tool_data.gd" id="2_u0ri6"]
-[ext_resource type="Resource" uid="uid://d221ydw0ypwbb" path="res://resources/tools/tool_gloom.tres" id="3_01ud5"]
-[ext_resource type="Resource" uid="uid://by33d3rxf4bt0" path="res://resources/tools/tool_summon_shadow.tres" id="4_toexm"]
-[ext_resource type="Resource" uid="uid://c3hok6e1h3ogl" path="res://resources/tools/tool_summon_wraith.tres" id="5_ce1dc"]
-[ext_resource type="Resource" uid="uid://7eotuqimlwy6" path="res://resources/tools/tool_summon_brute.tres" id="6_qyts5"]
-[ext_resource type="Resource" uid="uid://cmpocluq4vagl" path="res://resources/tools/tool_drain.tres" id="7_dd5yr"]
-[ext_resource type="Resource" uid="uid://b86sthsh0q45e" path="res://resources/tools/tool_rubble.tres" id="8_nro2g"]
-[ext_resource type="Resource" uid="uid://cbvtnu2v6sabp" path="res://resources/tools/tool_snuff.tres" id="9_4cnbh"]
+[ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_61tk6"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_brute.tres" id="1_ce1dc"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/dread.png" id="1_u0ri6"]
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_u0ri6"]
+[ext_resource type="Resource" path="res://resources/tools/tool_gloom.tres" id="3_01ud5"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_shadow.tres" id="4_qyts5"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_shadow.tres" id="4_toexm"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_wraith.tres" id="5_ce1dc"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_brute.tres" id="6_qyts5"]
+[ext_resource type="Resource" path="res://resources/tools/tool_drain.tres" id="7_dd5yr"]
+[ext_resource type="Resource" path="res://resources/tools/tool_rubble.tres" id="8_nro2g"]
+[ext_resource type="Resource" path="res://resources/tools/tool_snuff.tres" id="9_4cnbh"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_wraith.tres" id="13_dd5yr"]
 
 [resource]
 script = ExtResource("1_61tk6")
@@ -29,4 +32,8 @@ regen = 3.0
 resource_per_kill = 15.0
 gloom_speed = 0.05
 max_houses = 12
+start_villagers = 8
+shadow = ExtResource("4_qyts5")
+wraith = ExtResource("13_dd5yr")
+brute = ExtResource("1_ce1dc")
 tools = Array[ExtResource("2_u0ri6")]([ExtResource("3_01ud5"), ExtResource("4_toexm"), ExtResource("5_ce1dc"), ExtResource("6_qyts5"), ExtResource("7_dd5yr"), ExtResource("8_nro2g"), ExtResource("9_4cnbh")])
