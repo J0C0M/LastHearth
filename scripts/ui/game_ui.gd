@@ -44,6 +44,8 @@ var _tool_group := ButtonGroup.new()
 @onready var resource_name_label: Label = %ResourceName
 @onready var resource_bar: ProgressBar = %ResourceBar
 @onready var resource_value_label: Label = %ResourceValue
+@onready var villager_count_label: Label = %VillagerCount
+@onready var wood_count_label: Label = %WoodCount
 @onready var night_bar: ProgressBar = %NightBar
 @onready var clock_label: Label = %Clock
 @onready var pause_button: Button = %PauseButton
@@ -98,6 +100,8 @@ func refresh() -> void:
 	resource_bar.max_value = sim.level.max_resource
 	resource_bar.value = sim.resource
 	resource_value_label.text = "%d/%d" % [floori(sim.resource), roundi(sim.level.max_resource)]
+	villager_count_label.text = str(sim.villagers.size())
+	wood_count_label.text = str(sim.planner.wood)
 	night_bar.value = 1.0 - sim.time_left / maxf(sim.level.dawn_time, 0.001)
 	clock_label.text = "%s until dawn" % format_time(sim.time_left)
 	brush_label.text = str(brush_size + 1)

@@ -183,3 +183,12 @@ func test_setup_again_rebuilds_the_toolbar() -> void:
 	var ui := _setup()
 	ui.setup(ui.sim, ui.world_view)
 	assert_int(ui.tools_box.get_child_count()).is_equal(3)
+
+
+func test_village_row_shows_villagers_and_wood() -> void:
+	var ui := _setup()
+	ui.sim.spawn_villager(Vector2i(5, 1), Villager.Role.WORKER)
+	ui.sim.planner.wood = 7
+	ui.refresh()
+	assert_str(ui.villager_count_label.text).is_equal(str(ui.sim.villagers.size()))
+	assert_str(ui.wood_count_label.text).is_equal("7")
