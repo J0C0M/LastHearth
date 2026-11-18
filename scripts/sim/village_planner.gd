@@ -15,6 +15,9 @@ const HOUSE_RING := Vector2(2.0, 6.0)
 const TORCH_RING := Vector2(6.0, 8.5)
 ## The village builds at most this many torches more than houses.
 const EXTRA_TORCHES := 2
+## A little randomness in where things are built, so the village grows like a
+## village and not like a grid. Uses the round's rng: same seed, same village.
+const SPOT_JITTER := 1.5
 const NO_CELL := Vector2i(-1, -1)
 
 var wood := 0
@@ -60,7 +63,8 @@ func finish(site: Building) -> void:
 
 
 ## The best free tile in [param ring] (distance from the hearth), preferring
-## tiles close to the hearth and in direction [param toward]. NO_CELL if none.
+## tiles close to the hearth and in direction [param toward], with a little
+## randomness. NO_CELL if none.
 func find_spot(sim: Simulation, ring: Vector2, toward: Vector2) -> Vector2i:
 	var hearth := sim.hearth.cell
 	var reach := ceili(ring.y)
@@ -75,7 +79,7 @@ func find_spot(sim: Simulation, ring: Vector2, toward: Vector2) -> Vector2i:
 			var cell := hearth + Vector2i(dx, dy)
 			if not _can_build_on(sim, cell):
 				continue
-			var score := distance - 3.0 * offset.normalized().dot(toward)
+			var score := distance - 3.0 * offset.normalized().dot(toward) + sim.rng.randf() * SPOT_JITTER
 			if score < best_score:
 				best_score = score
 				best = cell
