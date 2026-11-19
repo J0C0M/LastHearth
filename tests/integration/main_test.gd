@@ -35,9 +35,37 @@ func test_game_starts_in_the_main_menu() -> void:
 
 func test_main_menu_lists_both_levels() -> void:
 	var main := _main()
-	assert_int(main.main_menu.level_buttons.get_child_count()).is_greater_equal(2)
-	assert_str((main.main_menu.level_buttons.get_child(0) as Button).text).is_equal("Level 1: Hold the Light")
-	assert_str((main.main_menu.level_buttons.get_child(1) as Button).text).is_equal("Level 2: Let the Dark In")
+	assert_int(main.main_menu.buttons.size()).is_greater_equal(2)
+	assert_str(main.main_menu.buttons[0].text).is_equal("Level 1: Hold the Light")
+	assert_str(main.main_menu.buttons[1].text).is_equal("Level 2: Let the Dark In")
+
+
+func test_every_level_in_the_menu_shows_a_description_without_hover() -> void:
+	var main := _main()
+	var menu := main.main_menu
+	assert_int(menu.descriptions.size()).is_equal(menu.buttons.size())
+	for i: int in menu.levels.size():
+		var description := menu.descriptions[i]
+		assert_bool(description.visible).is_true()
+		assert_str(description.text).is_not_empty()
+		assert_str(description.text).is_equal(MainMenu.description_of(menu.levels[i]))
+		# Right under its own button, in the same entry.
+		assert_object(description.get_parent().get_parent()).is_same(menu.buttons[i].get_parent())
+
+
+func test_level_1_shows_its_own_summary_in_the_menu() -> void:
+	var main := _main()
+	var level_1: LevelData = main.main_menu.levels[0]
+	assert_str(level_1.summary).is_not_empty()
+	assert_str(main.main_menu.descriptions[0].text).is_equal(level_1.summary)
+
+
+func test_a_level_without_summary_describes_its_goal() -> void:
+	var level := LevelData.new()
+	level.goal = LevelData.Goal.EXTINGUISH
+	assert_str(MainMenu.description_of(level)).is_equal(MainMenu.goal_summary(LevelData.Goal.EXTINGUISH))
+	level.summary = "Own text."
+	assert_str(MainMenu.description_of(level)).is_equal("Own text.")
 
 
 func test_choosing_a_level_shows_the_briefing_over_the_map() -> void:
