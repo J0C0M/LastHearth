@@ -22,6 +22,9 @@ const MAX_TOOLS := 7
 @export var id: StringName = &""
 ## Name shown in the level select, for example "Hold the Light".
 @export var title: String = ""
+## One or two short sentences under the level in the main menu. Empty means
+## the menu shows a sentence about the goal instead (MainMenu.goal_summary()).
+@export var summary: String = ""
 ## Text shown before the level starts.
 @export_multiline var briefing: String = ""
 @export var goal: Goal = Goal.DEFEND
