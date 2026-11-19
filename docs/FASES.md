@@ -9,7 +9,7 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 | 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | ✅ Klaar |
 | 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | ✅ Klaar |
-| 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | 🚧 Bezig |
+| 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ✅ Klaar |
 | 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ⏳ Gepland |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
 | 6 | Testen, documentatie en oplevering | `Testing-And-Delivery` | iedereen | PT-05, PT-06, PT-07 | 3 | ⏳ Gepland |
@@ -140,13 +140,13 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 
 | Kaart | Wat | Raakt | Wie |
 |---|---|---|---|
-| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (nu alleen tooltip) | `main_menu.tscn`/`.gd`, `LevelData` | _(naam)_ |
+| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (🔍 in review, branch `Show-Level-Description-In-Menu`) | `main_menu.tscn`/`.gd`, `LevelData` | Roexoe (duo A) |
 | US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu | `main.gd`, `ui.tscn` | _(naam)_ |
 | PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README | docs | _(naam)_ |
 | PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) | Trello, `docs/trello-voorstel.md` | Jochem |
 | US-28 | Spel schaalt mee met de venstergrootte (🔍 in review, branch `Fix-Window-Scaling`) | `project.godot`, `world_camera.gd` | Jochem |
 
-- [ ] US-26
+- [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
 - [ ] US-27
 - [ ] PT-10
 - [ ] PT-11
@@ -164,7 +164,7 @@ Branch `Level-1-Hold-The-Light` · Duo A · US-12
 - [x] Sterren voor het aantal overlevende dorpelingen (`scripts/sim/levels/level_1_rules.gd`)
 - [x] Briefingtekst
 - [x] Tests (`level_1_map_test`, `level_1_rules_test`, Flare in `simulation_test` en `game_ui_test`)
-- [ ] PR `Level-1-Hold-The-Light` → `Development`
+- [x] PR `Level-1-Hold-The-Light` → `Development` gemerged ([#8](https://github.com/J0C0M/LastHearth/pull/8))
 
 **Gemaakte keuzes (fase 4A)**
 - **Kaart:** haard op (48, 32), putten op (9, 8), (86, 9) en (68, 55). Elke put heeft een eigen soort weg: in het westen een rivier met één doorwaadplaats, in het noordoosten een bergkam met één pas, in het zuidoosten open grasland waar de speler zelf een gracht moet graven. Drie bosjes liggen binnen het werkbereik van de houthakkers (14 tegels). De kaart blijft ruis-terrein met `map_seed` 101, dus elke seed geeft een andere kaart met dezelfde indeling.
