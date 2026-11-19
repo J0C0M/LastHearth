@@ -280,7 +280,9 @@ func _update_brush_preview() -> void:
 	if over_ui or sim.is_over() or selected_tool == null:
 		world_view.hide_brush()
 		return
-	var cells := Simulation.brush_cells(world_view.mouse_cell(), brush_size)
+	# Terrain tools paint with the brush; Flare shows its own radius, a torch one tile.
+	var radius := brush_size if selected_tool.is_terrain_tool() else selected_tool.radius
+	var cells := Simulation.brush_cells(world_view.mouse_cell(), radius)
 	world_view.show_brush(cells, sim.resource >= selected_tool.cost)
 
 

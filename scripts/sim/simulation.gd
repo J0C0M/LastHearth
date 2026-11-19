@@ -5,7 +5,8 @@ extends RefCounted
 ## GameUI calls [method use_tool], and WorldView reads [member grid],
 ## [member hearth], [member villagers], [member enemies] and [member buildings].
 ##
-## Fase 4A/4B voegen de overige gereedschappen toe en vullen stars() in.
+## Fase 4A voegde Flare en de sterren van level 1 toe (Level1Rules); fase 4B
+## voegt de gereedschappen en sterren van level 2 toe.
 
 ## A terrain tool changed [param cell]. WorldView redraws that tile.
 signal tile_changed(cell: Vector2i)
@@ -18,6 +19,8 @@ signal wave_spawned(wave: int)
 signal villager_died(villager: Villager)
 ## A house or torch is finished (built by the village or placed by the player).
 signal building_finished(building: Building)
+## A Flare burst at [param cell] with [param radius] tiles. WorldView shows a flash.
+signal flare_used(cell: Vector2i, radius: int)
 
 ## Why the last [method use_tool] call did nothing. GameUI shows a message for it.
 enum Refusal {
@@ -151,14 +154,20 @@ func use_tool(tool: ToolData, cell: Vector2i, brush: int = 0) -> bool:
 		return _paint_terrain(tool, cell, brush)
 	if tool.kind == Kind.TORCH:
 		return _place_torch(tool, cell)
-	# FLARE (fase 4A), GLOOM, SUMMON and SNUFF (fase 4B) come later.
+	if tool.kind == Kind.FLARE:
+		return _use_flare(tool, cell)
+	# GLOOM, SUMMON and SNUFF (fase 4B) come later.
 	return _refuse(Refusal.NOT_AVAILABLE)
 
 
-## Stars earned this round (0-3). Fase 4A/4B fill this in per level; until
-## then it is always 0.
+## Stars earned this round (0-3), counted by the rules of the level's goal.
+## Level 1 (DEFEND): see Level1Rules. Level 2 (EXTINGUISH) fills this in in fase 4B.
 func stars() -> int:
-	return 0
+	match level.goal:
+		LevelData.Goal.DEFEND:
+			return Level1Rules.stars(self)
+		_:
+			return 0
 
 
 ## Everything that gives light: the hearth, lit torches and finished houses.
@@ -337,6 +346,26 @@ func _place_torch(tool: ToolData, cell: Vector2i) -> bool:
 	add_building(torch)
 	last_refusal = Refusal.NONE
 	building_finished.emit(torch)
+	return true
+
+
+## Flare: every enemy within [member ToolData.radius] tiles of [param cell]
+## burns up at once, and the gloom there is wiped away.
+func _use_flare(tool: ToolData, cell: Vector2i) -> bool:
+	if resource + 0.0001 < tool.cost:
+		return _refuse(Refusal.NOT_ENOUGH_RESOURCE)
+	resource -= tool.cost
+	var center := Entity.center_of(cell)
+	var reach := tool.radius + 0.5
+	for enemy: Enemy in enemies:
+		if enemy.is_alive() and enemy.pos.distance_to(center) <= reach:
+			enemy.take_damage(enemy.hp)
+	for target: Vector2i in brush_cells(cell, tool.radius):
+		if grid.in_bounds(target):
+			grid.set_gloom(target, 0.0)
+	_remove_dead()
+	last_refusal = Refusal.NONE
+	flare_used.emit(cell, tool.radius)
 	return true
 
 

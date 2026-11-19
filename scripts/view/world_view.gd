@@ -47,6 +47,10 @@ const ENEMY_ROWS := {&"shadow": 2, &"wraith": 3, &"brute": 4}
 ## Units are drawn a little above their position, so their feet stand on it.
 const UNIT_OFFSET := Vector2(0, -4)
 const BURN_COLOR := Color(1.7, 0.75, 0.45)
+## The Flare flash: brighter and whiter than a torch, gone in under a second.
+const FLARE_COLOR := Color(1.0, 0.93, 0.7)
+const FLARE_ENERGY := 3.0
+const FLARE_TIME := 0.7
 
 const Terrain := WorldGrid.Terrain
 
@@ -82,8 +86,10 @@ var _building_sprites := {}
 func setup(simulation: Simulation) -> void:
 	if sim != null and sim.tile_changed.is_connected(_on_tile_changed):
 		sim.tile_changed.disconnect(_on_tile_changed)
+		sim.flare_used.disconnect(_on_flare_used)
 	sim = simulation
 	sim.tile_changed.connect(_on_tile_changed)
+	sim.flare_used.connect(_on_flare_used)
 
 	terrain.clear()
 	shore.clear()
@@ -336,6 +342,21 @@ func _clear_sprites() -> void:
 		sprite.queue_free()
 	_unit_sprites.clear()
 	_building_sprites.clear()
+
+
+## A Flare: a bright white-gold flash the size of its radius that fades out.
+## It also plays while the game is paused, because the player can use tools then.
+func _on_flare_used(cell: Vector2i, radius: int) -> void:
+	var flash := _new_light()
+	flash.color = FLARE_COLOR
+	flash.position = cell_center(cell)
+	flash.texture_scale = (radius + 0.5) * TILE_SIZE / (LIGHT_TEXTURE_SIZE * 0.5)
+	flash.energy = FLARE_ENERGY
+	flash.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(flash)
+	var tween := flash.create_tween()
+	tween.tween_property(flash, "energy", 0.0, FLARE_TIME).set_ease(Tween.EASE_IN)
+	tween.tween_callback(flash.queue_free)
 
 
 func _new_light() -> PointLight2D:

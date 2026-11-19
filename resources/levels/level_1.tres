@@ -17,7 +17,7 @@
 script = ExtResource("1_7blc3")
 id = &"level_1"
 title = "Hold the Light"
-briefing = "Shadows crawl out of three Night Pits towards the last hearth. Shape the land, light torches and keep the hearth burning until dawn."
+briefing = "Shadows crawl out of three Night Pits towards the last hearth: across the river ford in the west, through the mountain pass in the north-east and over open fields in the south-east. They always take the shortest way. Dig a moat or raise a mountain to steer them into the light of your torches, and save Flare for when they reach the village. Plant forest near the village: your villagers chop wood to build houses and torches. Keep the hearth burning until dawn; the more villagers see the sun, the more stars you earn."
 map_type = 1
 map_seed = 101
 resource_icon = ExtResource("1_4u7ew")
