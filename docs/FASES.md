@@ -9,7 +9,7 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 | 1 | Simulatiekern | `Simulation-Core` | Jochem | PT-04, US-01 (deels) | 2 | ✅ Klaar |
 | 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | ✅ Klaar |
-| 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ⏳ Gepland |
+| 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | 🚧 Bezig |
 | 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ⏳ Gepland |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
 | 6 | Testen, documentatie en oplevering | `Testing-And-Delivery` | iedereen | PT-05, PT-06, PT-07 | 3 | ⏳ Gepland |
@@ -158,12 +158,21 @@ Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine,
 
 Branch `Level-1-Hold-The-Light` · Duo A · US-12
 
-- [ ] `gen_level_1`: drie Nachtputten, het dorp en bos in de buurt
-- [ ] Gereedschappen: land, water, bos, berg, fakkel en Flare
-- [ ] Winst bij de dageraad met de haard nog aan
-- [ ] Sterren voor het aantal overlevende dorpelingen
-- [ ] Briefingtekst
-- [ ] Tests
+- [x] `gen_level_1`: drie Nachtputten, het dorp en bos in de buurt (`scripts/sim/levels/level_1_map.gd`)
+- [x] Gereedschappen: land, water, bos, berg, fakkel en Flare
+- [x] Winst bij de dageraad met de haard nog aan
+- [x] Sterren voor het aantal overlevende dorpelingen (`scripts/sim/levels/level_1_rules.gd`)
+- [x] Briefingtekst
+- [x] Tests (`level_1_map_test`, `level_1_rules_test`, Flare in `simulation_test` en `game_ui_test`)
+- [ ] PR `Level-1-Hold-The-Light` → `Development`
+
+**Gemaakte keuzes (fase 4A)**
+- **Kaart:** haard op (48, 32), putten op (9, 8), (86, 9) en (68, 55). Elke put heeft een eigen soort weg: in het westen een rivier met één doorwaadplaats, in het noordoosten een bergkam met één pas, in het zuidoosten open grasland waar de speler zelf een gracht moet graven. Drie bosjes liggen binnen het werkbereik van de houthakkers (14 tegels). De kaart blijft ruis-terrein met `map_seed` 101, dus elke seed geeft een andere kaart met dezelfde indeling.
+- **Flare** (100 Licht, straal 6): doodt meteen elke vijand binnen de straal en veegt de gloom daar weg. Het is een tak in `Simulation.use_tool()` (`_use_flare()`), met het signaal `flare_used(cell, radius)`; `WorldView` toont een witgouden flits die ook tijdens de pauze speelt. Het penseelvoorbeeld toont bij Flare de straal en bij een fakkel één tegel, in plaats van de penseelgrootte.
+- **Sterren:** 0 bij verlies; bij winst 1, 2 als minstens 60% van alle dorpelingen (levend + gedood) de dageraad haalt, 3 bij minstens 90%. Een deel in plaats van een aantal, zodat de grootte van het dorp niet uitmaakt. `Simulation.stars()` roept `Level1Rules.stars()` aan voor het doel DEFEND; duo B kan een tak voor EXTINGUISH toevoegen.
+- Winst bij de dageraad bestond al (`Simulation.is_won()` voor DEFEND).
+- Zonder speler gaat de haard rond 2:35 uit (van de 4:30): de speler moet dus echt iets doen. Balans in fase 5.
+- Gedeelde bestanden kleinst mogelijk aangepast: `simulation.gd` (Flare-tak, signaal, `stars()`), `game_ui.gd` (penseelvoorbeeld) en `world_view.gd` (flits). De testen die Flare als "nog niet beschikbaar" gebruikten, gebruiken nu Snuff.
 
 ## Fase 4B: Level 2, Let the Dark In
 

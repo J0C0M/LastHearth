@@ -17,7 +17,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 1 Simulatiekern | ✅ Klaar (PR #2) | Jochem |
 | 2 Wereld, camera en interface | ✅ Klaar (PR #3) | Jochem |
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
-| 4A Level 1: Hold the Light | ⏳ Volgende: kan nu starten (branch `Level-1-Hold-The-Light`) | duo A |
+| 4A Level 1: Hold the Light | 🚧 Bezig (branch `Level-1-Hold-The-Light`) | duo A |
 | 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
 | Losse kaarten | ⏳ US-26, US-27, PT-10, PT-11 in de Sprint Backlog; 🔍 US-28 in review (zie `docs/FASES.md`) | wie ze oppakt |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |

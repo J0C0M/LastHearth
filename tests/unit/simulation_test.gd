@@ -266,7 +266,7 @@ func test_tile_changed_is_emitted_for_every_changed_tile() -> void:
 
 func test_tools_from_later_phases_are_refused_for_now() -> void:
 	var sim := _sim()
-	assert_bool(sim.use_tool(_tool(Kind.FLARE, 1.0), Vector2i(7, 2))).is_false()
+	assert_bool(sim.use_tool(_tool(Kind.SNUFF, 1.0), Vector2i(7, 2))).is_false()
 	assert_float(sim.resource).is_equal(10.0)
 
 
@@ -331,7 +331,7 @@ func test_refusal_says_when_a_pit_would_be_cut_off() -> void:
 
 func test_refusal_says_when_a_tool_is_not_available_yet() -> void:
 	var sim := _sim()
-	sim.use_tool(_tool(Kind.FLARE), Vector2i(7, 2))
+	sim.use_tool(_tool(Kind.SNUFF), Vector2i(7, 2))
 	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NOT_AVAILABLE)
 
 
@@ -355,8 +355,9 @@ func test_hearth_that_is_out_gives_no_light_source() -> void:
 	assert_bool(sim.light_sources().is_empty()).is_true()
 
 
-func test_stars_are_zero_until_phase_4() -> void:
-	var sim := _sim()
+func test_stars_of_an_extinguish_level_are_zero_until_phase_4b() -> void:
+	var sim := _sim(OPEN_MAP, _level(Goal.EXTINGUISH))
+	sim.hearth.damage(20.0)
 	sim.tick(100.0)
 	assert_int(sim.stars()).is_equal(0)
 
@@ -436,3 +437,90 @@ func test_same_seed_gives_the_same_night() -> void:
 	assert_int(a.enemies.size()).is_equal(b.enemies.size())
 	assert_float(a.hearth.health).is_equal(b.hearth.health)
 	assert_int(a.planner.wood).is_equal(b.planner.wood)
+
+
+# --- Flare (fase 4A) ----------------------------------------------------------
+
+func _flare(cost: float = 5.0, radius: int = 2) -> ToolData:
+	var tool := _tool(Kind.FLARE, cost)
+	tool.radius = radius
+	return tool
+
+
+func _enemy_data() -> EnemyData:
+	var data := EnemyData.new()
+	data.hp = 50.0
+	data.light_sensitivity = 0.0
+	return data
+
+
+func test_flare_burns_every_enemy_within_its_radius() -> void:
+	var sim := _sim()
+	var near := sim.spawn_enemy(_enemy_data(), Vector2i(7, 2))
+	var edge := sim.spawn_enemy(_enemy_data(), Vector2i(9, 2))
+	var far := sim.spawn_enemy(_enemy_data(), Vector2i(0, 4))
+	assert_bool(sim.use_tool(_flare(), Vector2i(7, 2))).is_true()
+	assert_bool(near.is_alive()).is_false()
+	assert_bool(edge.is_alive()).is_false()
+	assert_bool(far.is_alive()).is_true()
+	assert_array(sim.enemies).contains_exactly([far])
+	assert_int(sim.enemies_killed).is_equal(2)
+
+
+func test_flare_costs_its_price_once() -> void:
+	var sim := _sim()
+	assert_bool(sim.use_tool(_flare(4.0), Vector2i(7, 2), 3)).is_true()
+	assert_float(sim.resource).is_equal(6.0)
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NONE)
+
+
+func test_flare_is_refused_without_enough_resource() -> void:
+	var sim := _sim()
+	var enemy := sim.spawn_enemy(_enemy_data(), Vector2i(7, 2))
+	assert_bool(sim.use_tool(_flare(11.0), Vector2i(7, 2))).is_false()
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NOT_ENOUGH_RESOURCE)
+	assert_bool(enemy.is_alive()).is_true()
+	assert_float(sim.resource).is_equal(10.0)
+
+
+func test_flare_wipes_the_gloom_around_it() -> void:
+	var sim := _sim()
+	for cell: Vector2i in Simulation.brush_cells(Vector2i(7, 2), 3):
+		if sim.grid.in_bounds(cell):
+			sim.grid.set_gloom(cell, 1.0)
+	sim.use_tool(_flare(), Vector2i(7, 2))
+	for cell: Vector2i in Simulation.brush_cells(Vector2i(7, 2), 2):
+		if sim.grid.in_bounds(cell):
+			assert_float(sim.grid.get_gloom(cell)).is_equal(0.0)
+	# (5, 0) lies just outside a radius of 2, so its gloom stays.
+	assert_float(sim.grid.get_gloom(Vector2i(5, 0))).is_equal(1.0)
+
+
+func test_flare_used_is_emitted_with_cell_and_radius() -> void:
+	var sim := _sim()
+	var bursts: Array = []
+	sim.flare_used.connect(func(cell: Vector2i, radius: int) -> void: bursts.append([cell, radius]))
+	sim.use_tool(_flare(5.0, 2), Vector2i(7, 2))
+	assert_array(bursts).contains_exactly([[Vector2i(7, 2), 2]])
+
+
+func test_flare_from_level_1_resource_works() -> void:
+	var level := load("res://resources/levels/level_1.tres") as LevelData
+	var flare := level.find_tool(&"flare")
+	var sim := Simulation.new(level)
+	sim.resource = flare.cost
+	var at := sim.hearth.cell + Vector2i(3, 0)
+	var enemy := sim.spawn_enemy(level.shadow, at)
+	assert_bool(sim.use_tool(flare, at)).is_true()
+	assert_bool(enemy.is_alive()).is_false()
+	assert_float(sim.resource).is_equal(0.0)
+
+
+# --- Stars of a DEFEND level (fase 4A) ----------------------------------------
+
+func test_stars_of_a_defend_level_follow_level_1_rules() -> void:
+	var sim := _sim()
+	sim.tick(100.0)
+	assert_bool(sim.is_won()).is_true()
+	assert_int(sim.stars()).is_equal(Level1Rules.stars(sim))
+	assert_int(sim.stars()).is_greater(0)
