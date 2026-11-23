@@ -95,6 +95,19 @@ func toggle_pause() -> void:
 		_set_paused(not get_tree().paused)
 
 
+## The message when a villager dies. In a level where a kill pays off (level 2:
+## dawn comes later, Dread comes back) it says what the player gained.
+static func villager_died_text(level: LevelData) -> String:
+	var gains := PackedStringArray()
+	if level.dawn_delay_per_kill > 0.0:
+		gains.append("dawn +%d s" % roundi(level.dawn_delay_per_kill))
+	if level.resource_per_kill > 0.0:
+		gains.append("+%d %s" % [roundi(level.resource_per_kill), level.resource_label])
+	if gains.is_empty():
+		return "A villager has fallen."
+	return "A villager has fallen: %s." % ", ".join(gains)
+
+
 func _process(delta: float) -> void:
 	if screen == Screen.MENU:
 		_drift_menu_camera()
@@ -153,7 +166,7 @@ func _on_wave_spawned(wave: int) -> void:
 
 
 func _on_villager_died(_villager: Villager) -> void:
-	ui.show_message("A villager has fallen.")
+	ui.show_message(villager_died_text(sim.level))
 
 
 ## The world behind the main menu: a night of the first level, already dark.
