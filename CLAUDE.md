@@ -18,11 +18,11 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 2 Wereld, camera en interface | ✅ Klaar (PR #3) | Jochem |
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
 | 4A Level 1: Hold the Light | ✅ Klaar (PR #8) | duo A |
-| 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
+| 4B Level 2: Let the Dark In | 🔍 In review (PR #12, branch `Level-2-Let-The-Dark-In`) | Roexoe |
 | Losse kaarten | 🔍 US-26, US-27, US-28, PT-10 en PT-11 in review; Sprint Backlog leeg (zie `docs/FASES.md`) | Jochem, Roexoe |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
-Wat er nu speelbaar is: menu (met een korte beschrijving per level) → briefing → een nacht met terrein schilderen, fakkels en Flare, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Level 1 heeft een eigen kaart en sterren. Nog niet: de level 2-gereedschappen, de kaart en sterren van level 2 (fase 4B).
+Wat er nu speelbaar is: menu (met een korte beschrijving per level) → briefing → een nacht met terrein schilderen, fakkels en Flare, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Level 1 en level 2 hebben elk een eigen kaart, eigen gereedschappen en sterren. Nog niet: bots en balans (fase 5).
 
 Werk deze tabel bij aan het begin (🚧 Bezig) en het eind (🔍 In review, ✅ Klaar) van elke fase. Werk je aan 4A of 4B, pas dan **alleen je eigen rij** aan (hier en in `docs/FASES.md`), zodat de duo's geen merge-conflict krijgen.
 
