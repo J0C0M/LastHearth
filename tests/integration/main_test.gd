@@ -157,31 +157,57 @@ func test_main_menu_from_the_game_resets_pause_and_speed() -> void:
 	assert_object(main.world.sim).is_not_same(main.sim)
 
 
-func _press_escape(main: Main) -> void:
+func _press(main: Main, action: StringName) -> void:
 	var event := InputEventAction.new()
-	event.action = &"ui_cancel"
+	event.action = action
 	event.pressed = true
 	main._unhandled_input(event)
 
 
-func test_escape_while_playing_pauses() -> void:
+func _press_escape(main: Main) -> void:
+	_press(main, &"ui_cancel")
+
+
+func test_escape_while_playing_opens_the_pause_screen() -> void:
 	var main := _playing()
 	_press_escape(main)
 	assert_int(main.screen).is_equal(Main.Screen.PLAYING)
 	assert_bool(get_tree().paused).is_true()
 	assert_bool(main.ui.paused_overlay.visible).is_true()
+	assert_str(main.ui.resume_button.text).is_equal("Resume (Esc)")
+	assert_str(main.ui.paused_menu_button.text).is_equal("Main menu (Space)")
 
 
-func test_escape_on_the_pause_screen_goes_to_the_main_menu() -> void:
+func test_escape_again_closes_the_pause_screen() -> void:
+	var main := _playing()
+	_press_escape(main)
+	_press_escape(main)
+	assert_int(main.screen).is_equal(Main.Screen.PLAYING)
+	assert_bool(get_tree().paused).is_false()
+	assert_bool(main.ui.paused_overlay.visible).is_false()
+
+
+func test_space_on_the_escape_menu_goes_to_the_main_menu() -> void:
 	var main := _playing()
 	main.cycle_speed()
 	_press_escape(main)
-	_press_escape(main)
+	_press(main, &"pause")
 	assert_int(main.screen).is_equal(Main.Screen.MENU)
 	assert_bool(main.main_menu.visible).is_true()
 	assert_bool(main.ui.visible).is_false()
 	assert_bool(get_tree().paused).is_false()
 	assert_float(Engine.time_scale).is_equal(1.0)
+
+
+func test_space_pauses_and_resumes_without_leaving_the_game() -> void:
+	var main := _playing()
+	_press(main, &"pause")
+	assert_bool(get_tree().paused).is_true()
+	assert_str(main.ui.resume_button.text).is_equal("Resume (Space)")
+	assert_str(main.ui.paused_menu_button.text).is_equal("Main menu")
+	_press(main, &"pause")
+	assert_int(main.screen).is_equal(Main.Screen.PLAYING)
+	assert_bool(get_tree().paused).is_false()
 
 
 func test_escape_on_the_result_screen_goes_to_the_main_menu() -> void:

@@ -145,8 +145,12 @@ func show_speed(speed: int) -> void:
 	speed_buttons[index].button_pressed = true
 
 
-func show_paused(paused: bool) -> void:
+## Shows or hides the pause screen. Opened with Esc ([param escape_menu]), Esc
+## closes it and Space goes to the main menu; paused with Space, Space resumes.
+func show_paused(paused: bool, escape_menu: bool = false) -> void:
 	paused_overlay.visible = paused
+	resume_button.text = "Resume (Esc)" if escape_menu else "Resume (Space)"
+	paused_menu_button.text = "Main menu (Space)" if escape_menu else "Main menu"
 	pause_button.icon = ICON_PLAY if paused else ICON_PAUSE
 	pause_button.tooltip_text = "Resume (Space)" if paused else "Pause (Space)"
 
