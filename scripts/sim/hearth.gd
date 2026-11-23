@@ -33,16 +33,21 @@ func is_lit() -> bool:
 
 ## Enemies hurt the hearth. Emits [signal extinguished] once when it goes out.
 func damage(amount: float) -> void:
-	if not is_lit() or amount <= 0.0:
+	# not (amount > 0.0) weigert ook NaN.
+	if not is_lit() or not (amount > 0.0):
 		return
-	health = maxf(0.0, health - amount)
-	if health <= 0.0:
+	health -= amount
+	# Een restje van float-afronding (1e-14) telt als uit.
+	if health < 0.001:
+		health = 0.0
 		extinguished.emit()
 
 
 ## Snuff dims the hearth: its light shrinks, but it is not damaged.
 ## [param amount] is a fraction of full brightness (0.25 = a quarter).
 func dim(amount: float) -> void:
+	if not (amount > 0.0):
+		return
 	brightness = clampf(brightness - amount, 0.0, 1.0)
 
 
