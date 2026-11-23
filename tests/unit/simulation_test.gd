@@ -266,7 +266,6 @@ func test_boxing_in_a_walking_enemy_is_refused_and_free() -> void:
 	assert_float(sim.resource).is_equal(10.0)
 
 
-
 func test_a_flying_enemy_can_be_boxed_in() -> void:
 	var sim := _sim()
 	var wraith := _enemy_data()
