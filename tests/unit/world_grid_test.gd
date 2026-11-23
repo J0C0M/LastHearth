@@ -158,3 +158,13 @@ func test_new_grid_has_gloom_rate_one_everywhere() -> void:
 	var grid := WorldGrid.new(Vector2i(4, 4))
 	assert_int(grid.gloom_rate.size()).is_equal(16)
 	assert_float(grid.gloom_rate[5]).is_equal(1.0)
+
+
+func test_painting_terrain_changes_how_fast_gloom_grows_there() -> void:
+	var grid := WorldGrid.new(Vector2i(4, 4))
+	var cell := Vector2i(1, 1)
+	grid.gloom_rate[grid.index(cell)] = 0.8 # ruis van MapGen
+	grid.set_tile(cell, Terrain.FOREST)
+	assert_float(grid.gloom_rate[grid.index(cell)]).is_equal_approx(0.8 * MapGen.GLOOM_TERRAIN_FACTOR[Terrain.FOREST], 0.0001)
+	grid.set_tile(cell, Terrain.GRASS)
+	assert_float(grid.gloom_rate[grid.index(cell)]).is_equal_approx(0.8, 0.0001)

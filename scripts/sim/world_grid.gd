@@ -98,6 +98,9 @@ func set_tile(cell: Vector2i, terrain: Terrain) -> bool:
 	var i := index(cell)
 	if tiles[i] == terrain:
 		return false
+	# Gloom kruipt per terreinsoort anders snel, ook over geschilderd terrein.
+	# Schalen met de verhouding houdt de ruis van MapGen.set_gloom_rates() heel.
+	gloom_rate[i] *= MapGen.GLOOM_TERRAIN_FACTOR[terrain] / MapGen.GLOOM_TERRAIN_FACTOR[tiles[i]]
 	tiles[i] = terrain
 	return true
 
