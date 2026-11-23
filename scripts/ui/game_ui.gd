@@ -119,7 +119,7 @@ func select_tool(index: int) -> void:
 	_tool_buttons[index].button_pressed = true
 	tool_name_label.text = selected_tool.name
 	tool_cost_label.text = "%s %s%s" % [_cost_text(selected_tool.cost), sim.level.resource_label,
-		" per tile" if selected_tool.is_terrain_tool() else ""]
+		" per tile" if selected_tool.paints_with_brush() else ""]
 	tool_description_label.text = selected_tool.description
 
 
@@ -226,6 +226,11 @@ func _show_refusal(reason: Simulation.Refusal) -> void:
 			show_message("The dark must always have a way to the hearth.")
 		Simulation.Refusal.NOT_AVAILABLE:
 			show_message("%s is not available yet." % selected_tool.name)
+		Simulation.Refusal.NEEDS_GLOOM:
+			if selected_tool.kind == ToolData.Kind.GLOOM:
+				show_message("Gloom only grows from the dark.")
+			else:
+				show_message("Summon only on gloom.")
 
 
 func _build_toolbar() -> void:
@@ -280,8 +285,9 @@ func _update_brush_preview() -> void:
 	if over_ui or sim.is_over() or selected_tool == null:
 		world_view.hide_brush()
 		return
-	# Terrain tools paint with the brush; Flare shows its own radius, a torch one tile.
-	var radius := brush_size if selected_tool.is_terrain_tool() else selected_tool.radius
+	# Terrain tools and Gloom paint with the brush; Flare and Snuff show their own
+	# radius, a torch or summon one tile.
+	var radius := brush_size if selected_tool.paints_with_brush() else selected_tool.radius
 	var cells := Simulation.brush_cells(world_view.mouse_cell(), radius)
 	world_view.show_brush(cells, sim.resource >= selected_tool.cost)
 
