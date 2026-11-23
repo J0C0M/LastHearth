@@ -59,3 +59,10 @@ func test_light_source_is_at_the_hearth() -> void:
 	var source := hearth.light_source()
 	assert_that(source.cell).is_equal(Vector2i(7, 3))
 	assert_float(source.radius).is_equal(Hearth.BASE_LIGHT_RADIUS)
+
+
+func test_damage_and_dim_shrink_the_light_together() -> void:
+	var hearth := Hearth.new(Vector2i.ZERO, 100.0)
+	hearth.damage(50.0)
+	hearth.dim(0.5)
+	assert_float(hearth.light_radius()).is_equal(lerpf(Hearth.MIN_LIGHT_RADIUS, Hearth.BASE_LIGHT_RADIUS, 0.25))

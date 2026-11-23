@@ -4,14 +4,14 @@ extends RefCounted
 ## until dawn. Level 2: put it out before dawn. Its light pushes gloom back.
 ##
 ## Twee manieren om de haard te verzwakken:
-## - damage(): vijanden doen schade; bij 0 hp gaat de haard uit.
+## - damage(): vijanden doen schade; het licht krimpt mee en bij 0 hp gaat de haard uit.
 ## - dim(): Snuff maakt de lichtcirkel kleiner, zonder schade.
 
 signal extinguished
 
-## Light radius in tiles at full brightness.
+## Light radius in tiles at full brightness and health.
 const BASE_LIGHT_RADIUS := 8.0
-## Light radius at zero brightness, while the hearth still burns.
+## Light radius at zero brightness or health, while the hearth still burns.
 const MIN_LIGHT_RADIUS := 2.0
 
 var cell: Vector2i
@@ -54,7 +54,7 @@ func health_fraction() -> float:
 func light_radius() -> float:
 	if not is_lit():
 		return 0.0
-	return lerpf(MIN_LIGHT_RADIUS, BASE_LIGHT_RADIUS, brightness)
+	return lerpf(MIN_LIGHT_RADIUS, BASE_LIGHT_RADIUS, brightness * health_fraction())
 
 
 func light_source() -> LightSource:
