@@ -6,7 +6,8 @@ extends CanvasLayer
 ## the tile under the mouse. Pause and speed are handled by Main (GameUI asks).
 ##
 ## Toetsen: 1-7 kiezen een gereedschap, [ en ] veranderen de penseelgrootte,
-## de linkermuisknop schildert (ook slepen).
+## de linkermuisknop schildert (ook slepen). Met de muis boven een gereedschap
+## toont de infostrook de uitleg en kosten van dat gereedschap.
 
 signal pause_requested
 ## The player clicked a speed button (1, 2 or 3).
@@ -117,10 +118,18 @@ func select_tool(index: int) -> void:
 		return
 	selected_tool = sim.level.tools[index]
 	_tool_buttons[index].button_pressed = true
-	tool_name_label.text = selected_tool.name
-	tool_cost_label.text = "%s %s%s" % [_cost_text(selected_tool.cost), sim.level.resource_label,
-		" per tile" if selected_tool.paints_with_brush() else ""]
-	tool_description_label.text = selected_tool.description
+	show_tool_info(selected_tool)
+
+
+## Fills the info strip with the name, cost and explanation of [param tool].
+## Shows the selected tool, or the tool under the mouse in the toolbar.
+func show_tool_info(tool: ToolData) -> void:
+	if sim == null or tool == null:
+		return
+	tool_name_label.text = tool.name
+	tool_cost_label.text = "%s %s%s" % [_cost_text(tool.cost), sim.level.resource_label,
+		" per tile" if tool.paints_with_brush() else ""]
+	tool_description_label.text = tool.description
 
 
 func change_brush(step: int) -> void:
@@ -262,6 +271,9 @@ func _make_tool_slot(index: int, tool: ToolData) -> Button:
 	button.focus_mode = Control.FOCUS_NONE
 	button.tooltip_text = "%s (%d)" % [tool.name, index + 1]
 	button.pressed.connect(select_tool.bind(index))
+	# Hovering a slot explains that tool; leaving shows the selected one again.
+	button.mouse_entered.connect(show_tool_info.bind(tool))
+	button.mouse_exited.connect(func() -> void: show_tool_info(selected_tool))
 	button.add_child(_micro_label(str(index + 1), Vector2(3, 2), Color(0.75, 0.7, 0.66)))
 	var cost := _micro_label(_cost_text(tool.cost), Vector2(0, 17), COST_OK)
 	cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
