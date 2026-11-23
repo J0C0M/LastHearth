@@ -47,3 +47,9 @@ const TERRAIN_KINDS: Array[Kind] = [
 ## True for tools that change the terrain and are charged per tile.
 func is_terrain_tool() -> bool:
 	return kind in TERRAIN_KINDS
+
+
+## True for tools that paint with the brush and cost [member cost] per tile:
+## the terrain tools and Gloom.
+func paints_with_brush() -> bool:
+	return is_terrain_tool() or kind == Kind.GLOOM
