@@ -3,15 +3,28 @@ extends GdUnitTestSuite
 
 const MAIN_SCENE := "res://scenes/main/Main.tscn"
 const TEST_LEVEL := "res://resources/levels/test_level.tres"
+## The tests save their stars here, never in the real score file of the player.
+const STARS_PATH := "user://test_main_best_stars.cfg"
+
+
+func before_test() -> void:
+	_remove_stars_file()
 
 
 func after_test() -> void:
 	Engine.time_scale = 1.0
 	get_tree().paused = false
+	_remove_stars_file()
+
+
+func _remove_stars_file() -> void:
+	if FileAccess.file_exists(STARS_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(STARS_PATH))
 
 
 func _main() -> Main:
 	var main: Main = auto_free(load(MAIN_SCENE).instantiate())
+	main.best_stars = BestStars.new(STARS_PATH)
 	add_child(main)
 	return main
 
@@ -49,8 +62,8 @@ func test_every_level_in_the_menu_shows_a_description_without_hover() -> void:
 		assert_bool(description.visible).is_true()
 		assert_str(description.text).is_not_empty()
 		assert_str(description.text).is_equal(MainMenu.description_of(menu.levels[i]))
-		# Right under its own button, in the same entry.
-		assert_object(description.get_parent().get_parent()).is_same(menu.buttons[i].get_parent())
+		# Right under its own button (which shares a row with its stars), in the same entry.
+		assert_object(description.get_parent().get_parent()).is_same(menu.buttons[i].get_parent().get_parent())
 
 
 func test_level_1_shows_its_own_summary_in_the_menu() -> void:
@@ -133,6 +146,55 @@ func test_end_of_the_round_shows_the_result() -> void:
 	assert_bool(main.ui.result_screen.visible).is_true()
 	assert_str(main.ui.result_screen.title_label.text).is_equal("Dawn breaks")
 	assert_float(Engine.time_scale).is_equal(1.0)
+
+
+func test_a_won_round_saves_its_stars_for_the_next_start() -> void:
+	var main := _playing()
+	main.sim.tick(1000.0)
+	main._process(0.0)
+	var level_id := main.sim.level.id
+	assert_bool(main.sim.is_won()).is_true()
+	assert_int(main.sim.stars()).is_greater(0)
+	assert_int(main.best_stars.get_stars(level_id)).is_equal(main.sim.stars())
+	# A fresh start of the game reads the same score from user://.
+	assert_int(BestStars.new(STARS_PATH).get_stars(level_id)).is_equal(main.sim.stars())
+
+
+func test_a_lost_round_keeps_the_best_score() -> void:
+	var main := _playing()
+	main.best_stars.record(main.sim.level.id, 3)
+	main.sim.hearth.damage(main.sim.hearth.max_health)
+	main.sim.tick(0.1)
+	main._process(0.0)
+	assert_int(main.screen).is_equal(Main.Screen.RESULT)
+	assert_int(main.best_stars.get_stars(main.sim.level.id)).is_equal(3)
+
+
+func test_the_main_menu_shows_no_stars_before_a_level_is_won() -> void:
+	var main := _main()
+	assert_int(main.main_menu.star_rows.size()).is_equal(main.main_menu.buttons.size())
+	assert_int(main.main_menu.shown_stars(0)).is_equal(0)
+	assert_int(main.main_menu.shown_stars(1)).is_equal(0)
+
+
+func test_the_main_menu_shows_the_best_stars_per_level() -> void:
+	var main := _main()
+	main.best_stars.record(&"level_1", 2)
+	main.best_stars.record(&"level_2", 3)
+	main.show_menu()
+	assert_int(main.main_menu.shown_stars(0)).is_equal(2)
+	assert_int(main.main_menu.shown_stars(1)).is_equal(3)
+
+
+func test_back_in_the_menu_after_a_round_shows_the_new_best() -> void:
+	var main := _playing()
+	main.sim.tick(1000.0)
+	main._process(0.0)
+	var earned := main.sim.stars()
+	main.ui.menu_requested.emit()
+	var index := main.main_menu.buttons.size() - 1
+	assert_str(main.main_menu.buttons[index].text).contains("(dev)")
+	assert_int(main.main_menu.shown_stars(index)).is_equal(earned)
 
 
 func test_play_again_starts_a_fresh_round_of_the_same_level() -> void:
