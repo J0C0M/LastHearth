@@ -25,6 +25,9 @@ var speed := 1
 var screen := Screen.MENU
 
 var _menu_sim: Simulation
+## True when the pause screen was opened with Esc: then Esc closes it again and
+## Space goes to the main menu. Paused with Space, Space resumes.
+var _escape_menu := false
 
 @onready var world: WorldView = $World
 @onready var ui: GameUI = $GameUI
@@ -107,11 +110,24 @@ func _process(delta: float) -> void:
 		_finish_round()
 
 
+## Esc opens the pause screen and closes it again. On a pause screen opened
+## with Esc, Space goes to the main menu; otherwise Space pauses and resumes.
+## Esc on the result screen goes to the main menu. The briefing handles its own
+## Esc (back to the menu).
 func _unhandled_input(event: InputEvent) -> void:
+	if screen == Screen.RESULT and event.is_action_pressed("ui_cancel"):
+		show_menu()
+		get_viewport().set_input_as_handled()
+		return
 	if screen != Screen.PLAYING:
 		return
-	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
-		toggle_pause()
+	if event.is_action_pressed("ui_cancel"):
+		_set_paused(not get_tree().paused, true)
+	elif event.is_action_pressed("pause"):
+		if get_tree().paused and _escape_menu:
+			show_menu()
+		else:
+			toggle_pause()
 	elif event.is_action_pressed("speed_toggle"):
 		cycle_speed()
 	else:
@@ -126,9 +142,10 @@ func _finish_round() -> void:
 	ui.show_result(sim.is_won(), sim.stars())
 
 
-func _set_paused(paused: bool) -> void:
+func _set_paused(paused: bool, with_escape: bool = false) -> void:
 	get_tree().paused = paused
-	ui.show_paused(paused)
+	_escape_menu = paused and with_escape
+	ui.show_paused(paused, _escape_menu)
 
 
 func _on_wave_spawned(wave: int) -> void:

@@ -19,7 +19,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
 | 4A Level 1: Hold the Light | ✅ Klaar (PR #8) | duo A |
 | 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
-| Losse kaarten | ⏳ US-27, PT-10, PT-11 in de Sprint Backlog; 🔍 US-26 en US-28 in review (zie `docs/FASES.md`) | wie ze oppakt |
+| Losse kaarten | 🔍 US-26, US-27, US-28, PT-10 en PT-11 in review; Sprint Backlog leeg (zie `docs/FASES.md`) | Jochem, Roexoe |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Wat er nu speelbaar is: menu (met een korte beschrijving per level) → briefing → een nacht met terrein schilderen, fakkels en Flare, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Level 1 heeft een eigen kaart en sterren. Nog niet: de level 2-gereedschappen, de kaart en sterren van level 2 (fase 4B).
@@ -113,9 +113,24 @@ Werk deze tabel bij aan het begin (🚧 Bezig) en het eind (🔍 In review, ✅ 
 6. Pushen en een PR naar `Development` openen.
 7. Trello-kaart bijwerken (als er een Trello-tool is): bij de start naar **Doing**; als de PR open staat naar **Code Review + Functional Review**, met een reactie met branchnaam en PR-link. **Nooit zelf naar Done**; dat doet het team na de review. Verander of verwijder geen andere kaarten zonder akkoord van de gebruiker.
 
-Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `trelloReadChecklist`, want het bordoverzicht laat checklists weg). Let op: de checklists van oudere kaarten (US-02, US-03, US-04, US-10, PT-02, PT-04) komen nog uit een eerder concept (honger, kroniek, jaren, 5x snelheid). Die worden herschreven in PT-11; volg tot die tijd de **beschrijving** van de kaart en `docs/design.md`.
+Een kaart gaat pas naar Done als hij voldoet aan de **Definition of Done** (hieronder).
+
+Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `trelloReadChecklist`, want het bordoverzicht laat checklists weg). Een checklist *Oude criteria (vervallen concept)* komt uit een eerder concept (honger, kroniek, jaren): negeer die.
 
 Trello-bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
+
+## Definition of Done
+
+Een kaart is pas af als alles hieronder klopt. Tot die tijd staat hij niet in Done.
+
+1. **Acceptatiecriteria:** alle punten van de checklist *Acceptatiecriteria* op de kaart zijn gehaald en afgevinkt.
+2. **Code:** volgt de codeconventies hierboven, met statische types overal, en zit in de juiste laag (sim, weergave of interface).
+3. **Tests:** een nieuwe sim-klasse heeft een gdUnit4-test, en nieuw gedrag in schermen of de spellus een integratietest waar dat kan. `./run_tests.sh` geeft exitcode 0: geen falende tests en geen GDScript-waarschuwingen.
+4. **Echt gespeeld:** `godot --headless --path . --quit-after 30` start zonder fouten, en de wijziging is in het spel zelf bekeken, ook in een groter venster. Tijdens het spelen staan er geen errors of warnings in de Output of Debugger.
+5. **Documentatie:** `docs/FASES.md` en de **Huidige status** zijn bijgewerkt. Verandert er een toets, dan ook de besturing in `README.md`; bij nieuwe assets ook `assets/CREDITS.md`.
+6. **Git:** gesignde commits op je eigen account, één per stukje, met een Engels bericht en zonder Claude-vermelding. De branch is gepusht en heeft een PR naar `Development`.
+7. **Review:** iemand van het andere duo heeft de PR gelezen (code review) en de wijziging zelf gespeeld (functional review). Daarna is de PR gemerged.
+8. **Trello:** pas na de merge zet het team de kaart naar Done. Claude zet een kaart nooit zelf naar Done.
 
 ## Handige commando's
 
