@@ -147,7 +147,7 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 | US-28 | Spel schaalt mee met de venstergrootte (🔍 in review, branch `Fix-Window-Scaling`) | `project.godot`, `world_camera.gd` | Jochem |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
-- [x] US-27: Esc tijdens het spelen pauzeert, Esc op het pauzescherm of het resultaatscherm gaat naar het hoofdmenu (pauze en snelheid terug op normaal), Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toetsen
+- [x] US-27: Esc opent het pauzemenu en sluit het weer. In dat menu gaat spatie naar het hoofdmenu (pauze en snelheid terug op normaal); pauzeer je met spatie, dan speelt spatie weer verder. Esc op het resultaatscherm gaat naar het hoofdmenu, Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toets die op dat moment werkt
 - [x] PT-10: de Definition of Done staat in `CLAUDE.md` (sectie *Definition of Done*); de README vat hem samen en linkt ernaar
 - [x] PT-11: nieuwe criteria per kaart in `docs/trello-voorstel.md` (deel 2), na akkoord van Jochem op Trello gezet. Oude checklists heten nu *Oude criteria (vervallen concept)*; elke kaart van US-01 t/m US-28 en PT-02, PT-04, PT-09 t/m PT-11 heeft een checklist **Acceptatiecriteria**
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit

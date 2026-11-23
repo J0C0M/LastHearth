@@ -53,8 +53,9 @@ Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via h
 | Gereedschap kiezen | `1` – `7` |
 | Penseel kleiner / groter | `[` / `]` |
 | Schilderen met gereedschap | linkermuisknop |
-| Pauze (schilderen mag dan nog) | spatie of Esc |
-| Terug naar het hoofdmenu | Esc op het pauzescherm, het resultaatscherm of in de briefing |
+| Pauze (schilderen mag dan nog) | spatie (nog een keer spatie: verder spelen) |
+| Pauzemenu openen en sluiten | Esc |
+| Terug naar het hoofdmenu | spatie in het pauzemenu dat je met Esc opende; Esc op het resultaatscherm of in de briefing |
 | Snelheid 1x / 2x / 3x | Tab |
 | Camera bewegen | WASD, pijltjestoetsen of slepen met de middelste muisknop |
 | Zoomen | scrollwiel |

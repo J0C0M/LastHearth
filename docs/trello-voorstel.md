@@ -233,7 +233,7 @@ PT-01, PT-03 en PT-05 t/m PT-08 zijn projectkaarten zonder spelinhoud. Hun crite
 - ✅ Het hoofdmenu toont beide levels met naam en korte beschrijving, en een knop Quit
 - ✅ Een klik op een level toont de briefing met doel, verhaal en gereedschappen, met de kaart erachter
 - ✅ Start begint de nacht; Back of Esc gaat terug naar het hoofdmenu
-- ✅ Vanuit het spel kom je terug in het hoofdmenu via het pauzescherm (knop of Esc)
+- ✅ Vanuit het spel kom je terug in het hoofdmenu via het pauzescherm (knop, of Esc en dan spatie)
 
 **PT-02 · Project opzetten**
 - ✅ GitHub-repository met README en een Godot 4.7-project met `scenes/`, `scripts/`, `assets/`, `resources/` en `tests/`
