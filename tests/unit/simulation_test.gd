@@ -256,6 +256,29 @@ func test_cutting_a_pit_off_from_the_hearth_is_refused_and_free() -> void:
 	assert_bool(sim.flow_field.is_reachable(Vector2i(0, 0))).is_true()
 
 
+func test_boxing_in_a_walking_enemy_is_refused_and_free() -> void:
+	var sim := _sim()
+	sim.spawn_enemy(_enemy_data(), Vector2i(7, 2))
+	# Onder de vijand en een ring eromheen: hij zou nergens meer heen kunnen.
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(7, 2), 1)).is_false()
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.CUTS_OFF_PIT)
+	assert_int(sim.grid.get_tile(Vector2i(7, 2))).is_equal(Terrain.GRASS)
+	assert_float(sim.resource).is_equal(10.0)
+
+
+func test_water_next_to_a_walking_enemy_is_fine() -> void:
+	var sim := _sim()
+	sim.spawn_enemy(_enemy_data(), Vector2i(7, 2))
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(8, 2))).is_true()
+
+
+func test_a_flying_enemy_can_be_boxed_in() -> void:
+	var sim := _sim()
+	var wraith := _enemy_data()
+	wraith.flying = true
+	sim.spawn_enemy(wraith, Vector2i(7, 2))
+	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(7, 2), 1)).is_true()
+
 func test_tile_changed_is_emitted_for_every_changed_tile() -> void:
 	var sim := _sim()
 	var cells: Array[Vector2i] = []
