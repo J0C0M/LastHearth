@@ -4,14 +4,14 @@ extends RefCounted
 ## until dawn. Level 2: put it out before dawn. Its light pushes gloom back.
 ##
 ## Twee manieren om de haard te verzwakken:
-## - damage(): vijanden doen schade; bij 0 hp gaat de haard uit.
+## - damage(): vijanden doen schade; het licht krimpt mee en bij 0 hp gaat de haard uit.
 ## - dim(): Snuff maakt de lichtcirkel kleiner, zonder schade.
 
 signal extinguished
 
-## Light radius in tiles at full brightness.
+## Light radius in tiles at full brightness and health.
 const BASE_LIGHT_RADIUS := 8.0
-## Light radius at zero brightness, while the hearth still burns.
+## Light radius at zero brightness or health, while the hearth still burns.
 const MIN_LIGHT_RADIUS := 2.0
 
 var cell: Vector2i
@@ -33,17 +33,22 @@ func is_lit() -> bool:
 
 ## Enemies hurt the hearth. Emits [signal extinguished] once when it goes out.
 func damage(amount: float) -> void:
-	if not is_lit() or amount <= 0.0:
+	# not (amount > 0.0) weigert ook NaN.
+	if not is_lit() or not (amount > 0.0):
 		return
-	health = maxf(0.0, health - amount)
-	if health <= 0.0:
+	health -= amount
+	# Een restje van float-afronding (1e-14) telt als uit.
+	if health < 0.001:
+		health = 0.0
 		extinguished.emit()
 
 
 ## Snuff dims the hearth: its light shrinks, but it is not damaged.
 ## [param amount] is a fraction of full brightness (0.25 = a quarter).
 func dim(amount: float) -> void:
-	brightness = clampf(brightness - amount, 0.0, 1.0)
+	if not (amount > 0.0):
+		return
+	brightness = maxf(0.0, brightness - amount)
 
 
 func health_fraction() -> float:
@@ -54,7 +59,7 @@ func health_fraction() -> float:
 func light_radius() -> float:
 	if not is_lit():
 		return 0.0
-	return lerpf(MIN_LIGHT_RADIUS, BASE_LIGHT_RADIUS, brightness)
+	return lerpf(MIN_LIGHT_RADIUS, BASE_LIGHT_RADIUS, brightness * health_fraction())
 
 
 func light_source() -> LightSource:
