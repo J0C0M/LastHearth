@@ -122,11 +122,20 @@ func test_cutting_off_a_pit_shows_a_message() -> void:
 	assert_str(ui.message_label.text).is_equal("The dark must always have a way to the hearth.")
 
 
-func test_tool_from_a_later_phase_shows_a_message() -> void:
+func test_summoning_off_gloom_shows_a_message() -> void:
 	var ui := _setup()
-	ui.select_tool(2)
+	var summon := _tool(&"shadow", ToolData.Kind.SUMMON, 10.0)
+	summon.enemy = EnemyData.new()
+	ui.selected_tool = summon
 	assert_bool(ui.paint_at(Vector2i(5, 1))).is_false()
-	assert_str(ui.message_label.text).is_equal("Snuff is not available yet.")
+	assert_str(ui.message_label.text).is_equal("Summon only on gloom.")
+
+
+func test_gloom_away_from_the_dark_shows_a_message() -> void:
+	var ui := _setup()
+	ui.selected_tool = _tool(&"gloom", ToolData.Kind.GLOOM, 1.0)
+	assert_bool(ui.paint_at(Vector2i(8, 3))).is_false()
+	assert_str(ui.message_label.text).is_equal("Gloom only grows from the dark.")
 
 
 func test_tool_that_does_nothing_shows_no_message() -> void:

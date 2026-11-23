@@ -18,7 +18,8 @@
 script = ExtResource("1_61tk6")
 id = &"level_2"
 title = "Let the Dark In"
-briefing = "The village hides behind a moat and a ring of torches. Spread the gloom, cross the water and snuff out the hearth before dawn."
+summary = "You are the darkness. The village hides behind a moat and a ring of torches. Put out the hearth before dawn."
+briefing = "You are the darkness. The last village hides behind a moat, inside a ring of torches. Gloom only grows from the dark: spread it from the three Night Pits towards the village, because you can only summon on gloom. Shadows are fast, wraiths fly over water, brutes are slow but tough. Drain the moat to make a bridge, break the eastern ridge with Rubble, and Snuff the torches before your army walks into their light. Every villager you kill gives you Dread and pushes dawn back. Put out the hearth before dawn; the faster, and the fewer villagers left, the more stars you earn."
 goal = 1
 map_type = 2
 map_seed = 202
