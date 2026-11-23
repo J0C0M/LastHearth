@@ -143,13 +143,13 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 | US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (🔍 in review, branch `Show-Level-Description-In-Menu`) | `main_menu.tscn`/`.gd`, `LevelData` | Roexoe (duo A) |
 | US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu (🔍 in review, branch `Finish-Sprint-Backlog-Cards`) | `main.gd`, `ui.tscn` | Jochem |
 | PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README (🔍 in review, branch `Finish-Sprint-Backlog-Cards`) | docs | Jochem |
-| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) (🚧 voorstel in `docs/trello-voorstel.md`, wacht op akkoord) | Trello, `docs/trello-voorstel.md` | Jochem |
+| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) (🔍 in review: uitgevoerd op Trello, zie `docs/trello-voorstel.md` deel 2) | Trello, `docs/trello-voorstel.md` | Jochem |
 | US-28 | Spel schaalt mee met de venstergrootte (🔍 in review, branch `Fix-Window-Scaling`) | `project.godot`, `world_camera.gd` | Jochem |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
 - [x] US-27: Esc tijdens het spelen pauzeert, Esc op het pauzescherm of het resultaatscherm gaat naar het hoofdmenu (pauze en snelheid terug op normaal), Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toetsen
 - [x] PT-10: de Definition of Done staat in `CLAUDE.md` (sectie *Definition of Done*); de README vat hem samen en linkt ernaar
-- [ ] PT-11: voorstel met nieuwe criteria per kaart staat in `docs/trello-voorstel.md` (deel 2); na akkoord van Jochem op Trello zetten
+- [x] PT-11: nieuwe criteria per kaart in `docs/trello-voorstel.md` (deel 2), na akkoord van Jochem op Trello gezet. Oude checklists heten nu *Oude criteria (vervallen concept)*; elke kaart van US-01 t/m US-28 en PT-02, PT-04, PT-09 t/m PT-11 heeft een checklist **Acceptatiecriteria**
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit
 
 Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.

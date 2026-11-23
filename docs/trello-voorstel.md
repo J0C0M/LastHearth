@@ -2,7 +2,7 @@
 
 **Status: uitgevoerd op 16 november 2026**, na akkoord van Jochem. De nieuwe kaarten (US-17 t/m US-25, PT-09) staan bovenaan de Backlog.
 
-**Deel 2 (PT-11, 23 november 2026): voorstel, wacht op akkoord van Jochem.** Nieuwe acceptatiecriteria per kaart, zie [Deel 2](#deel-2-acceptatiecriteria-pt-11).
+**Deel 2 (PT-11): uitgevoerd op 23 november 2026**, na akkoord van Jochem. Nieuwe acceptatiecriteria per kaart, zie [Deel 2](#deel-2-acceptatiecriteria-pt-11).
 
 Bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
 Stand van het bord: 16 november 2026, 24 kaarten.
@@ -239,7 +239,7 @@ PT-01, PT-03 en PT-05 t/m PT-08 zijn projectkaarten zonder spelinhoud. Hun crite
 - ✅ GitHub-repository met README en een Godot 4.7-project met `scenes/`, `scripts/`, `assets/`, `resources/` en `tests/`
 - ✅ `.gitignore` en `.gitattributes` aanwezig
 - ✅ Branches `main` en `Development`; elke pull request naar `Development` wordt gereviewd door een ander teamlid
-- ✅ Afspraken vastgelegd in `CLAUDE.md`: GDScript-stijlgids (snake_case, statische types) en Definition of Done *(DoD na de merge van PT-10)*
+- ⏳ Afspraken vastgelegd in `CLAUDE.md`: GDScript-stijlgids (snake_case, statische types) en Definition of Done *(open tot de merge van PT-10)*
 - ✅ Alle art en lettertypen zijn eigen werk (CC0), getekend door `tools/art/`, met `assets/CREDITS.md`
 - ✅ Iedereen commit gesigned onder zijn eigen account
 
@@ -262,7 +262,7 @@ PT-01, PT-03 en PT-05 t/m PT-08 zijn projectkaarten zonder spelinhoud. Hun crite
 - ✅ Een nieuwe golf wordt gemeld in beeld
 - ✅ Een level zonder golven (level 2) kan dat uitzetten met `wave_interval = 0`
 
-Uitkomst van de controle: **alle kaarten in Done halen de nieuwe criteria.** Er hoeft geen nieuwe kaart bij.
+Uitkomst van de controle: **alle kaarten in Done halen de nieuwe criteria**, op de Definition of Done van PT-02 na; die komt met de merge van PT-10. Er hoeft geen nieuwe kaart bij.
 
 ## Kaarten in de Backlog: nieuwe criteria
 

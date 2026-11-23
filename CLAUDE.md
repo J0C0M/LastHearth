@@ -19,7 +19,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
 | 4A Level 1: Hold the Light | ✅ Klaar (PR #8) | duo A |
 | 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
-| Losse kaarten | 🔍 US-26, US-27, US-28 en PT-10 in review; 🚧 PT-11 wacht op akkoord over het voorstel (zie `docs/FASES.md`) | Jochem, Roexoe |
+| Losse kaarten | 🔍 US-26, US-27, US-28, PT-10 en PT-11 in review; Sprint Backlog leeg (zie `docs/FASES.md`) | Jochem, Roexoe |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Wat er nu speelbaar is: menu (met een korte beschrijving per level) → briefing → een nacht met terrein schilderen, fakkels en Flare, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Level 1 heeft een eigen kaart en sterren. Nog niet: de level 2-gereedschappen, de kaart en sterren van level 2 (fase 4B).
@@ -115,7 +115,7 @@ Werk deze tabel bij aan het begin (🚧 Bezig) en het eind (🔍 In review, ✅ 
 
 Een kaart gaat pas naar Done als hij voldoet aan de **Definition of Done** (hieronder).
 
-Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `trelloReadChecklist`, want het bordoverzicht laat checklists weg). Let op: de checklists van oudere kaarten (US-02, US-03, US-04, US-10, PT-02, PT-04) komen nog uit een eerder concept (honger, kroniek, jaren, 5x snelheid). Die worden herschreven in PT-11; volg tot die tijd de **beschrijving** van de kaart en `docs/design.md`.
+Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `trelloReadChecklist`, want het bordoverzicht laat checklists weg). Een checklist *Oude criteria (vervallen concept)* komt uit een eerder concept (honger, kroniek, jaren): negeer die.
 
 Trello-bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
 
