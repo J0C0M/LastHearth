@@ -28,7 +28,7 @@ enum Refusal {
 	NONE, ## The tool was used.
 	NO_EFFECT, ## Nothing to change here (same terrain, wrong tile, outside the map).
 	NOT_ENOUGH_RESOURCE, ## Too little Light or Dread.
-	CUTS_OFF_PIT, ## The change would cut a pit off from the hearth.
+	CUTS_OFF_PIT, ## The change would cut a pit or a walking enemy off from the hearth.
 	NOT_AVAILABLE, ## This tool does not work yet (later phases).
 	ROUND_OVER, ## The round has ended.
 	NEEDS_GLOOM, ## Level 2: summoning needs gloom, and gloom only grows from the dark.
@@ -303,7 +303,7 @@ static func brush_cells(center: Vector2i, radius: int) -> Array[Vector2i]:
 
 
 func _paint_terrain(tool: ToolData, center: Vector2i, brush: int) -> bool:
-	var reachable_pits := _reachable_pits()
+	var reachable := _reachable_dark()
 	var changed: Array[Vector2i] = []
 	var previous: Array[int] = []
 	var spent := 0.0
@@ -326,8 +326,8 @@ func _paint_terrain(tool: ToolData, center: Vector2i, brush: int) -> bool:
 		return _refuse(Refusal.NOT_ENOUGH_RESOURCE if ran_out else Refusal.NO_EFFECT)
 
 	flow_field.rebuild(grid, hearth.cell)
-	for pit: Vector2i in reachable_pits:
-		if not flow_field.is_reachable(pit):
+	for cell: Vector2i in reachable:
+		if not flow_field.is_reachable(cell):
 			for i: int in changed.size():
 				grid.set_tile(changed[i], previous[i] as Terrain)
 			flow_field.rebuild(grid, hearth.cell)
@@ -439,12 +439,18 @@ func _terrain_after(kind: Kind, current: int) -> int:
 	return target if target != current else -1
 
 
-func _reachable_pits() -> Array[Vector2i]:
-	var pits: Array[Vector2i] = []
+## Pits and walking enemies that can reach the hearth now. Painting must not
+## cut them off, or a walking enemy would freeze forever.
+func _reachable_dark() -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
 	for pit: Vector2i in layout.pits:
 		if flow_field.is_reachable(pit):
-			pits.append(pit)
-	return pits
+			cells.append(pit)
+	for enemy: Enemy in enemies:
+		var cell := enemy.cell()
+		if not enemy.data.flying and flow_field.is_reachable(cell):
+			cells.append(cell)
+	return cells
 
 
 ## Pits are endless sources of gloom.

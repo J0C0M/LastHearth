@@ -115,6 +115,13 @@ func test_too_little_resource_shows_a_message() -> void:
 	assert_str(ui.message_label.text).is_equal("Not enough Light.")
 
 
+func test_cutting_off_a_pit_shows_a_message() -> void:
+	var ui := _setup()
+	ui.brush_size = 1
+	assert_bool(ui.paint_at(Vector2i(0, 0))).is_false()
+	assert_str(ui.message_label.text).is_equal("The dark must always have a way to the hearth.")
+
+
 func test_summoning_off_gloom_shows_a_message() -> void:
 	var ui := _setup()
 	var summon := _tool(&"shadow", ToolData.Kind.SUMMON, 10.0)
