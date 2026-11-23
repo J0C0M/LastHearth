@@ -145,11 +145,13 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 | PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README | docs | _(naam)_ |
 | PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) | Trello, `docs/trello-voorstel.md` | Jochem |
 | US-28 | Spel schaalt mee met de venstergrootte (🔍 in review, branch `Fix-Window-Scaling`) | `project.godot`, `world_camera.gd` | Jochem |
+| US-17 | Haard en licht: licht krimpt mee met de schade aan de haard (🔍 in review, branch `Hearth-Light-Shrinks-With-Damage`) | `hearth.gd` (gedeelde kern) | Mees |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
 - [ ] US-27
 - [ ] PT-10
 - [ ] PT-11
+- [x] US-17: criteria 1–3 zaten al in fase 1–3. Nieuw: `Hearth.light_radius()` schaalt met `brightness * health_fraction()`, dus schade én Snuff maken de cirkel kleiner. `damage()` weigert NaN en zet een float-restje (< 0.001) op 0; `dim()` weigert negatieve waarden. Integratietest: `tests/integration/hearth_light_test.gd`
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit
 
 Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.

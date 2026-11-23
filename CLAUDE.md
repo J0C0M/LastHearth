@@ -19,7 +19,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
 | 4A Level 1: Hold the Light | ✅ Klaar (PR #8) | duo A |
 | 4B Level 2: Let the Dark In | ⏳ Volgende: kan nu starten (branch `Level-2-Let-The-Dark-In`) | duo B |
-| Losse kaarten | ⏳ US-27, PT-10, PT-11 in de Sprint Backlog; 🔍 US-26 en US-28 in review (zie `docs/FASES.md`) | wie ze oppakt |
+| Losse kaarten | ⏳ US-27, PT-10, PT-11 in de Sprint Backlog; 🔍 US-26, US-28 en US-17 in review (zie `docs/FASES.md`) | wie ze oppakt |
 | 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
 
 Wat er nu speelbaar is: menu (met een korte beschrijving per level) → briefing → een nacht met terrein schilderen, fakkels en Flare, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Level 1 heeft een eigen kaart en sterren. Nog niet: de level 2-gereedschappen, de kaart en sterren van level 2 (fase 4B).
