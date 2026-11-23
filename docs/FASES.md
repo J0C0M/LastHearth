@@ -107,7 +107,7 @@ Branch `World-View-And-UI` · 1 persoon, tegelijk met fase 3 · US-01, US-02, US
 - De nacht kleurt in de laatste 15% van de tijd naar de dageraad.
 - `Simulation` kreeg `light_sources()`, `last_refusal` (reden van weigeren, voor de melding in de UI) en `stars()` (0 tot fase 4).
 - Het testlevel staat alleen in het menu bij een debug build (spelen vanuit de editor).
-- Bekend: gloom groeit in vier richtingen en wordt daardoor een ruit. Organischer maken kan later in `WorldGrid.spread_gloom()`.
+- Gloom groeide eerst in vier richtingen en werd daardoor een ruit. Dat is opgelost: het groeit nu ook schuin en met een snelheid per tegel (zie hierboven).
 
 ## Fase 3: Dorp en vijanden
 
@@ -136,7 +136,7 @@ Branch `Village-And-Enemies` · Jochem · US-03, US-04, US-19, US-20
 
 ## Losse kaarten na de review van fase 0–3
 
-Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiecriteria niet gehaald, en veel checklists kwamen nog uit het oude concept. Daarvoor staan vier kaarten in de **Sprint Backlog** (Sprint 2). Ze zijn klein en kunnen naast fase 4A/4B; wie ze oppakt zet zijn naam erbij.
+Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiecriteria niet gehaald, en veel checklists kwamen nog uit het oude concept. Daarvoor kwamen eerst vier kaarten in de **Sprint Backlog** (Sprint 2); daarna zijn ook de andere user stories zo nagelopen. Alle kaarten hieronder zijn gemerged in `Development`.
 
 | Kaart | Wat | Raakt | Wie |
 |---|---|---|---|
@@ -150,10 +150,10 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 | US-18 | Duisternis verspreidt zich: gloom-snelheid volgt ook geschilderd terrein (✅ gemerged, PR #13) | `world_grid.gd` (gedeelde kern) | Mees |
 | US-21 | Terrein schilderen (level 1): verven mag geen lopende vijand insluiten (✅ gemerged, PR #15) | `simulation.gd` (gedeelde kern) | Mees |
 | US-06 | Gereedschappen en grondstof: met de muis boven een gereedschap zie je uitleg en kosten (✅ gemerged, PR #17) | `game_ui.gd` | Jochem |
-| US-25 | Gedode dorpeling vertraagt de dageraad (level 2): de melding noemt de winst (🔍 in review, branch `Dawn-Delay-Per-Kill`) | `main.gd` | Jochem |
-| US-11 | Resultaat en sterren: de beste sterren per level worden bewaard en staan in het hoofdmenu (🔍 in review, branch `Save-Best-Stars`) | `best_stars.gd` (nieuw), `main.gd`, `main_menu.gd` | Roexoe |
+| US-25 | Gedode dorpeling vertraagt de dageraad (level 2): de melding noemt de winst (✅ gemerged, PR #19) | `main.gd` | Jochem |
+| US-11 | Resultaat en sterren: de beste sterren per level worden bewaard en staan in het hoofdmenu (✅ gemerged, PR #21) | `best_stars.gd` (nieuw), `main.gd`, `main_menu.gd` | Roexoe |
 
-- [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
+- [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 en level 2 hebben elk een eigen summary (die van level 2 kwam met fase 4B).
 - [x] US-27: Esc opent het pauzemenu en sluit het weer. In dat menu gaat spatie naar het hoofdmenu (pauze en snelheid terug op normaal); pauzeer je met spatie, dan speelt spatie weer verder. Esc op het resultaatscherm gaat naar het hoofdmenu, Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toets die op dat moment werkt
 - [x] PT-10: de Definition of Done staat in `CLAUDE.md` (sectie *Definition of Done*); de README vat hem samen en linkt ernaar
 - [x] PT-11: nieuwe criteria per kaart in `docs/trello-voorstel.md` (deel 2), na akkoord van Jochem op Trello gezet. Oude checklists heten nu *Oude criteria (vervallen concept)*; elke kaart van US-01 t/m US-28 en PT-02, PT-04, PT-09 t/m PT-11 heeft een checklist **Acceptatiecriteria**
@@ -166,7 +166,7 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 - [x] US-11: het resultaatscherm (gewonnen of niet, 0–3 sterren, Play again en Main menu) bestond al sinds fase 2. Nieuw: `BestStars` (`scripts/data/best_stars.gd`) bewaart per level-id de beste sterren in een `ConfigFile` in `user://best_stars.cfg`; een lagere score overschrijft nooit een hogere. `Main` slaat de score op aan het eind van elke ronde, het hoofdmenu toont naast elk level drie sterren (vol = gehaald). Tests geven een eigen bestand mee, zodat ze de echte score niet raken (`best_stars_test`, `main_test`).
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit
 
-Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.
+Gedeelde bestanden (`LevelData`, `main.gd` en de kern in `scripts/sim/`) gingen steeds in een kleine, aparte PR, niet in een level-branch.
 
 ## Fase 4A: Level 1, Hold the Light
 
@@ -201,7 +201,7 @@ Branch `Level-2-Let-The-Dark-In` · Duo B (Roexoe) · US-16 (met US-23, US-24 en
 - [x] Tests (`level_2_map_test`, `level_2_tools_test`, `level_2_rules_test`, meldingen in `game_ui_test`)
 - [x] PR `Level-2-Let-The-Dark-In` → `Development` gemerged ([#12](https://github.com/J0C0M/LastHearth/pull/12))
 
-**US-23 en US-24 nagelopen** (branch `Verify-Level-2-Tools`, 🔍 in review · Roexoe)
+**US-23 en US-24 nagelopen** (branch `Verify-Level-2-Tools`, ✅ gemerged, PR #16 · Roexoe)
 - [x] US-23: Gloom kost 1 Dread per tegel en werkt niet in licht; schaduw (10), geest (22) en brute (45) alleen op gloom; buiten gloom geweigerd met de melding "Summon only on gloom."
 - [x] US-23 "opgeroepen eenheden lopen meteen naar de haard": klopte nog niet. Een lopende eenheid buiten de gracht had geen route en bleef staan waar hij werd opgeroepen. Nu loopt hij zo dicht mogelijk naar de haard (`Enemy._closer_on_foot()`, hemelsbreed via het vliegveld, alleen over begaanbare tegels) en wacht op de oever tot er een brug is; daarna neemt het `FlowField` het over.
 - [x] US-24: Drain maakt van water zand voor 1 Dread per tegel, Rubble breekt een berg af voor 1,5; Snuff (60) dooft de fakkels binnen 4 tegels en dimt de haard daar; na Drain of Rubble lopen vijanden meteen de nieuwe route.
@@ -234,7 +234,7 @@ Branch `Bots-And-Balance` · elk duo voor zijn eigen level · nieuwe Trello-kaar
 
 Branch `Testing-And-Delivery` · iedereen · PT-05, PT-06, PT-07
 
-- [ ] Sterren opslaan met `ConfigFile` in `user://`
+- [x] Sterren opslaan met `ConfigFile` in `user://` (US-11, PR #21: `BestStars`, getoond in het hoofdmenu)
 - [ ] Integratietest: simulatie + scènes (gdUnit4 scene runner), met rapport
 - [ ] Acceptatietest op basis van de user stories, met rapport in `docs/testen/`
 - [x] Gebruikersdocumentatie (hoe speel je): [`handleiding.md`](handleiding.md), met screenshots in `handleiding/` (PT-05, branch `System-And-User-Docs`)
