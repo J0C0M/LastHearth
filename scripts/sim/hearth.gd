@@ -48,7 +48,7 @@ func damage(amount: float) -> void:
 func dim(amount: float) -> void:
 	if not (amount > 0.0):
 		return
-	brightness = clampf(brightness - amount, 0.0, 1.0)
+	brightness = maxf(0.0, brightness - amount)
 
 
 func health_fraction() -> float:

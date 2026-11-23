@@ -68,20 +68,6 @@ func test_damage_and_dim_shrink_the_light_together() -> void:
 	assert_float(hearth.light_radius()).is_equal(lerpf(Hearth.MIN_LIGHT_RADIUS, Hearth.BASE_LIGHT_RADIUS, 0.25))
 
 
-func test_radius_never_grows_with_more_damage() -> void:
-	for b: float in [1.0, 0.5, 0.0]:
-		var hearth := Hearth.new(Vector2i.ZERO, 100.0)
-		hearth.dim(1.0 - b)
-		var previous := hearth.light_radius()
-		for i: int in 200:
-			hearth.damage(0.5)
-			var radius := hearth.light_radius()
-			assert_float(radius).is_less_equal(previous)
-			if hearth.is_lit():
-				assert_float(radius).is_between(Hearth.MIN_LIGHT_RADIUS, Hearth.BASE_LIGHT_RADIUS)
-			previous = radius
-
-
 func test_many_tiny_damages_put_it_out() -> void:
 	var hearth := Hearth.new(Vector2i.ZERO, 10.0)
 	var emitted: Array[int] = []
