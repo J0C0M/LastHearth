@@ -121,6 +121,7 @@ func test_cutting_off_a_pit_shows_a_message() -> void:
 	assert_bool(ui.paint_at(Vector2i(0, 0))).is_false()
 	assert_str(ui.message_label.text).is_equal("The dark must always have a way to the hearth.")
 
+
 func test_tool_from_a_later_phase_shows_a_message() -> void:
 	var ui := _setup()
 	ui.select_tool(2)

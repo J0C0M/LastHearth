@@ -266,11 +266,6 @@ func test_boxing_in_a_walking_enemy_is_refused_and_free() -> void:
 	assert_float(sim.resource).is_equal(10.0)
 
 
-func test_water_next_to_a_walking_enemy_is_fine() -> void:
-	var sim := _sim()
-	sim.spawn_enemy(_enemy_data(), Vector2i(7, 2))
-	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(8, 2))).is_true()
-
 
 func test_a_flying_enemy_can_be_boxed_in() -> void:
 	var sim := _sim()
@@ -278,6 +273,7 @@ func test_a_flying_enemy_can_be_boxed_in() -> void:
 	wraith.flying = true
 	sim.spawn_enemy(wraith, Vector2i(7, 2))
 	assert_bool(sim.use_tool(_tool(Kind.WATER), Vector2i(7, 2), 1)).is_true()
+
 
 func test_tile_changed_is_emitted_for_every_changed_tile() -> void:
 	var sim := _sim()

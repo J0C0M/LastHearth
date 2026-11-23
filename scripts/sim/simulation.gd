@@ -429,15 +429,16 @@ func _terrain_after(kind: Kind, current: int) -> int:
 
 
 ## Pits and walking enemies that can reach the hearth now. Painting must not
-## cut them off: een ingesloten vijand zou anders voor altijd stilstaan.
+## cut them off, or a walking enemy would freeze forever.
 func _reachable_dark() -> Array[Vector2i]:
 	var cells: Array[Vector2i] = []
 	for pit: Vector2i in layout.pits:
 		if flow_field.is_reachable(pit):
 			cells.append(pit)
 	for enemy: Enemy in enemies:
-		if not enemy.data.flying and flow_field.is_reachable(enemy.cell()):
-			cells.append(enemy.cell())
+		var cell := enemy.cell()
+		if not enemy.data.flying and flow_field.is_reachable(cell):
+			cells.append(cell)
 	return cells
 
 
