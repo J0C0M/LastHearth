@@ -8,6 +8,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 
 - Design document (leidend voor concept, klassen en namen): [`docs/design.md`](docs/design.md)
 - Fases, branches en checklists: [`docs/FASES.md`](docs/FASES.md)
+- Hoe de code werkt, met stappenplannen voor een nieuw gereedschap, level of vijandtype: [`docs/systeem.md`](docs/systeem.md). Voor spelers: [`docs/handleiding.md`](docs/handleiding.md)
 
 ## Huidige status
 
@@ -19,8 +20,8 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 | 3 Dorp en vijanden | ✅ Klaar (PR #4) | Jochem |
 | 4A Level 1: Hold the Light | ✅ Klaar (PR #8) | duo A |
 | 4B Level 2: Let the Dark In | 🔍 In review (PR #12, branch `Level-2-Let-The-Dark-In`) | Roexoe |
-| Losse kaarten | 🔍 US-25 in review; ✅ US-06, US-17, US-18, US-21, US-22, US-26, US-27, US-28, PT-10 en PT-11 gemerged (zie `docs/FASES.md`) | Jochem, Roexoe, Mees |
-| 5–6 | ⏳ Gepland | zie `docs/FASES.md` |
+| Losse kaarten | ✅ US-06, US-17, US-18, US-21, US-22, US-26, US-27, US-25, US-28, PT-10 en PT-11 gemerged (zie `docs/FASES.md`) | Jochem, Roexoe, Mees |
+| 5–6 | 🔍 PT-05 (documentatie) in review; de rest gepland (zie `docs/FASES.md`) | Jochem |
 
 Wat er nu speelbaar is: menu (met een korte beschrijving per level) → briefing → een nacht met terrein schilderen, fakkels en Flare, een dorp dat zelf hout hakt en bouwt, en golven vijanden uit de putten. Level 1 en level 2 hebben elk een eigen kaart, eigen gereedschappen en sterren. Nog niet: bots en balans (fase 5).
 

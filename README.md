@@ -9,6 +9,12 @@ Je bestuurt niemand rechtstreeks. Met gereedschappen pas je het terrein, het lic
 
 Meer in het [design document](docs/design.md).
 
+## Documentatie
+
+- **Spelen:** [handleiding](docs/handleiding.md): besturing, het scherm, de gereedschappen en tips per level.
+- **Ontwikkelen:** [systeemdocumentatie](docs/systeem.md): architectuur, wat er in een frame gebeurt, de klassen en stappenplannen voor een nieuw gereedschap, level of vijandtype.
+- **Werkafspraken:** [`CLAUDE.md`](CLAUDE.md) (git, Definition of Done) en [`docs/FASES.md`](docs/FASES.md) (fases en status).
+
 ## Vereisten
 
 - **Godot 4.7** (getest met 4.7.2 stable). De standaard- en de .NET/mono-build werken allebei; het project gebruikt alleen GDScript.
@@ -79,7 +85,7 @@ scripts/
   ui/             GameUI en menu's
 tests/            unit/, integration/, bots/
 tools/art/        scripts die alle pixelart en lettertypen tekenen
-docs/             design.md, FASES.md, ontwerp/, testen/
+docs/             handleiding.md, systeem.md, design.md, FASES.md, ontwerp/, testen/
 ```
 
 Elke hoofdmap heeft een eigen `README.md` met uitleg.
