@@ -6,7 +6,8 @@ extends RefCounted
 ## [member hearth], [member villagers], [member enemies] and [member buildings].
 ##
 ## Fase 4A voegde Flare en de sterren van level 1 toe (Level1Rules); fase 4B
-## voegt de gereedschappen en sterren van level 2 toe.
+## de gereedschappen van de duisternis (Level2Tools) en de sterren van level 2
+## (Level2Rules).
 
 ## A terrain tool changed [param cell]. WorldView redraws that tile.
 signal tile_changed(cell: Vector2i)
@@ -30,6 +31,7 @@ enum Refusal {
 	CUTS_OFF_PIT, ## The change would cut a pit off from the hearth.
 	NOT_AVAILABLE, ## This tool does not work yet (later phases).
 	ROUND_OVER, ## The round has ended.
+	NEEDS_GLOOM, ## Level 2: summoning needs gloom, and gloom only grows from the dark.
 }
 
 const Terrain := WorldGrid.Terrain
@@ -87,6 +89,8 @@ func _init(level_data: LevelData, world: WorldGrid = null, map_layout: MapLayout
 	rng.seed = level.map_seed
 	waves = WaveSpawner.new(layout.pits, level.first_wave_at)
 	flow_field.rebuild(grid, hearth.cell)
+	for cell: Vector2i in layout.torches:
+		add_building(Torch.new(cell))
 	_spawn_village()
 	_feed_pits()
 	_update_light()
@@ -156,16 +160,23 @@ func use_tool(tool: ToolData, cell: Vector2i, brush: int = 0) -> bool:
 		return _place_torch(tool, cell)
 	if tool.kind == Kind.FLARE:
 		return _use_flare(tool, cell)
-	# GLOOM, SUMMON and SNUFF (fase 4B) come later.
+	if tool.kind == Kind.GLOOM:
+		return Level2Tools.spread_gloom(self, tool, cell, brush)
+	if tool.kind == Kind.SUMMON:
+		return Level2Tools.summon(self, tool, cell)
+	if tool.kind == Kind.SNUFF:
+		return Level2Tools.snuff(self, tool, cell)
 	return _refuse(Refusal.NOT_AVAILABLE)
 
 
 ## Stars earned this round (0-3), counted by the rules of the level's goal.
-## Level 1 (DEFEND): see Level1Rules. Level 2 (EXTINGUISH) fills this in in fase 4B.
+## Level 1 (DEFEND): see Level1Rules. Level 2 (EXTINGUISH): see Level2Rules.
 func stars() -> int:
 	match level.goal:
 		LevelData.Goal.DEFEND:
 			return Level1Rules.stars(self)
+		LevelData.Goal.EXTINGUISH:
+			return Level2Rules.stars(self)
 		_:
 			return 0
 

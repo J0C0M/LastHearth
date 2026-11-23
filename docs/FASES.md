@@ -10,7 +10,7 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 | 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | ✅ Klaar |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ✅ Klaar |
-| 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ⏳ Gepland |
+| 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | 🔍 In review |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
 | 6 | Testen, documentatie en oplevering | `Testing-And-Delivery` | iedereen | PT-05, PT-06, PT-07 | 3 | ⏳ Gepland |
 
@@ -140,18 +140,22 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 
 | Kaart | Wat | Raakt | Wie |
 |---|---|---|---|
-| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (🔍 in review, branch `Show-Level-Description-In-Menu`) | `main_menu.tscn`/`.gd`, `LevelData` | Roexoe (duo A) |
-| US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu | `main.gd`, `ui.tscn` | _(naam)_ |
-| PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README | docs | _(naam)_ |
-| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) | Trello, `docs/trello-voorstel.md` | Jochem |
-| US-28 | Spel schaalt mee met de venstergrootte (🔍 in review, branch `Fix-Window-Scaling`) | `project.godot`, `world_camera.gd` | Jochem |
+| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (✅ gemerged, PR #9) | `main_menu.tscn`/`.gd`, `LevelData` | Roexoe (duo A) |
+| US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu (✅ gemerged, PR #11) | `main.gd`, `game_ui.gd` | Jochem |
+| PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README (✅ gemerged, PR #11) | docs | Jochem |
+| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) (✅ uitgevoerd op Trello en gemerged, PR #11; zie `docs/trello-voorstel.md` deel 2) | Trello, `docs/trello-voorstel.md` | Jochem |
+| US-28 | Spel schaalt mee met de venstergrootte (✅ gemerged, PR #6) | `project.godot`, `world_camera.gd` | Jochem |
+| US-22 | Fakkel en Flare (level 1): bestond al uit fase 3 en 4A; nu met tests nagelopen tegen de acceptatiecriteria (✅ gemerged, PR #14) | alleen nieuwe tests | Jochem |
 | US-17 | Haard en licht: licht krimpt mee met de schade aan de haard (🔍 in review, branch `Hearth-Light-Shrinks-With-Damage`) | `hearth.gd` (gedeelde kern) | Mees |
+| US-18 | Duisternis verspreidt zich: gloom-snelheid volgt ook geschilderd terrein (🔍 in review, branch `Gloom-Rate-Follows-Painted-Terrain`) | `world_grid.gd` (gedeelde kern) | Mees |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
-- [ ] US-27
-- [ ] PT-10
-- [ ] PT-11
+- [x] US-27: Esc opent het pauzemenu en sluit het weer. In dat menu gaat spatie naar het hoofdmenu (pauze en snelheid terug op normaal); pauzeer je met spatie, dan speelt spatie weer verder. Esc op het resultaatscherm gaat naar het hoofdmenu, Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toets die op dat moment werkt
+- [x] PT-10: de Definition of Done staat in `CLAUDE.md` (sectie *Definition of Done*); de README vat hem samen en linkt ernaar
+- [x] PT-11: nieuwe criteria per kaart in `docs/trello-voorstel.md` (deel 2), na akkoord van Jochem op Trello gezet. Oude checklists heten nu *Oude criteria (vervallen concept)*; elke kaart van US-01 t/m US-28 en PT-02, PT-04, PT-09 t/m PT-11 heeft een checklist **Acceptatiecriteria**
+- [x] US-22: fakkel (30 Licht) en Flare (100 Licht, straal 6) werkten al. Nieuwe tests met de echte gereedschappen uit `level_1.tres`: de fakkel staat er meteen en brandt, zijn licht verdrijft de gloom binnen ongeveer een seconde (licht wist gloom geleidelijk weg, `WorldGrid.LIGHT_CLEARS_GLOOM`) en verbrandt vijanden; Flare doodt alles binnen 6 tegels en niets daarbuiten, veegt de gloom weg en geeft een flits die vanzelf verdwijnt; met te weinig Licht volgt de melding "Not enough Light." (`tests/unit/level_1_tools_test.gd`, `tests/integration/level_1_tools_test.gd`)
 - [x] US-17: criteria 1–3 zaten al in fase 1–3. Nieuw: `Hearth.light_radius()` schaalt met `brightness * health_fraction()`, dus schade én Snuff maken de cirkel kleiner. `damage()` weigert NaN en zet een float-restje (< 0.001) op 0; `dim()` weigert negatieve waarden. Integratietest: `tests/integration/hearth_light_test.gd`
+- [x] US-18: criteria 2 en 3 zaten al in fase 1–3. Nieuw: `WorldGrid.set_tile()` schaalt `gloom_rate` met `GLOOM_TERRAIN_FACTOR[nieuw] / [oud]`, dus geschilderd terrein (en gekapt bos) krijgt de gloom-snelheid van zijn terreinsoort; de ruis van `MapGen` blijft. Test dat gloom vanuit een put groeit en stopt bij licht in `simulation_test.gd`; integratietest `tests/integration/gloom_spread_test.gd`
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit
 
 Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.
@@ -178,15 +182,27 @@ Branch `Level-1-Hold-The-Light` · Duo A · US-12
 
 ## Fase 4B: Level 2, Let the Dark In
 
-Branch `Level-2-Let-The-Dark-In` · Duo B · US-16
+Branch `Level-2-Let-The-Dark-In` · Duo B (Roexoe) · US-16 (met US-23, US-24 en US-25)
 
-- [ ] `gen_level_2`: het dorp ligt achter een gracht met een ring fakkels
-- [ ] Gereedschappen: gloom verspreiden, eenheden oproepen (alleen op gloom), Drain, Rubble en Snuff
-- [ ] Een gedode dorpeling vertraagt de dageraad en geeft Dread terug
-- [ ] Winst als de haard uit is vóór de dageraad
-- [ ] Sterren voor snelheid en het aantal gedode dorpelingen
-- [ ] Briefingtekst
-- [ ] Tests
+- [x] `gen_level_2`: het dorp ligt achter een gracht met een ring fakkels (`scripts/sim/levels/level_2_map.gd`)
+- [x] Gereedschappen: gloom verspreiden, eenheden oproepen (alleen op gloom), Drain, Rubble en Snuff (`scripts/sim/levels/level_2_tools.gd`)
+- [x] Een gedode dorpeling vertraagt de dageraad en geeft Dread terug (bestond al in `Simulation._remove_dead()`)
+- [x] Winst als de haard uit is vóór de dageraad (bestond al in `Simulation.is_won()`)
+- [x] Sterren voor snelheid en het aantal gedode dorpelingen (`scripts/sim/levels/level_2_rules.gd`)
+- [x] Briefingtekst en samenvatting voor het menu
+- [x] Tests (`level_2_map_test`, `level_2_tools_test`, `level_2_rules_test`, meldingen in `game_ui_test`)
+- [ ] PR `Level-2-Let-The-Dark-In` → `Development` gemerged
+
+**Gemaakte keuzes (fase 4B)**
+- **Kaart:** haard op (48, 30) in een grasveld; een gracht van water van 10 tot 13 tegels rond de haard, met een zandoever erbuiten; acht fakkels op een ring van 7,5 tegel binnen de gracht. Hun licht valt over de gracht tot net op de oever, dus daar groeit geen gloom en branden eenheden. Twee bosjes binnen de gracht geven het dorp hout. In het oosten ligt een bergkam vóór de gracht (voor Rubble). Drie Nachtputten in de hoeken: (8, 7), (87, 8) en (14, 52). Buiten de gracht blijft het ruis-terrein met `map_seed` 202.
+- **Fakkels bij de start:** `MapLayout` kreeg `torches`; `Simulation` zet daar bij de start een brandende fakkel neer. Level 1 heeft er geen, dus daar verandert niets.
+- **Gloom** (1 Dread per tegel, met penseel) groeit alleen vanuit de duisternis: een tegel wordt pas donker als een buurtegel (ook schuin) al helemaal donker is. Zo win je terrein vanaf de putten in plaats van meteen naast de gracht te schilderen. Op verlichte tegels kan het niet.
+- **Oproepen** kan alleen op een tegel met minstens 0,5 gloom waar de eenheid kan staan (een geest ook op water en berg).
+- **Snuff** (60, straal 4) dooft elke brandende fakkel in de straal en dimt de haard met een kwart als die erbinnen staat. Niets in de straal: geweigerd en gratis.
+- **Sterren:** 0 bij verlies; bij winst 1, +1 als de haard uit was binnen 60% van de nacht (zonder het uitstel door kills), +1 als minstens de helft van alle dorpelingen is gedood.
+- Nieuwe weigerreden `Refusal.NEEDS_GLOOM` met een melding in de UI ("Gloom only grows from the dark." / "Summon only on gloom."). `ToolData.paints_with_brush()`: Gloom gebruikt het penseel en kost "per tile", net als de terreingereedschappen.
+- Gedeelde bestanden kleinst mogelijk aangepast: `simulation.gd` (takken naar `Level2Tools`, sterren, fakkels bij de start, weigerreden), `map_layout.gd` (`torches`), `tool_data.gd` (`paints_with_brush()`) en `game_ui.gd` (melding, penseel). De tests die Snuff als "nog niet beschikbaar" gebruikten zijn aangepast.
+- **Balans (voor fase 5):** een simpele bot (gloom naar de westkant, Snuff, Drain, dan brutes) wint nu in ongeveer 100 van de 220 seconden, ook als hij brutes één voor één stuurt. Level 2 is dus nog te makkelijk; het design wil dat druppelsgewijs sturen altijd verliest.
 
 ## Fase 5: Bots en balans
 

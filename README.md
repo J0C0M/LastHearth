@@ -27,7 +27,7 @@ godot --path .              # spel direct starten
 
 Of open Godot, kies **Import** en selecteer `project.godot`.
 
-Instellingen voor pixelart: basisresolutie 640×360, venster 1280×720, stretch mode `canvas_items` met aspect `keep` (de Godot-standaard, daarom staat het niet in `project.godot`), texture filter `nearest`. Renderer: Compatibility (werkt met 2D-licht en op meer hardware, ook web).
+Instellingen voor pixelart: basisresolutie 640×360, venster 1280×720, stretch mode `canvas_items` met aspect `expand` (een groter venster schaalt mee, een venster dat niet 16:9 is toont meer wereld), texture filter `nearest`. Speel je vanuit de editor in de Game-tab, kies dan in het ⋮-menu naast `1280x720` **Stretch to Fit**, anders blijft het beeld 1280×720. Renderer: Compatibility (werkt met 2D-licht en op meer hardware, ook web).
 
 ## Tests draaien
 
@@ -53,7 +53,9 @@ Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via h
 | Gereedschap kiezen | `1` – `7` |
 | Penseel kleiner / groter | `[` / `]` |
 | Schilderen met gereedschap | linkermuisknop |
-| Pauze (schilderen mag dan nog) | spatie of Esc |
+| Pauze (schilderen mag dan nog) | spatie (nog een keer spatie: verder spelen) |
+| Pauzemenu openen en sluiten | Esc |
+| Terug naar het hoofdmenu | spatie in het pauzemenu dat je met Esc opende; Esc op het resultaatscherm of in de briefing |
 | Snelheid 1x / 2x / 3x | Tab |
 | Camera bewegen | WASD, pijltjestoetsen of slepen met de middelste muisknop |
 | Zoomen | scrollwiel |
@@ -91,6 +93,8 @@ Elke hoofdmap heeft een eigen `README.md` met uitleg.
 - Iedereen commit onder zijn **eigen GitHub-account** en **signt** zijn commits.
 - Klaar? Push je branch en open een **pull request naar `Development`**. Na review wordt die gemerged.
 - Na een merge: `git switch Development && git pull`.
+
+Een kaart is pas af als hij aan de **Definition of Done** voldoet: acceptatiecriteria gehaald, `./run_tests.sh` groen zonder waarschuwingen, de wijziging zelf gespeeld, docs bijgewerkt, een gesignde PR naar `Development` die door iemand van het andere duo is gelezen en gespeeld, en pas daarna Done op Trello. De volledige lijst staat in [`CLAUDE.md`](CLAUDE.md#definition-of-done).
 
 De fases en hun branches staan in [`docs/FASES.md`](docs/FASES.md). Afspraken voor Claude Code staan in [`CLAUDE.md`](CLAUDE.md).
 

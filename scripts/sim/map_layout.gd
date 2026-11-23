@@ -5,6 +5,8 @@ extends RefCounted
 
 var hearth: Vector2i
 var pits: Array[Vector2i] = []
+## Torches that already stand when the round starts (level 2: the ring of torches).
+var torches: Array[Vector2i] = []
 
 
 func _init(hearth_cell: Vector2i = Vector2i.ZERO, pit_cells: Array[Vector2i] = []) -> void:
