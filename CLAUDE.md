@@ -117,6 +117,19 @@ Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `tr
 
 Trello-bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
 
+## Definition of Done
+
+Een kaart is pas af als alles hieronder klopt. Tot die tijd staat hij niet in Done.
+
+1. **Acceptatiecriteria:** alle punten van de checklist *Acceptatiecriteria* op de kaart zijn gehaald en afgevinkt.
+2. **Code:** volgt de codeconventies hierboven, met statische types overal, en zit in de juiste laag (sim, weergave of interface).
+3. **Tests:** een nieuwe sim-klasse heeft een gdUnit4-test, en nieuw gedrag in schermen of de spellus een integratietest waar dat kan. `./run_tests.sh` geeft exitcode 0: geen falende tests en geen GDScript-waarschuwingen.
+4. **Echt gespeeld:** `godot --headless --path . --quit-after 30` start zonder fouten, en de wijziging is in het spel zelf bekeken, ook in een groter venster. Tijdens het spelen staan er geen errors of warnings in de Output of Debugger.
+5. **Documentatie:** `docs/FASES.md` en de **Huidige status** zijn bijgewerkt. Verandert er een toets, dan ook de besturing in `README.md`; bij nieuwe assets ook `assets/CREDITS.md`.
+6. **Git:** gesignde commits op je eigen account, één per stukje, met een Engels bericht en zonder Claude-vermelding. De branch is gepusht en heeft een PR naar `Development`.
+7. **Review:** iemand anders uit het team heeft de PR gelezen (code review) en de wijziging zelf gespeeld (functional review). Daarna is de PR gemerged.
+8. **Trello:** pas na de merge zet het team de kaart naar Done. Claude zet een kaart nooit zelf naar Done.
+
 ## Handige commando's
 
 ```bash
