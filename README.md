@@ -27,7 +27,7 @@ godot --path .              # spel direct starten
 
 Of open Godot, kies **Import** en selecteer `project.godot`.
 
-Instellingen voor pixelart: basisresolutie 640×360, venster 1280×720, stretch mode `canvas_items` met aspect `keep` (de Godot-standaard, daarom staat het niet in `project.godot`), texture filter `nearest`. Renderer: Compatibility (werkt met 2D-licht en op meer hardware, ook web).
+Instellingen voor pixelart: basisresolutie 640×360, venster 1280×720, stretch mode `canvas_items` met aspect `expand` (een groter venster schaalt mee, een venster dat niet 16:9 is toont meer wereld), texture filter `nearest`. Speel je vanuit de editor in de Game-tab, kies dan in het ⋮-menu naast `1280x720` **Stretch to Fit**, anders blijft het beeld 1280×720. Renderer: Compatibility (werkt met 2D-licht en op meer hardware, ook web).
 
 ## Tests draaien
 
@@ -54,6 +54,7 @@ Het HTML-rapport komt in `reports/`. In de editor kun je tests ook draaien via h
 | Penseel kleiner / groter | `[` / `]` |
 | Schilderen met gereedschap | linkermuisknop |
 | Pauze (schilderen mag dan nog) | spatie of Esc |
+| Terug naar het hoofdmenu | Esc op het pauzescherm, het resultaatscherm of in de briefing |
 | Snelheid 1x / 2x / 3x | Tab |
 | Camera bewegen | WASD, pijltjestoetsen of slepen met de middelste muisknop |
 | Zoomen | scrollwiel |
