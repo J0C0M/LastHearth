@@ -345,13 +345,13 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
-text = "Resume"
+text = "Resume (Space)"
 
 [node name="PausedMenuButton" type="Button" parent="PausedOverlay/Panel/Box"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
-text = "Main menu"
+text = "Main menu (Esc)"
 
 [node name="ResultScreen" parent="." instance=ExtResource("2_result")]
 unique_name_in_owner = true
