@@ -157,6 +157,52 @@ func test_main_menu_from_the_game_resets_pause_and_speed() -> void:
 	assert_object(main.world.sim).is_not_same(main.sim)
 
 
+func _press_escape(main: Main) -> void:
+	var event := InputEventAction.new()
+	event.action = &"ui_cancel"
+	event.pressed = true
+	main._unhandled_input(event)
+
+
+func test_escape_while_playing_pauses() -> void:
+	var main := _playing()
+	_press_escape(main)
+	assert_int(main.screen).is_equal(Main.Screen.PLAYING)
+	assert_bool(get_tree().paused).is_true()
+	assert_bool(main.ui.paused_overlay.visible).is_true()
+
+
+func test_escape_on_the_pause_screen_goes_to_the_main_menu() -> void:
+	var main := _playing()
+	main.cycle_speed()
+	_press_escape(main)
+	_press_escape(main)
+	assert_int(main.screen).is_equal(Main.Screen.MENU)
+	assert_bool(main.main_menu.visible).is_true()
+	assert_bool(main.ui.visible).is_false()
+	assert_bool(get_tree().paused).is_false()
+	assert_float(Engine.time_scale).is_equal(1.0)
+
+
+func test_escape_on_the_result_screen_goes_to_the_main_menu() -> void:
+	var main := _playing()
+	main.sim.tick(1000.0)
+	main._process(0.0)
+	_press_escape(main)
+	assert_int(main.screen).is_equal(Main.Screen.MENU)
+	assert_bool(main.main_menu.visible).is_true()
+
+
+func test_escape_in_the_briefing_goes_back_to_the_menu() -> void:
+	var main := _main()
+	main.main_menu.level_chosen.emit(load(TEST_LEVEL) as LevelData)
+	var event := InputEventAction.new()
+	event.action = &"ui_cancel"
+	event.pressed = true
+	main.briefing._unhandled_input(event)
+	assert_int(main.screen).is_equal(Main.Screen.MENU)
+
+
 func test_a_wave_is_announced() -> void:
 	var main := _playing()
 	main.sim.waves.spawn_wave(main.sim)

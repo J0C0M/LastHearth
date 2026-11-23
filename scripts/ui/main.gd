@@ -107,10 +107,22 @@ func _process(delta: float) -> void:
 		_finish_round()
 
 
+## Esc: the first press pauses, a second press (on the pause screen) or a press
+## on the result screen goes back to the main menu. The briefing handles its
+## own Esc (back to the menu).
 func _unhandled_input(event: InputEvent) -> void:
+	if screen == Screen.RESULT and event.is_action_pressed("ui_cancel"):
+		show_menu()
+		get_viewport().set_input_as_handled()
+		return
 	if screen != Screen.PLAYING:
 		return
-	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel"):
+		if get_tree().paused:
+			show_menu()
+		else:
+			_set_paused(true)
+	elif event.is_action_pressed("pause"):
 		toggle_pause()
 	elif event.is_action_pressed("speed_toggle"):
 		cycle_speed()
