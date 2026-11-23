@@ -105,6 +105,18 @@ func test_hearth_light_keeps_gloom_away() -> void:
 	assert_float(sim.grid.get_gloom(sim.hearth.cell)).is_equal(0.0)
 
 
+func test_gloom_grows_from_a_pit_and_stops_at_the_light() -> void:
+	# De haard op x=23 verlicht x=16..23 (radius 8); x=16 is de rand van het licht.
+	var sim := _sim([
+		"P......................H",
+		"........................",
+	])
+	for i: int in 90:
+		sim.tick(1.0)
+	assert_float(sim.grid.get_gloom(Vector2i(14, 0))).is_equal(1.0)
+	assert_float(sim.grid.get_gloom(Vector2i(16, 0))).is_equal(0.0)
+
+
 # --- Winning and losing -------------------------------------------------------
 
 func test_defend_level_is_won_at_dawn_with_the_hearth_burning() -> void:

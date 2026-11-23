@@ -158,3 +158,29 @@ func test_new_grid_has_gloom_rate_one_everywhere() -> void:
 	var grid := WorldGrid.new(Vector2i(4, 4))
 	assert_int(grid.gloom_rate.size()).is_equal(16)
 	assert_float(grid.gloom_rate[5]).is_equal(1.0)
+
+
+func test_painted_level_1_map_keeps_gloom_rates_right() -> void:
+	var gen := MapGen.new(MapGen.TEST_SEED)
+	var grid := WorldGrid.new()
+	gen.generate(grid, LevelData.MapType.LEVEL_1)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 99
+	for n: int in 2000:
+		var cell := Vector2i(rng.randi_range(0, grid.size.x - 1), rng.randi_range(0, grid.size.y - 1))
+		grid.set_tile(cell, rng.randi_range(0, 4) as Terrain)
+	# Zelfde terrein, opnieuw berekend door MapGen: de snelheden moeten gelijk zijn.
+	var reference := WorldGrid.new(grid.size)
+	reference.tiles = grid.tiles.duplicate()
+	gen.set_gloom_rates(reference)
+	for i: int in grid.tiles.size():
+		assert_float(grid.gloom_rate[i]).is_equal_approx(reference.gloom_rate[i], 0.0001)
+
+
+func test_painted_forest_fills_faster_than_painted_water() -> void:
+	var grid := WorldGrid.new(Vector2i(3, 1))
+	grid.set_tile(Vector2i(0, 0), Terrain.FOREST)
+	grid.set_tile(Vector2i(2, 0), Terrain.WATER)
+	grid.set_gloom(Vector2i(1, 0), 1.0)
+	grid.spread_gloom(0.1, 1.0)
+	assert_float(grid.get_gloom(Vector2i(0, 0))).is_greater(grid.get_gloom(Vector2i(2, 0)))
