@@ -45,7 +45,25 @@ func _attack(sim: Simulation, delta: float) -> bool:
 func _walk(sim: Simulation, delta: float) -> void:
 	var here := cell()
 	var next := sim.flow_field.next_step(here, data.flying)
+	if next == here and not data.flying and not sim.flow_field.is_reachable(here):
+		next = _closer_on_foot(sim, here)
 	if next != here:
 		move_towards(Entity.center_of(next), delta)
 	elif sim.flow_field.distance(here, data.flying) == 0:
 		move_towards(sim.hearth_position(), delta)
+
+
+## For a walker with no way to the hearth (level 2: outside the moat): the
+## walkable neighbour that is closest to the hearth as the crow flies, or
+## [param here] if none is closer. So it walks up to the water and waits there
+## until a bridge (Drain) opens a way; then the FlowField takes over.
+func _closer_on_foot(sim: Simulation, here: Vector2i) -> Vector2i:
+	var best := here
+	var best_distance := sim.flow_field.distance(here, true)
+	for direction: Vector2i in WorldGrid.NEIGHBORS:
+		var neighbor := here + direction
+		var distance := sim.flow_field.distance(neighbor, true)
+		if sim.grid.is_walkable(neighbor) and distance < best_distance:
+			best = neighbor
+			best_distance = distance
+	return best

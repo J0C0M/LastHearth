@@ -52,11 +52,29 @@ func test_wraith_crosses_water_but_a_walker_cannot() -> void:
 	var sim := _sim(ISLAND)
 	var walker := sim.spawn_enemy(_data(false), Vector2i(0, 0))
 	var wraith := sim.spawn_enemy(_data(true), Vector2i(0, 0))
-	var walker_start := walker.pos
 	_run(sim, 8.0)
 	assert_float(wraith.pos.distance_to(sim.hearth_position())).is_less(2.0)
 	assert_float(sim.hearth.health).is_less(sim.hearth.max_health)
-	assert_float(walker.pos.distance_to(walker_start)).is_less(0.01)
+	# The walker goes as close as it can and waits on the shore.
+	assert_that(walker.cell()).is_equal(Vector2i(11, 2))
+
+
+func test_a_waiting_walker_crosses_as_soon_as_a_bridge_opens() -> void:
+	var sim := _sim(ISLAND)
+	var walker := sim.spawn_enemy(_data(false), Vector2i(0, 0))
+	_run(sim, 6.0)
+	assert_that(walker.cell()).is_equal(Vector2i(11, 2))
+	sim.change_tile(Vector2i(12, 2), WorldGrid.Terrain.SAND)
+	_run(sim, 2.0)
+	assert_float(walker.pos.distance_to(sim.hearth_position())).is_less(2.0)
+
+
+func test_a_walker_never_steps_into_water_while_waiting() -> void:
+	var sim := _sim(ISLAND)
+	var walker := sim.spawn_enemy(_data(false), Vector2i(0, 4))
+	for i: int in 80:
+		sim.tick(0.1)
+		assert_bool(sim.grid.is_walkable(walker.cell())).is_true()
 
 
 func test_enemy_burns_in_light() -> void:
