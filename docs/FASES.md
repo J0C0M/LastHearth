@@ -10,7 +10,7 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 | 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | ✅ Klaar |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ✅ Klaar |
-| 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ⏳ Gepland |
+| 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | 🔍 In review |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
 | 6 | Testen, documentatie en oplevering | `Testing-And-Delivery` | iedereen | PT-05, PT-06, PT-07 | 3 | ⏳ Gepland |
 
@@ -176,15 +176,27 @@ Branch `Level-1-Hold-The-Light` · Duo A · US-12
 
 ## Fase 4B: Level 2, Let the Dark In
 
-Branch `Level-2-Let-The-Dark-In` · Duo B · US-16
+Branch `Level-2-Let-The-Dark-In` · Duo B (Roexoe) · US-16 (met US-23, US-24 en US-25)
 
-- [ ] `gen_level_2`: het dorp ligt achter een gracht met een ring fakkels
-- [ ] Gereedschappen: gloom verspreiden, eenheden oproepen (alleen op gloom), Drain, Rubble en Snuff
-- [ ] Een gedode dorpeling vertraagt de dageraad en geeft Dread terug
-- [ ] Winst als de haard uit is vóór de dageraad
-- [ ] Sterren voor snelheid en het aantal gedode dorpelingen
-- [ ] Briefingtekst
-- [ ] Tests
+- [x] `gen_level_2`: het dorp ligt achter een gracht met een ring fakkels (`scripts/sim/levels/level_2_map.gd`)
+- [x] Gereedschappen: gloom verspreiden, eenheden oproepen (alleen op gloom), Drain, Rubble en Snuff (`scripts/sim/levels/level_2_tools.gd`)
+- [x] Een gedode dorpeling vertraagt de dageraad en geeft Dread terug (bestond al in `Simulation._remove_dead()`)
+- [x] Winst als de haard uit is vóór de dageraad (bestond al in `Simulation.is_won()`)
+- [x] Sterren voor snelheid en het aantal gedode dorpelingen (`scripts/sim/levels/level_2_rules.gd`)
+- [x] Briefingtekst en samenvatting voor het menu
+- [x] Tests (`level_2_map_test`, `level_2_tools_test`, `level_2_rules_test`, meldingen in `game_ui_test`)
+- [ ] PR `Level-2-Let-The-Dark-In` → `Development` gemerged
+
+**Gemaakte keuzes (fase 4B)**
+- **Kaart:** haard op (48, 30) in een grasveld; een gracht van water van 10 tot 13 tegels rond de haard, met een zandoever erbuiten; acht fakkels op een ring van 7,5 tegel binnen de gracht. Hun licht valt over de gracht tot net op de oever, dus daar groeit geen gloom en branden eenheden. Twee bosjes binnen de gracht geven het dorp hout. In het oosten ligt een bergkam vóór de gracht (voor Rubble). Drie Nachtputten in de hoeken: (8, 7), (87, 8) en (14, 52). Buiten de gracht blijft het ruis-terrein met `map_seed` 202.
+- **Fakkels bij de start:** `MapLayout` kreeg `torches`; `Simulation` zet daar bij de start een brandende fakkel neer. Level 1 heeft er geen, dus daar verandert niets.
+- **Gloom** (1 Dread per tegel, met penseel) groeit alleen vanuit de duisternis: een tegel wordt pas donker als een buurtegel (ook schuin) al helemaal donker is. Zo win je terrein vanaf de putten in plaats van meteen naast de gracht te schilderen. Op verlichte tegels kan het niet.
+- **Oproepen** kan alleen op een tegel met minstens 0,5 gloom waar de eenheid kan staan (een geest ook op water en berg).
+- **Snuff** (60, straal 4) dooft elke brandende fakkel in de straal en dimt de haard met een kwart als die erbinnen staat. Niets in de straal: geweigerd en gratis.
+- **Sterren:** 0 bij verlies; bij winst 1, +1 als de haard uit was binnen 60% van de nacht (zonder het uitstel door kills), +1 als minstens de helft van alle dorpelingen is gedood.
+- Nieuwe weigerreden `Refusal.NEEDS_GLOOM` met een melding in de UI ("Gloom only grows from the dark." / "Summon only on gloom."). `ToolData.paints_with_brush()`: Gloom gebruikt het penseel en kost "per tile", net als de terreingereedschappen.
+- Gedeelde bestanden kleinst mogelijk aangepast: `simulation.gd` (takken naar `Level2Tools`, sterren, fakkels bij de start, weigerreden), `map_layout.gd` (`torches`), `tool_data.gd` (`paints_with_brush()`) en `game_ui.gd` (melding, penseel). De tests die Snuff als "nog niet beschikbaar" gebruikten zijn aangepast.
+- **Balans (voor fase 5):** een simpele bot (gloom naar de westkant, Snuff, Drain, dan brutes) wint nu in ongeveer 100 van de 220 seconden, ook als hij brutes één voor één stuurt. Level 2 is dus nog te makkelijk; het design wil dat druppelsgewijs sturen altijd verliest.
 
 ## Fase 5: Bots en balans
 
