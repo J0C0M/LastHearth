@@ -150,7 +150,7 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 | US-18 | Duisternis verspreidt zich: gloom-snelheid volgt ook geschilderd terrein (✅ gemerged, PR #13) | `world_grid.gd` (gedeelde kern) | Mees |
 | US-21 | Terrein schilderen (level 1): verven mag geen lopende vijand insluiten (✅ gemerged, PR #15) | `simulation.gd` (gedeelde kern) | Mees |
 | US-06 | Gereedschappen en grondstof: met de muis boven een gereedschap zie je uitleg en kosten (✅ gemerged, PR #17) | `game_ui.gd` | Jochem |
-| US-25 | Gedode dorpeling vertraagt de dageraad (level 2): de melding noemt de winst (🔍 in review, branch `Dawn-Delay-Per-Kill`) | `main.gd` | Jochem |
+| US-25 | Gedode dorpeling vertraagt de dageraad (level 2): de melding noemt de winst (✅ gemerged, PR #19) | `main.gd` | Jochem |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
 - [x] US-27: Esc opent het pauzemenu en sluit het weer. In dat menu gaat spatie naar het hoofdmenu (pauze en snelheid terug op normaal); pauzeer je met spatie, dan speelt spatie weer verder. Esc op het resultaatscherm gaat naar het hoofdmenu, Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toets die op dat moment werkt
@@ -235,7 +235,7 @@ Branch `Testing-And-Delivery` · iedereen · PT-05, PT-06, PT-07
 - [ ] Sterren opslaan met `ConfigFile` in `user://`
 - [ ] Integratietest: simulatie + scènes (gdUnit4 scene runner), met rapport
 - [ ] Acceptatietest op basis van de user stories, met rapport in `docs/testen/`
-- [ ] Gebruikersdocumentatie (hoe speel je)
-- [ ] Systeemdocumentatie (architectuur)
+- [x] Gebruikersdocumentatie (hoe speel je): [`handleiding.md`](handleiding.md), met screenshots in `handleiding/` (PT-05, branch `System-And-User-Docs`)
+- [x] Systeemdocumentatie (architectuur): [`systeem.md`](systeem.md), met stappenplannen voor een gereedschap, level en vijandtype (PT-05)
 - [ ] Exportpresets voor Windows en Linux; builds in `builds/` (staat in `.gitignore`)
 - [ ] Checklist voor de demovideo
