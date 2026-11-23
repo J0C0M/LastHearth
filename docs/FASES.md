@@ -10,7 +10,7 @@ Werk na elke fase de checklist hieronder en de **Huidige status** in [`CLAUDE.md
 | 2 | Wereld, camera en interface | `World-View-And-UI` | Jochem | US-01, US-02, US-10 | 2 | ✅ Klaar |
 | 3 | Dorp en vijanden | `Village-And-Enemies` | Jochem | US-03, US-04, US-19, US-20 | 2 | ✅ Klaar |
 | 4A | Level 1: Hold the Light | `Level-1-Hold-The-Light` | Duo A | US-12 | 2 | ✅ Klaar |
-| 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | 🔍 In review |
+| 4B | Level 2: Let the Dark In | `Level-2-Let-The-Dark-In` | Duo B | US-16 | 2–3 | ✅ Klaar |
 | 5 | Bots en balans | `Bots-And-Balance` | elk duo voor zijn eigen level | nieuw | 3 | ⏳ Gepland |
 | 6 | Testen, documentatie en oplevering | `Testing-And-Delivery` | iedereen | PT-05, PT-06, PT-07 | 3 | ⏳ Gepland |
 
@@ -187,7 +187,14 @@ Branch `Level-2-Let-The-Dark-In` · Duo B (Roexoe) · US-16 (met US-23, US-24 en
 - [x] Sterren voor snelheid en het aantal gedode dorpelingen (`scripts/sim/levels/level_2_rules.gd`)
 - [x] Briefingtekst en samenvatting voor het menu
 - [x] Tests (`level_2_map_test`, `level_2_tools_test`, `level_2_rules_test`, meldingen in `game_ui_test`)
-- [ ] PR `Level-2-Let-The-Dark-In` → `Development` gemerged
+- [x] PR `Level-2-Let-The-Dark-In` → `Development` gemerged ([#12](https://github.com/J0C0M/LastHearth/pull/12))
+
+**US-23 en US-24 nagelopen** (branch `Verify-Level-2-Tools`, 🔍 in review · Roexoe)
+- [x] US-23: Gloom kost 1 Dread per tegel en werkt niet in licht; schaduw (10), geest (22) en brute (45) alleen op gloom; buiten gloom geweigerd met de melding "Summon only on gloom."
+- [x] US-23 "opgeroepen eenheden lopen meteen naar de haard": klopte nog niet. Een lopende eenheid buiten de gracht had geen route en bleef staan waar hij werd opgeroepen. Nu loopt hij zo dicht mogelijk naar de haard (`Enemy._closer_on_foot()`, hemelsbreed via het vliegveld, alleen over begaanbare tegels) en wacht op de oever tot er een brug is; daarna neemt het `FlowField` het over.
+- [x] US-24: Drain maakt van water zand voor 1 Dread per tegel, Rubble breekt een berg af voor 1,5; Snuff (60) dooft de fakkels binnen 4 tegels en dimt de haard daar; na Drain of Rubble lopen vijanden meteen de nieuwe route.
+- Tests met de echte gereedschappen uit `level_2.tres`: `tests/integration/level_2_tools_acceptance_test.gd`; wachten op de oever en oversteken na een brug in `enemy_test`.
+- Gedeeld bestand: alleen `enemy.gd` (`_walk()` en `_closer_on_foot()`). In level 1 hebben lopende vijanden altijd een route, dus daar verandert niets.
 
 **Gemaakte keuzes (fase 4B)**
 - **Kaart:** haard op (48, 30) in een grasveld; een gracht van water van 10 tot 13 tegels rond de haard, met een zandoever erbuiten; acht fakkels op een ring van 7,5 tegel binnen de gracht. Hun licht valt over de gracht tot net op de oever, dus daar groeit geen gloom en branden eenheden. Twee bosjes binnen de gracht geven het dorp hout. In het oosten ligt een bergkam vóór de gracht (voor Rubble). Drie Nachtputten in de hoeken: (8, 7), (87, 8) en (14, 52). Buiten de gracht blijft het ruis-terrein met `map_seed` 202.
