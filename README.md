@@ -93,7 +93,7 @@ Elke hoofdmap heeft een eigen `README.md` met uitleg.
 - Klaar? Push je branch en open een **pull request naar `Development`**. Na review wordt die gemerged.
 - Na een merge: `git switch Development && git pull`.
 
-Een kaart is pas af als hij aan de **Definition of Done** voldoet: acceptatiecriteria gehaald, `./run_tests.sh` groen zonder waarschuwingen, de wijziging zelf gespeeld, docs bijgewerkt, een gesignde PR naar `Development` die door een ander teamlid is gelezen en gespeeld, en pas daarna Done op Trello. De volledige lijst staat in [`CLAUDE.md`](CLAUDE.md#definition-of-done).
+Een kaart is pas af als hij aan de **Definition of Done** voldoet: acceptatiecriteria gehaald, `./run_tests.sh` groen zonder waarschuwingen, de wijziging zelf gespeeld, docs bijgewerkt, een gesignde PR naar `Development` die door iemand van het andere duo is gelezen en gespeeld, en pas daarna Done op Trello. De volledige lijst staat in [`CLAUDE.md`](CLAUDE.md#definition-of-done).
 
 De fases en hun branches staan in [`docs/FASES.md`](docs/FASES.md). Afspraken voor Claude Code staan in [`CLAUDE.md`](CLAUDE.md).
 

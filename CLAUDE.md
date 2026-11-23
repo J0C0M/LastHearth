@@ -113,6 +113,8 @@ Werk deze tabel bij aan het begin (🚧 Bezig) en het eind (🔍 In review, ✅ 
 6. Pushen en een PR naar `Development` openen.
 7. Trello-kaart bijwerken (als er een Trello-tool is): bij de start naar **Doing**; als de PR open staat naar **Code Review + Functional Review**, met een reactie met branchnaam en PR-link. **Nooit zelf naar Done**; dat doet het team na de review. Verander of verwijder geen andere kaarten zonder akkoord van de gebruiker.
 
+Een kaart gaat pas naar Done als hij voldoet aan de **Definition of Done** (hieronder).
+
 Kijk bij een kaart ook naar de checklist **Acceptatiecriteria** (ophalen met `trelloReadChecklist`, want het bordoverzicht laat checklists weg). Let op: de checklists van oudere kaarten (US-02, US-03, US-04, US-10, PT-02, PT-04) komen nog uit een eerder concept (honger, kroniek, jaren, 5x snelheid). Die worden herschreven in PT-11; volg tot die tijd de **beschrijving** van de kaart en `docs/design.md`.
 
 Trello-bord: "Hackaton 3 Last Hearth 😈😈", https://trello.com/b/aRXpOvu7
@@ -127,7 +129,7 @@ Een kaart is pas af als alles hieronder klopt. Tot die tijd staat hij niet in Do
 4. **Echt gespeeld:** `godot --headless --path . --quit-after 30` start zonder fouten, en de wijziging is in het spel zelf bekeken, ook in een groter venster. Tijdens het spelen staan er geen errors of warnings in de Output of Debugger.
 5. **Documentatie:** `docs/FASES.md` en de **Huidige status** zijn bijgewerkt. Verandert er een toets, dan ook de besturing in `README.md`; bij nieuwe assets ook `assets/CREDITS.md`.
 6. **Git:** gesignde commits op je eigen account, één per stukje, met een Engels bericht en zonder Claude-vermelding. De branch is gepusht en heeft een PR naar `Development`.
-7. **Review:** iemand anders uit het team heeft de PR gelezen (code review) en de wijziging zelf gespeeld (functional review). Daarna is de PR gemerged.
+7. **Review:** iemand van het andere duo heeft de PR gelezen (code review) en de wijziging zelf gespeeld (functional review). Daarna is de PR gemerged.
 8. **Trello:** pas na de merge zet het team de kaart naar Done. Claude zet een kaart nooit zelf naar Done.
 
 ## Handige commando's
