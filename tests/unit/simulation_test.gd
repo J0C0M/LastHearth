@@ -329,10 +329,13 @@ func test_refusal_says_when_a_pit_would_be_cut_off() -> void:
 	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.CUTS_OFF_PIT)
 
 
-func test_refusal_says_when_a_tool_is_not_available_yet() -> void:
+func test_snuff_with_nothing_to_snuff_does_nothing() -> void:
 	var sim := _sim()
-	sim.use_tool(_tool(Kind.SNUFF), Vector2i(7, 2))
-	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NOT_AVAILABLE)
+	var snuff := _tool(Kind.SNUFF, 5.0)
+	snuff.radius = 1
+	assert_bool(sim.use_tool(snuff, Vector2i(0, 0))).is_false()
+	assert_int(sim.last_refusal).is_equal(Simulation.Refusal.NO_EFFECT)
+	assert_float(sim.resource).is_equal(10.0)
 
 
 func test_refusal_says_when_the_round_is_over() -> void:
@@ -355,11 +358,15 @@ func test_hearth_that_is_out_gives_no_light_source() -> void:
 	assert_bool(sim.light_sources().is_empty()).is_true()
 
 
-func test_stars_of_an_extinguish_level_are_zero_until_phase_4b() -> void:
+func test_stars_of_an_extinguish_level_use_the_level_2_rules() -> void:
 	var sim := _sim(OPEN_MAP, _level(Goal.EXTINGUISH))
-	sim.hearth.damage(20.0)
 	sim.tick(100.0)
 	assert_int(sim.stars()).is_equal(0)
+	sim = _sim(OPEN_MAP, _level(Goal.EXTINGUISH))
+	sim.hearth.damage(20.0)
+	sim.tick(1.0)
+	assert_int(sim.stars()).is_equal(Level2Rules.stars(sim))
+	assert_int(sim.stars()).is_greater(1)
 
 
 func test_gloom_spreads_in_steps_not_every_frame() -> void:
