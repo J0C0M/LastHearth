@@ -21,6 +21,9 @@ const MENU_DRIFT := Vector2(40, 24)
 const MENU_DRIFT_SPEED := 0.12
 
 var sim: Simulation
+## The best stars per level, saved in user:// (US-11). Tests set their own
+## before the scene enters the tree, so they do not touch the real scores.
+var best_stars: BestStars
 var speed := 1
 var screen := Screen.MENU
 
@@ -36,6 +39,8 @@ var _escape_menu := false
 
 
 func _ready() -> void:
+	if best_stars == null:
+		best_stars = BestStars.new()
 	main_menu.level_chosen.connect(start_level)
 	main_menu.quit_requested.connect(func() -> void: get_tree().quit())
 	briefing.start_requested.connect(begin_round)
@@ -54,6 +59,7 @@ func show_menu() -> void:
 	_show_menu_world()
 	ui.hide()
 	briefing.hide()
+	main_menu.show_best(best_stars)
 	main_menu.show()
 
 
@@ -152,6 +158,7 @@ func _finish_round() -> void:
 	screen = Screen.RESULT
 	_set_paused(false)
 	set_speed(1)
+	best_stars.record(sim.level.id, sim.stars())
 	ui.show_result(sim.is_won(), sim.stars())
 
 
