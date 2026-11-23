@@ -140,16 +140,18 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 
 | Kaart | Wat | Raakt | Wie |
 |---|---|---|---|
-| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (🔍 in review, branch `Show-Level-Description-In-Menu`) | `main_menu.tscn`/`.gd`, `LevelData` | Roexoe (duo A) |
-| US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu (🔍 in review, branch `Finish-Sprint-Backlog-Cards`) | `main.gd`, `ui.tscn` | Jochem |
-| PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README (🔍 in review, branch `Finish-Sprint-Backlog-Cards`) | docs | Jochem |
-| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) (🔍 in review: uitgevoerd op Trello, zie `docs/trello-voorstel.md` deel 2) | Trello, `docs/trello-voorstel.md` | Jochem |
-| US-28 | Spel schaalt mee met de venstergrootte (🔍 in review, branch `Fix-Window-Scaling`) | `project.godot`, `world_camera.gd` | Jochem |
+| US-26 | Korte levelbeschrijving zichtbaar in het hoofdmenu (✅ gemerged, PR #9) | `main_menu.tscn`/`.gd`, `LevelData` | Roexoe (duo A) |
+| US-27 | Esc op het pauzescherm (en in de briefing) gaat terug naar het hoofdmenu (✅ gemerged, PR #11) | `main.gd`, `game_ui.gd` | Jochem |
+| PT-10 | Definition of Done vastleggen in `CLAUDE.md` en de README (✅ gemerged, PR #11) | docs | Jochem |
+| PT-11 | Acceptatiecriteria op Trello afstemmen op Last Hearth (oude checklists herschrijven, nieuwe kaarten voorzien) (✅ uitgevoerd op Trello en gemerged, PR #11; zie `docs/trello-voorstel.md` deel 2) | Trello, `docs/trello-voorstel.md` | Jochem |
+| US-28 | Spel schaalt mee met de venstergrootte (✅ gemerged, PR #6) | `project.godot`, `world_camera.gd` | Jochem |
+| US-22 | Fakkel en Flare (level 1): bestond al uit fase 3 en 4A; nu met tests nagelopen tegen de acceptatiecriteria (🔍 in review, branch `Verify-Torch-And-Flare`) | alleen nieuwe tests | Jochem |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
 - [x] US-27: Esc opent het pauzemenu en sluit het weer. In dat menu gaat spatie naar het hoofdmenu (pauze en snelheid terug op normaal); pauzeer je met spatie, dan speelt spatie weer verder. Esc op het resultaatscherm gaat naar het hoofdmenu, Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toets die op dat moment werkt
 - [x] PT-10: de Definition of Done staat in `CLAUDE.md` (sectie *Definition of Done*); de README vat hem samen en linkt ernaar
 - [x] PT-11: nieuwe criteria per kaart in `docs/trello-voorstel.md` (deel 2), na akkoord van Jochem op Trello gezet. Oude checklists heten nu *Oude criteria (vervallen concept)*; elke kaart van US-01 t/m US-28 en PT-02, PT-04, PT-09 t/m PT-11 heeft een checklist **Acceptatiecriteria**
+- [x] US-22: fakkel (30 Licht) en Flare (100 Licht, straal 6) werkten al. Nieuwe tests met de echte gereedschappen uit `level_1.tres`: de fakkel staat er meteen en brandt, zijn licht verdrijft de gloom binnen ongeveer een seconde (licht wist gloom geleidelijk weg, `WorldGrid.LIGHT_CLEARS_GLOOM`) en verbrandt vijanden; Flare doodt alles binnen 6 tegels en niets daarbuiten, veegt de gloom weg en geeft een flits die vanzelf verdwijnt; met te weinig Licht volgt de melding "Not enough Light." (`tests/unit/level_1_tools_test.gd`, `tests/integration/level_1_tools_test.gd`)
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit
 
 Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.
