@@ -237,7 +237,7 @@ Branch `Testing-And-Delivery` · iedereen · PT-05, PT-06, PT-07
 - [ ] Sterren opslaan met `ConfigFile` in `user://`
 - [ ] Integratietest: simulatie + scènes (gdUnit4 scene runner), met rapport
 - [ ] Acceptatietest op basis van de user stories, met rapport in `docs/testen/`
-- [ ] Gebruikersdocumentatie (hoe speel je)
-- [ ] Systeemdocumentatie (architectuur)
+- [x] Gebruikersdocumentatie (hoe speel je): [`handleiding.md`](handleiding.md), met screenshots in `handleiding/` (PT-05, branch `System-And-User-Docs`)
+- [x] Systeemdocumentatie (architectuur): [`systeem.md`](systeem.md), met stappenplannen voor een gereedschap, level en vijandtype (PT-05)
 - [ ] Exportpresets voor Windows en Linux; builds in `builds/` (staat in `.gitignore`)
 - [ ] Checklist voor de demovideo

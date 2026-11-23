@@ -8,6 +8,7 @@ Een 2D-pixelartspel in **Godot 4.7 met GDScript** (schoolproject Hackaton 3: Gam
 
 - Design document (leidend voor concept, klassen en namen): [`docs/design.md`](docs/design.md)
 - Fases, branches en checklists: [`docs/FASES.md`](docs/FASES.md)
+- Hoe de code werkt, met stappenplannen voor een nieuw gereedschap, level of vijandtype: [`docs/systeem.md`](docs/systeem.md). Voor spelers: [`docs/handleiding.md`](docs/handleiding.md)
 
 ## Huidige status
 
