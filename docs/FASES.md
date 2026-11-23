@@ -149,7 +149,8 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 | US-17 | Haard en licht: licht krimpt mee met de schade aan de haard (✅ gemerged, PR #10) | `hearth.gd` (gedeelde kern) | Mees |
 | US-18 | Duisternis verspreidt zich: gloom-snelheid volgt ook geschilderd terrein (✅ gemerged, PR #13) | `world_grid.gd` (gedeelde kern) | Mees |
 | US-21 | Terrein schilderen (level 1): verven mag geen lopende vijand insluiten (✅ gemerged, PR #15) | `simulation.gd` (gedeelde kern) | Mees |
-| US-06 | Gereedschappen en grondstof: met de muis boven een gereedschap zie je uitleg en kosten (🔍 in review, branch `Tools-And-Resource`) | `game_ui.gd` | Jochem |
+| US-06 | Gereedschappen en grondstof: met de muis boven een gereedschap zie je uitleg en kosten (✅ gemerged, PR #17) | `game_ui.gd` | Jochem |
+| US-25 | Gedode dorpeling vertraagt de dageraad (level 2): de melding noemt de winst (🔍 in review, branch `Dawn-Delay-Per-Kill`) | `main.gd` | Jochem |
 
 - [x] US-26: `LevelData.summary` (nieuw veld) staat onder elk level in het hoofdmenu, altijd zichtbaar. Is het leeg, dan toont het menu een zin over het doel (`MainMenu.goal_summary()`). Level 1 heeft een eigen summary; `level_2.tres` is van duo B, dus level 2 toont nog de zin over het doel tot duo B een summary invult.
 - [x] US-27: Esc opent het pauzemenu en sluit het weer. In dat menu gaat spatie naar het hoofdmenu (pauze en snelheid terug op normaal); pauzeer je met spatie, dan speelt spatie weer verder. Esc op het resultaatscherm gaat naar het hoofdmenu, Esc in de briefing ging al terug. De knoppen op het pauzescherm noemen de toets die op dat moment werkt
@@ -160,6 +161,7 @@ Bij het nalopen van de kaarten in Done (18 november) bleken een paar acceptatiec
 - [x] US-18: criteria 2 en 3 zaten al in fase 1–3. Nieuw: `WorldGrid.set_tile()` schaalt `gloom_rate` met `GLOOM_TERRAIN_FACTOR[nieuw] / [oud]`, dus geschilderd terrein (en gekapt bos) krijgt de gloom-snelheid van zijn terreinsoort; de ruis van `MapGen` blijft. Test dat gloom vanuit een put groeit en stopt bij licht in `simulation_test.gd`; integratietest `tests/integration/gloom_spread_test.gd`
 - [x] US-21: criteria 1, 3 en 4 zaten al in fase 2–4A. Bug opgelost: water of berg onder of rond een lopende vijand zette hem voor altijd vast. `_paint_terrain` weigert nu ook een streek die een lopende vijand van de haard afsnijdt (zelfde melding als bij een put). Integratietest `tests/integration/level_1_painting_test.gd`
 - [x] US-06: werkbalk, toetsen 1–7, penseel met voorbeeld, kosten in Licht of Dread, aangroei tot het maximum en de meldingen bestonden al (fase 2–4B). Nieuw: met de muis boven een gereedschap toont de infostrook zijn naam, kosten en uitleg (`GameUI.show_tool_info()`); wegbewegen toont weer het gekozen gereedschap. Tests met de echte gereedschappen van level 1 en 2: `tests/integration/toolbar_test.gd`
+- [x] US-25: de simulatie deed het al (fase 3: `dawn_delay_per_kill` en `resource_per_kill`, in `level_2.tres` 5 s en 15 Dread) en de klok en Dread-balk volgden vanzelf. Nieuw: de melding noemt wat een kill oplevert, "A villager has fallen: dawn +5 s, +15 Dread." (`Main.villager_died_text()`); in level 1 blijft het "A villager has fallen.". Tests: `tests/integration/dawn_delay_test.gd`
 - [x] US-28: `stretch/aspect = expand` (een breder of hoger venster toont meer wereld, geen zwarte balken) en de camera rekent bij elke venstergrootte zijn kleinste zoom opnieuw uit
 
 Let op: `LevelData` en `main.gd` zijn gedeeld. US-26 en US-27 dus in een kleine, aparte PR, niet in een level-branch.
