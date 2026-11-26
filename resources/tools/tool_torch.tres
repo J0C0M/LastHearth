@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ToolData" format=3 uid="uid://dhjm6yd6bgk25"]
+
+[ext_resource type="Texture2D" uid="uid://bq6hk3ucae7oi" path="res://assets/ui/icons/tool_torch.png" id="1_au5mw"]
+[ext_resource type="Script" uid="uid://cpgbldjkvfwsa" path="res://scripts/data/tool_data.gd" id="1_gyl8b"]
+
+[resource]
+script = ExtResource("1_gyl8b")
+id = &"torch"
+name = "Torch"
+kind = 4
+cost = 30.0
+icon = ExtResource("1_au5mw")
+description = "Place a torch. Its light hurts enemies and keeps gloom away."

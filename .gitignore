@@ -1,0 +1,27 @@
+# Godot 4 cache and generated files
+.godot/
+.mono/
+data_*/
+mono_crash.*.json
+
+# Export output (see docs/FASES.md, fase 6)
+builds/
+export_credentials.cfg
+
+# gdUnit4 test reports
+reports/
+
+# Temporary and editor files
+*.tmp
+*.translation
+*~
+*.swp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Claude Code: personal settings stay local, shared settings are committed
+.claude/settings.local.json
+
+# Note: *.import files ARE committed on purpose (Godot 4 import settings).

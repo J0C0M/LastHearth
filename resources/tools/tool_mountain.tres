@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ToolData" format=3 uid="uid://ceg46af1t4m7w"]
+
+[ext_resource type="Script" uid="uid://cpgbldjkvfwsa" path="res://scripts/data/tool_data.gd" id="1_0el68"]
+[ext_resource type="Texture2D" uid="uid://bedclq38wbmkv" path="res://assets/ui/icons/tool_mountain.png" id="1_1j6f5"]
+
+[resource]
+script = ExtResource("1_0el68")
+id = &"mountain"
+name = "Mountain"
+kind = 3
+cost = 1.0
+icon = ExtResource("1_1j6f5")
+description = "Raise a mountain. Walking enemies must go around it."

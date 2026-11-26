@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ToolData" format=3 uid="uid://d221ydw0ypwbb"]
+
+[ext_resource type="Texture2D" uid="uid://ba3tht6agvd8x" path="res://assets/ui/icons/tool_gloom.png" id="1_srwks"]
+[ext_resource type="Script" uid="uid://cpgbldjkvfwsa" path="res://scripts/data/tool_data.gd" id="1_x6t4b"]
+
+[resource]
+script = ExtResource("1_x6t4b")
+id = &"gloom"
+name = "Gloom"
+kind = 6
+cost = 1.0
+icon = ExtResource("1_srwks")
+description = "Spread darkness. You can only summon on gloom."

@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="LevelData" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/level_data.gd" id="1_61tk6"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_brute.tres" id="1_ce1dc"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/dread.png" id="1_u0ri6"]
+[ext_resource type="Script" path="res://scripts/data/tool_data.gd" id="2_u0ri6"]
+[ext_resource type="Resource" path="res://resources/tools/tool_gloom.tres" id="3_01ud5"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_shadow.tres" id="4_qyts5"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_shadow.tres" id="4_toexm"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_wraith.tres" id="5_ce1dc"]
+[ext_resource type="Resource" path="res://resources/tools/tool_summon_brute.tres" id="6_qyts5"]
+[ext_resource type="Resource" path="res://resources/tools/tool_drain.tres" id="7_dd5yr"]
+[ext_resource type="Resource" path="res://resources/tools/tool_rubble.tres" id="8_nro2g"]
+[ext_resource type="Resource" path="res://resources/tools/tool_snuff.tres" id="9_4cnbh"]
+[ext_resource type="Resource" path="res://resources/enemies/enemy_wraith.tres" id="13_dd5yr"]
+
+[resource]
+script = ExtResource("1_61tk6")
+id = &"level_2"
+title = "Let the Dark In"
+summary = "You are the darkness. The village hides behind a moat and a ring of torches. Put out the hearth before dawn."
+briefing = "You are the darkness. The last village hides behind a moat, inside a ring of torches. Gloom only grows from the dark: spread it from the three Night Pits towards the village, because you can only summon on gloom. Shadows are fast, wraiths fly over water, brutes are slow but tough. Drain the moat to make a bridge, break the eastern ridge with Rubble, and Snuff the torches before your army walks into their light. Every villager you kill gives you Dread and pushes dawn back. Put out the hearth before dawn; the faster, and the fewer villagers left, the more stars you earn."
+goal = 1
+map_type = 2
+map_seed = 202
+dawn_time = 220.0
+dawn_delay_per_kill = 5.0
+resource_label = "Dread"
+resource_icon = ExtResource("1_u0ri6")
+start_resource = 50.0
+max_resource = 200.0
+regen = 3.0
+resource_per_kill = 15.0
+gloom_speed = 0.05
+max_houses = 12
+start_villagers = 8
+shadow = ExtResource("4_qyts5")
+wraith = ExtResource("13_dd5yr")
+brute = ExtResource("1_ce1dc")
+tools = Array[ExtResource("2_u0ri6")]([ExtResource("3_01ud5"), ExtResource("4_toexm"), ExtResource("5_ce1dc"), ExtResource("6_qyts5"), ExtResource("7_dd5yr"), ExtResource("8_nro2g"), ExtResource("9_4cnbh")])

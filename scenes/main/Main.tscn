@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/world/world.tscn" id="2_world"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ui.tscn" id="3_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/main_menu.tscn" id="4_menu"]
+[ext_resource type="PackedScene" path="res://scenes/ui/briefing.tscn" id="5_briefing"]
+
+[node name="Main" type="Node"]
+process_mode = 3
+script = ExtResource("1_main")
+
+[node name="World" parent="." instance=ExtResource("2_world")]
+process_mode = 1
+visible = false
+
+[node name="GameUI" parent="." instance=ExtResource("3_ui")]
+visible = false
+
+[node name="Menus" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="MainMenu" parent="Menus" instance=ExtResource("4_menu")]
+
+[node name="Briefing" parent="Menus" instance=ExtResource("5_briefing")]
+visible = false
